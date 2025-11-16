@@ -54,13 +54,13 @@ class User extends Authenticatable
     }
 
     // Relations
-    public function specialite(): BelongsTo
-    {
-        return $this->belongsTo(Specialite::class, 'specialite_id');
-    }
+    // public function specialite(): BelongsTo
+    // {
+    //     return $this->belongsTo(Specialite::class, 'specialite_id');
+    // }
 
-    public function anneeAcademique(): BelongsTo
-    {
-        return $this->belongsTo(AnneeAcademique::class, 'annee_academique_id');
-    }
+    // public function anneeAcademique(): BelongsTo
+    // {
+    //     return $this->belongsTo(AnneeAcademique::class, 'annee_academique_id');
+    // }
 }

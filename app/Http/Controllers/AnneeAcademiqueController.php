@@ -14,16 +14,15 @@ class AnneeAcademiqueController extends Controller
 {
     public function index(): View
     {
-        $annees = AnneeAcademique::withCount('users')
-            ->ordered()
-            ->paginate(15);
+        // $annees = AnneeAcademique::withCount('users')
+        $annees = AnneeAcademique::paginate(15);
 
-        return view('annees.index', compact('annees'));
+        return view('annees.index-annee', compact('annees'));
     }
 
     public function create(): View
     {
-        return view('annees.create');
+        return view('annees.create-annee');
     }
 
     public function store(Request $request): RedirectResponse
@@ -68,12 +67,12 @@ class AnneeAcademiqueController extends Controller
             'total_bilans' => $annee->bilans_competences_count,
         ];
 
-        return view('annees.show', compact('annee', 'stats'));
+        return view('annees.show-annee', compact('annee', 'stats'));
     }
 
     public function edit(AnneeAcademique $annee): View
     {
-        return view('annees.edit', compact('annee'));
+        return view('annees.edit-annee', compact('annee'));
     }
 
     public function update(Request $request, AnneeAcademique $annee): RedirectResponse

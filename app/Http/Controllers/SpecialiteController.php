@@ -19,16 +19,17 @@ class SpecialiteController extends Controller
             $query->search($search);
         }
 
-        $specialites = $query->withCount('users')
-            ->ordered()
-            ->paginate(15);
+        // $specialites = $query->withCount('users')
+        //     ->ordered()
+        //     ->paginate(15);
+        $specialites = $query->paginate(15);
 
-        return view('specialites.index', compact('specialites'));
+        return view('specialites.index-specialites', compact('specialites'));
     }
 
     public function create(): View
     {
-        return view('specialites.create');
+        return view('specialites.create-specialites');
     }
 
     public function store(Request $request): RedirectResponse
@@ -66,12 +67,12 @@ class SpecialiteController extends Controller
             ->ordered()
             ->paginate(20);
 
-        return view('specialites.show', compact('specialite', 'stats', 'etudiants'));
+        return view('specialites.show-specialites', compact('specialite', 'stats', 'etudiants'));
     }
 
     public function edit(Specialite $specialite): View
     {
-        return view('specialites.edit', compact('specialite'));
+        return view('specialites.edit-specialites', compact('specialite'));
     }
 
     public function update(Request $request, Specialite $specialite): RedirectResponse
