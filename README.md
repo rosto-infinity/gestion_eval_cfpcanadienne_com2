@@ -342,18 +342,6 @@ DB_PASSWORD=strong_password
 
 ---
 
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! 
-
-1. Fork le projet
-2. Créer une branche (`git checkout -b feature/AmazingFeature`)
-3. Commit (`git commit -m 'Add AmazingFeature'`)
-4. Push (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
-
----
-
 ## 📄 Licence
 
 Ce projet est sous licence MIT. Voir `LICENSE` pour plus d'informations.

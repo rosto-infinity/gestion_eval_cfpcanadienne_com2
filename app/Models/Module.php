@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Module extends Model
 {
@@ -25,8 +25,6 @@ class Module extends Model
         'coefficient' => 'decimal:2',
         'ordre' => 'integer',
     ];
-
-  
 
     // Scopes
     public function scopeOrdered(Builder $query): Builder

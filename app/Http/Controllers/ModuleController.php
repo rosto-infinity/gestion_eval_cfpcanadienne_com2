@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Module;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ModuleController extends Controller
@@ -17,8 +17,8 @@ class ModuleController extends Controller
             ->ordered()
             ->get();
 
-        $semestre1 = $modules->filter(fn($m) => $m->isSemestre1());
-        $semestre2 = $modules->filter(fn($m) => $m->isSemestre2());
+        $semestre1 = $modules->filter(fn ($m) => $m->isSemestre1());
+        $semestre2 = $modules->filter(fn ($m) => $m->isSemestre2());
 
         return view('modules.index', compact('modules', 'semestre1', 'semestre2'));
     }
@@ -46,7 +46,7 @@ class ModuleController extends Controller
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la création: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la création: '.$e->getMessage());
         }
     }
 
@@ -71,7 +71,7 @@ class ModuleController extends Controller
     public function update(Request $request, Module $module): RedirectResponse
     {
         $validated = $request->validate([
-            'code' => 'required|string|max:10|unique:modules,code,' . $module->id,
+            'code' => 'required|string|max:10|unique:modules,code,'.$module->id,
             'intitule' => 'required|string|max:100',
             'coefficient' => 'required|numeric|min:0.1|max:10',
             'ordre' => 'required|integer|min:1|max:100',
@@ -86,7 +86,7 @@ class ModuleController extends Controller
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la mise à jour: '.$e->getMessage());
         }
     }
 
@@ -103,8 +103,7 @@ class ModuleController extends Controller
                 ->route('modules.index')
                 ->with('success', 'Module supprimé avec succès.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Erreur lors de la suppression: ' . $e->getMessage());
+            return back()->with('error', 'Erreur lors de la suppression: '.$e->getMessage());
         }
     }
 }
-

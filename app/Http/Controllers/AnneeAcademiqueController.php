@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\AnneeAcademique;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class AnneeAcademiqueController extends Controller
 {
@@ -51,9 +51,10 @@ class AnneeAcademiqueController extends Controller
                 ->with('success', 'Année académique créée avec succès.');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la création: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la création: '.$e->getMessage());
         }
     }
 
@@ -78,7 +79,7 @@ class AnneeAcademiqueController extends Controller
     public function update(Request $request, AnneeAcademique $annee): RedirectResponse
     {
         $validated = $request->validate([
-            'libelle' => 'required|string|max:20|unique:annees_academiques,libelle,' . $annee->id,
+            'libelle' => 'required|string|max:20|unique:annees_academiques,libelle,'.$annee->id,
             'date_debut' => 'required|date',
             'date_fin' => 'required|date|after:date_debut',
             'is_active' => 'boolean',
@@ -100,9 +101,10 @@ class AnneeAcademiqueController extends Controller
                 ->with('success', 'Année académique mise à jour avec succès.');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la mise à jour: '.$e->getMessage());
         }
     }
 
@@ -123,7 +125,7 @@ class AnneeAcademiqueController extends Controller
                 ->route('annees.index')
                 ->with('success', 'Année académique supprimée avec succès.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Erreur lors de la suppression: ' . $e->getMessage());
+            return back()->with('error', 'Erreur lors de la suppression: '.$e->getMessage());
         }
     }
 
@@ -134,7 +136,7 @@ class AnneeAcademiqueController extends Controller
 
             return back()->with('success', 'Année académique activée avec succès.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Erreur lors de l\'activation: ' . $e->getMessage());
+            return back()->with('error', 'Erreur lors de l\'activation: '.$e->getMessage());
         }
     }
 }

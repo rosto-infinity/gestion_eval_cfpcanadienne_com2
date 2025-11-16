@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Specialite;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class SpecialiteController extends Controller
@@ -48,14 +48,14 @@ class SpecialiteController extends Controller
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la création: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la création: '.$e->getMessage());
         }
     }
 
     public function show(Specialite $specialite): View
     {
         $specialite->loadCount('users');
-        
+
         $stats = [
             'total_etudiants' => $specialite->getUsersCount(),
             'etudiants_actifs' => $specialite->getActiveUsersCount(),
@@ -77,7 +77,7 @@ class SpecialiteController extends Controller
     public function update(Request $request, Specialite $specialite): RedirectResponse
     {
         $validated = $request->validate([
-            'code' => 'required|string|max:20|unique:specialites,code,' . $specialite->id,
+            'code' => 'required|string|max:20|unique:specialites,code,'.$specialite->id,
             'intitule' => 'required|string|max:100',
             'description' => 'nullable|string',
         ]);
@@ -91,7 +91,7 @@ class SpecialiteController extends Controller
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la mise à jour: '.$e->getMessage());
         }
     }
 
@@ -108,7 +108,7 @@ class SpecialiteController extends Controller
                 ->route('specialites.index')
                 ->with('success', 'Spécialité supprimée avec succès.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Erreur lors de la suppression: ' . $e->getMessage());
+            return back()->with('error', 'Erreur lors de la suppression: '.$e->getMessage());
         }
     }
 }
