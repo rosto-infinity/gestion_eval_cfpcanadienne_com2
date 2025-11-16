@@ -2,10 +2,20 @@
 
 namespace App\Models;
 
+
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Enums\Niveau;
+use Illuminate\Support\Str;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -21,6 +31,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+          'specialite_id',
+        'annee_academique_id',
     ];
 
     /**
@@ -43,6 +55,20 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+             'niveau' => Niveau::class,
         ];
     }
+
+
+    // Relations
+    public function specialite(): BelongsTo
+    {
+        return $this->belongsTo(Specialite::class, 'specialite_id');
+    }
+
+    public function anneeAcademique(): BelongsTo
+    {
+        return $this->belongsTo(AnneeAcademique::class, 'annee_academique_id');
+    }
+
 }
