@@ -6,10 +6,13 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Niveau;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -25,6 +28,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'matricule',
+        'sexe',
+        'profile',
+        'niveau',
         'specialite_id',
         'annee_academique_id',
     ];
@@ -53,14 +60,82 @@ class User extends Authenticatable
         ];
     }
 
-    // Relations
-    // public function specialite(): BelongsTo
-    // {
-    //     return $this->belongsTo(Specialite::class, 'specialite_id');
-    // }
+      // Relations
+    public function specialite(): BelongsTo
+    {
+        return $this->belongsTo(Specialite::class, 'specialite_id');
+    }
 
-    // public function anneeAcademique(): BelongsTo
-    // {
-    //     return $this->belongsTo(AnneeAcademique::class, 'annee_academique_id');
-    // }
+    public function anneeAcademique(): BelongsTo
+    {
+        return $this->belongsTo(AnneeAcademique::class, 'annee_academique_id');
+    }
+
+    public function evaluations(): HasMany
+    {
+        return $this->hasMany(Evaluation::class, 'user_id');
+    }
+
+    public function bilanCompetence(): HasOne
+    {
+        return $this->hasOne(BilanCompetence::class, 'user_id')
+            ->where('annee_academique_id', $this->annee_academique_id);
+    }
+
+    // Scopes
+    public function scopeOrdered(Builder $query): Builder
+    {
+        return $query->orderBy('nom', 'asc')->orderBy('prenom', 'asc');
+    }
+
+    public function scopeSearch(Builder $query, string $search): Builder
+    {
+        return $query->where(function ($q) use ($search) {
+            $q->where('nom', 'like', "%{$search}%")
+              ->orWhere('prenom', 'like', "%{$search}%")
+              ->orWhere('matricule', 'like', "%{$search}%");
+        });
+    }
+
+    public function scopeBySpecialite(Builder $query, int $specialiteId): Builder
+    {
+        return $query->where('specialite_id', $specialiteId);
+    }
+
+    public function scopeByAnneeAcademique(Builder $query, int $anneeId): Builder
+    {
+        return $query->where('annee_academique_id', $anneeId);
+    }
+
+    // Methods
+    public function getFullName(): string
+    {
+        return "{$this->nom} {$this->prenom}";
+    }
+
+    public function getEvaluationsBySemestre(int $semestre): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->evaluations()
+            ->where('semestre', $semestre)
+            ->where('annee_academique_id', $this->annee_academique_id)
+            ->with('module')
+            ->get()
+            ->sortBy('module.ordre');
+    }
+
+    public function getMoyenneSemestre(int $semestre): ?float
+    {
+        $evaluations = $this->evaluations()
+            ->where('semestre', $semestre)
+            ->where('annee_academique_id', $this->annee_academique_id)
+            ->get();
+
+        if ($evaluations->isEmpty()) {
+            return null;
+        }
+
+        return round($evaluations->avg('note'), 2);
+    }
+
 }
+

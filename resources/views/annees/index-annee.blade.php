@@ -11,7 +11,7 @@
             <p class="mt-2 text-sm text-gray-700">Gestion des périodes scolaires</p>
         </div>
         <div class="mt-4 sm:mt-0">
-            <a href="{{ route('annees.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700">
+            <a href="{{ route('annees.create') }}" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
@@ -102,7 +102,7 @@
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
                             {{ $annee->bilans_competences_count }} bilan(s)
                         </span>
                     </td> --}}
@@ -116,7 +116,7 @@
                                     </button>
                                 </form>
                             @endif
-                            <a href="{{ route('annees.show', $annee) }}" class="text-indigo-600 hover:text-indigo-900">Voir</a>
+                            <a href="{{ route('annees.show', $annee) }}" class="text-red-600 hover:text-red-900">Voir</a>
                             <a href="{{ route('annees.edit', $annee) }}" class="text-yellow-600 hover:text-yellow-900">Modifier</a>
                             @if(!$annee->is_active)
                                 <form action="{{ route('annees.destroy', $annee) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr ?')">
@@ -136,7 +136,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
                             <p class="text-gray-500 text-lg">Aucune année académique trouvée</p>
-                            <a href="{{ route('annees.create') }}" class="mt-4 text-indigo-600 hover:text-indigo-900">Créer la première année</a>
+                            <a href="{{ route('annees.create') }}" class="mt-4 text-red-600 hover:text-red-900">Créer la première année</a>
                         </div>
                     </td>
                 </tr>

@@ -13,19 +13,20 @@ class ModuleController extends Controller
 {
     public function index(): View
     {
-        $modules = Module::withCount('evaluations')
-            ->ordered()
-            ->get();
+        // $modules = Module::withCount('evaluations')
+        //     ->ordered()
+        //     ->get();
+        $modules = Module::get();
 
         $semestre1 = $modules->filter(fn ($m) => $m->isSemestre1());
         $semestre2 = $modules->filter(fn ($m) => $m->isSemestre2());
 
-        return view('modules.index', compact('modules', 'semestre1', 'semestre2'));
+        return view('modules.index-modules', compact('modules', 'semestre1', 'semestre2'));
     }
 
     public function create(): View
     {
-        return view('modules.create');
+        return view('modules.create-modules');
     }
 
     public function store(Request $request): RedirectResponse
@@ -60,12 +61,12 @@ class ModuleController extends Controller
             'moyenne_generale' => $module->evaluations()->avg('note'),
         ];
 
-        return view('modules.show', compact('module', 'stats'));
+        return view('modules.show-modules', compact('module', 'stats'));
     }
 
     public function edit(Module $module): View
     {
-        return view('modules.edit', compact('module'));
+        return view('modules.edit-modules', compact('module'));
     }
 
     public function update(Request $request, Module $module): RedirectResponse

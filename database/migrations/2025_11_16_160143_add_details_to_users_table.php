@@ -13,18 +13,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('matricule', 20)->unique()->default('');
+            $table->string('matricule', 20)->unique()->nullable();
             $table->enum('sexe', ['M', 'F', 'Autre'])->default('M');
             $table->string('profile')->nullable();
             $table->enum('niveau', Niveau::values())->default(Niveau::BEPC->value);
             
             $table->foreignId('specialite_id')
+                ->nullable()
                 ->constrained('specialites')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
             
             $table->foreignId('annee_academique_id')
+                ->nullable()
                 ->constrained('annees_academiques')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
             
             $table->softDeletes();
             $table->index(['specialite_id', 'annee_academique_id']);

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 
 class Module extends Model
 {
@@ -25,6 +26,12 @@ class Module extends Model
         'coefficient' => 'decimal:2',
         'ordre' => 'integer',
     ];
+
+    // Relations
+    public function evaluations(): HasMany
+    {
+        return $this->hasMany(Evaluation::class, 'module_id');
+    }
 
     // Scopes
     public function scopeOrdered(Builder $query): Builder
