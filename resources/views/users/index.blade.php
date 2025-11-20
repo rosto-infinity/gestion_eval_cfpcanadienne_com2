@@ -145,7 +145,8 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($user->specialite)
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                    📚 {{ $user->specialite->intitule ?? $user->specialite->code }}
+                                    📚 {{ $user->specialite->intitule }}
+                                    {{-- 📚 {{ $user->specialite->intitule ?? $user->specialite->code }} --}}
                                 </span>
                             @else
                                 <span class="text-gray-400 text-sm">-</span>

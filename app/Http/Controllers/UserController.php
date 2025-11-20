@@ -22,7 +22,7 @@ class UserController extends Controller
         // ✅ IMPORTANT : Charger les relations AVANT paginate()
         $query = User::query()
             ->with(['specialite', 'anneeAcademique']);
-
+        // dd($query);
         // Recherche
         if ($search = $request->input('search')) {
             $query->search($search);
@@ -43,6 +43,7 @@ class UserController extends Controller
 
         $specialites = Specialite::ordered()->get();
         $annees = AnneeAcademique::ordered()->get();
+        // dd($specialites, $annees);
 
         return view('users.index', compact('users', 'specialites', 'annees'));
     }
@@ -59,15 +60,15 @@ class UserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'matricule' => 'required|string|max:20|unique:users,matricule',
+            'matricule' => 'nullable|string|max:20|unique:users,matricule',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => ['required', 'confirmed', Password::defaults()],
-            'sexe' => 'required|in:M,F,Autre',
-            'niveau' => 'required|in:' . implode(',', Niveau::values()),
+            'sexe' => 'nullable|in:M,F,Autre',
+            'niveau' => 'nullable|in:' . implode(',', Niveau::values()),
             'profile' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'specialite_id' => 'required|exists:specialites,id',
-            'annee_academique_id' => 'required|exists:annees_academiques,id',
+            'specialite_id' => 'nullable|exists:specialites,id',
+            'annee_academique_id' => 'nullable|exists:annees_academiques,id',
         ]);
 
         try {

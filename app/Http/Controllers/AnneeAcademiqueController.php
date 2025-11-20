@@ -24,7 +24,7 @@ class AnneeAcademiqueController extends Controller
     public function create(): View
     {
         $specialites = Specialite::all();
-        $anneesAcademiques = AnneeAcademique::all();
+        $anneesAcademiques= AnneeAcademique::all();
         return view('annees.create-annee',compact('specialites', 'anneesAcademiques'));
     }
 

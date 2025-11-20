@@ -89,15 +89,24 @@ class User extends Authenticatable
     }
 
     // Relations
+  // ✅ RELATIONS - CORRIGÉES AVEC LES NOMS DE TABLES CORRECTS
+    /**
+     * Relation avec Specialite
+     * ⚠️ IMPORTANT : Spécifier le nom de la table correctement
+     */
     public function specialite(): BelongsTo
-{
-    return $this->belongsTo(Specialite::class, 'specialite_id');
-}
+    {
+        return $this->belongsTo(Specialite::class, 'specialite_id', 'id');
+    }
 
-public function anneeAcademique(): BelongsTo
-{
-    return $this->belongsTo(AnneeAcademique::class, 'annee_academique_id');
-}
+    /**
+     * Relation avec AnneeAcademique
+     * ⚠️ IMPORTANT : Spécifier le nom de la table correctement
+     */
+    public function anneeAcademique(): BelongsTo
+    {
+        return $this->belongsTo(AnneeAcademique::class, 'annee_academique_id', 'id');
+    }
 
     public function evaluations(): HasMany
     {

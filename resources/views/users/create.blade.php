@@ -197,7 +197,7 @@
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('annee_academique_id') border-red-500 @enderror"
                 >
                     <option value="">-- Sélectionner --</option>
-                    @foreach ($anneesAcademiques as $annee)
+                    @foreach ( $anneesAcademiques as $annee)
                         <option value="{{ $annee->id }}" {{ old('annee_academique_id') == $annee->id ? 'selected' : '' }}>
                             {{ $annee->nom }}
                         </option>
