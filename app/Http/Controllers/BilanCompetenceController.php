@@ -32,7 +32,7 @@ class BilanCompetenceController extends Controller
         $annees = AnneeAcademique::ordered()->get();
         $specialites = Specialite::ordered()->get();
 
-        return view('bilans.index', compact('bilans', 'annees', 'specialites'));
+        return view('bilans.index-bilans', compact('bilans', 'annees', 'specialites'));
     }
 
     public function create(Request $request)
@@ -52,7 +52,7 @@ class BilanCompetenceController extends Controller
             ->ordered()
             ->get();
 
-        return view('bilans.create', compact('user', 'users'));
+        return view('bilans.create-bilans', compact('user', 'users'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -107,14 +107,14 @@ class BilanCompetenceController extends Controller
         $evaluationsSemestre1 = $bilan->user->getEvaluationsBySemestre(1);
         $evaluationsSemestre2 = $bilan->user->getEvaluationsBySemestre(2);
 
-        return view('bilans.show', compact('bilan', 'evaluationsSemestre1', 'evaluationsSemestre2'));
+        return view('bilans.show-bilans', compact('bilan', 'evaluationsSemestre1', 'evaluationsSemestre2'));
     }
 
     public function edit(BilanCompetence $bilan): View
     {
         $bilan->load(['user.specialite', 'anneeAcademique']);
 
-        return view('bilans.edit', compact('bilan'));
+        return view('bilans.edit-bilans', compact('bilan'));
     }
 
     public function update(Request $request, BilanCompetence $bilan): RedirectResponse

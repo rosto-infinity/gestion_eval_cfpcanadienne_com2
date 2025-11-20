@@ -91,7 +91,7 @@ class EvaluationController extends Controller
     {
         $evaluation->load(['user.specialite', 'module', 'anneeAcademique']);
 
-        return view('evaluations.show', compact('evaluation'));
+        return view('evaluations.show-evaluations', compact('evaluation'));
     }
 
     public function edit(Evaluation $evaluation): View
@@ -102,7 +102,7 @@ class EvaluationController extends Controller
         $users = User::with(['specialite', 'anneeAcademique'])->ordered()->get();
         $annees = AnneeAcademique::ordered()->get();
 
-        return view('evaluations.edit', compact('evaluation', 'modules', 'users', 'annees'));
+        return view('evaluations.edit-evaluations', compact('evaluation', 'modules', 'users', 'annees'));
     }
 
     public function update(Request $request, Evaluation $evaluation): RedirectResponse

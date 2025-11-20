@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EvaluationController;
@@ -20,9 +21,10 @@ Route::middleware('auth')->group(function (): void {
     Route::post('annees/{annee}/activate', [AnneeAcademiqueController::class, 'activate'])->name('annees.activate');
     Route::resource('specialites', SpecialiteController::class);
     Route::resource('modules', ModuleController::class);
-     // Évaluations
-    Route::resource('evaluations', EvaluationController::class);
-    Route::get('evaluations/saisir-multiple', [EvaluationController::class, 'saisirMultiple'])->name('evaluations.saisir-multiple');
+    Route::resource('users', UserController::class);
+    // Évaluations
+     Route::get('evaluations/saisir-multiple', [EvaluationController::class, 'saisirMultiple'])->name('evaluations.saisir-multiple');
+     Route::resource('evaluations', EvaluationController::class);
     Route::post('evaluations/store-multiple', [EvaluationController::class, 'storeMultiple'])->name('evaluations.store-multiple');
     Route::get('users/{user}/releve-notes', [EvaluationController::class, 'releveNotes'])->name('evaluations.releve-notes');
 

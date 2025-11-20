@@ -10,24 +10,27 @@
                         <a href="{{ route('dashboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('dashboard') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
                             Tableau de bord
                         </a>
-                        <a href="{{ route('annees.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('annees.*') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
-                            Années professionnelles
-                        </a>
+                        
                         <a href="{{ route('specialites.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('specialites.*') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
                             Spécialités
                         </a>
                         <a href="{{ route('modules.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('modules.*') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
                             Modules
                         </a>
-                        {{-- <a href="{{ route('evaluations.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('evaluations.*') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
+                         <a href="{{ route('annees.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('annees.*') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
+                            Années
+                        </a>
+                      
+                        <a href="{{ route('users.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('users.index') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
+                            Utilisateurs
+                        </a>
+                        <a href="{{ route('evaluations.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('evaluations.*') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
                             Évaluations
                         </a>
                         <a href="{{ route('bilans.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('bilans.*') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
                             Bilans
                         </a>
-                        <a href="{{ route('annees.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('annees.*') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
-                            Années
-                        </a> --}}
+                        
                     </div>
                 </div>
                 

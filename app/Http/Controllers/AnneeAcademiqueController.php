@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\AnneeAcademique;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use App\Models\Specialite;
+use Illuminate\Http\Request;
+use App\Models\AnneeAcademique;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\RedirectResponse;
 
 class AnneeAcademiqueController extends Controller
 {
@@ -22,7 +23,9 @@ class AnneeAcademiqueController extends Controller
 
     public function create(): View
     {
-        return view('annees.create-annee');
+        $specialites = Specialite::all();
+        $anneesAcademiques = AnneeAcademique::all();
+        return view('annees.create-annee',compact('specialites', 'anneesAcademiques'));
     }
 
     public function store(Request $request): RedirectResponse

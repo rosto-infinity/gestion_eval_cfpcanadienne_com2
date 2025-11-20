@@ -13,22 +13,31 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('matricule', 20)->unique()->nullable();
-            $table->enum('sexe', ['M', 'F', 'Autre'])->default('M');
-            $table->string('profile')->nullable();
-            $table->enum('niveau', Niveau::values())->default(Niveau::BEPC->value);
+            $table->string('matricule', 20)
+            ->nullable()
+            ->after('password')
+            ->unique()->nullable();
+            $table->enum('sexe', ['M', 'F', 'Autre'])->default('M')
+            ->after('matricule')->nullable();
+            $table->string('profile')
+            ->after('sexe')->nullable();
+            $table->enum('niveau', Niveau::values())->default(Niveau::BEPC->value)
+            ->after('profile');
             
             $table->foreignId('specialite_id')
+            ->after('niveau')
                 ->nullable()
                 ->constrained('specialites')
                 ->onDelete('cascade');
             
             $table->foreignId('annee_academique_id')
+            ->after('specialite_id')
                 ->nullable()
                 ->constrained('annees_academiques')
                 ->onDelete('cascade');
             
-            $table->softDeletes();
+            $table->softDeletes()
+            ->after('annee_academique_id');
             $table->index(['specialite_id', 'annee_academique_id']);
         });
     }

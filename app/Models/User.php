@@ -4,26 +4,20 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Niveau;
+use Illuminate\Support\Str;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -36,21 +30,11 @@ class User extends Authenticatable
         'annee_academique_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -60,16 +44,60 @@ class User extends Authenticatable
         ];
     }
 
-      // Relations
-    public function specialite(): BelongsTo
+    /**
+     * Get the user's initials
+     */
+    public function initials(): string
     {
-        return $this->belongsTo(Specialite::class, 'specialite_id');
+        return Str::of($this->name)
+            ->explode(' ')
+            ->take(2)
+            ->map(fn ($word) => Str::substr($word, 0, 1))
+            ->implode('');
     }
 
-    public function anneeAcademique(): BelongsTo
+    /**
+     * ✅ CORRIGÉ : Retourner le nom complet correctement
+     */
+    public function getFullName(): string
     {
-        return $this->belongsTo(AnneeAcademique::class, 'annee_academique_id');
+        return $this->name ?? 'N/A';
     }
+
+    /**
+     * Get sexe label
+     */
+    public function getSexeLabel(): string
+    {
+        return match ($this->sexe) {
+            'M' => 'Masculin',
+            'F' => 'Féminin',
+            default => 'Autre',
+        };
+    }
+
+    /**
+     * Get sexe emoji
+     */
+    public function getSexeEmoji(): string
+    {
+        return match ($this->sexe) {
+            'M' => '👨',
+            'F' => '👩',
+            default => '🧑',
+        };
+    }
+
+    // Relations
+    public function specialite(): BelongsTo
+{
+    return $this->belongsTo(Specialite::class, 'specialite_id');
+}
+
+public function anneeAcademique(): BelongsTo
+{
+    return $this->belongsTo(AnneeAcademique::class, 'annee_academique_id');
+}
 
     public function evaluations(): HasMany
     {
@@ -85,15 +113,15 @@ class User extends Authenticatable
     // Scopes
     public function scopeOrdered(Builder $query): Builder
     {
-        return $query->orderBy('nom', 'asc')->orderBy('prenom', 'asc');
+        return $query->orderBy('name', 'asc');
     }
 
     public function scopeSearch(Builder $query, string $search): Builder
     {
         return $query->where(function ($q) use ($search) {
-            $q->where('nom', 'like', "%{$search}%")
-              ->orWhere('prenom', 'like', "%{$search}%")
-              ->orWhere('matricule', 'like', "%{$search}%");
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('matricule', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%");
         });
     }
 
@@ -108,11 +136,6 @@ class User extends Authenticatable
     }
 
     // Methods
-    public function getFullName(): string
-    {
-        return "{$this->nom} {$this->prenom}";
-    }
-
     public function getEvaluationsBySemestre(int $semestre): \Illuminate\Database\Eloquent\Collection
     {
         return $this->evaluations()
@@ -136,6 +159,4 @@ class User extends Authenticatable
 
         return round($evaluations->avg('note'), 2);
     }
-
 }
-

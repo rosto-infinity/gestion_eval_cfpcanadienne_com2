@@ -12,8 +12,11 @@ return new class extends Migration
     {
         Schema::create('specialites', function (Blueprint $table): void {
             $table->id();
-            $table->string('code', 20)->unique();
-            $table->string('intitule', 100);
+            $table->string('code', 20)
+            ->nullable()
+            ->unique();
+            $table->string('intitule', 100)
+            ->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
         });
