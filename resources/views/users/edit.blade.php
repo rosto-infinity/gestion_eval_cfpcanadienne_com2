@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-2xl mx-auto">
-        <h1 class="text-3xl font-bold mb-8">Créer un Utilisateur</h1>
+        <h1 class="text-3xl font-bold mb-8">Modifier l'Utilisateur</h1>
 
         @if ($errors->any())
             <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
@@ -16,8 +16,9 @@
             </div>
         @endif
 
-        <form action="{{ route('users.store') }}" method="POST" class="bg-white rounded-lg shadow-md p-6">
+        <form action="{{ route('users.update', $user->id) }}" method="POST" class="bg-white rounded-lg shadow-md p-6">
             @csrf
+            @method('PUT')
 
             <!-- Nom -->
             <div class="mb-6">
@@ -28,7 +29,7 @@
                     type="text" 
                     id="name" 
                     name="name" 
-                    value="{{ old('name') }}"
+                    value="{{ old('name', $user->name) }}"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('name') border-red-500 @enderror"
                     required
                 >
@@ -46,7 +47,7 @@
                     type="email" 
                     id="email" 
                     name="email" 
-                    value="{{ old('email') }}"
+                    value="{{ old('email', $user->email) }}"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('email') border-red-500 @enderror"
                     required
                 >
@@ -65,7 +66,7 @@
                     id="password" 
                     name="password" 
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('password') border-red-500 @enderror"
-                    required
+                    placeholder="Laisser vide pour ne pas modifier"
                 >
                 @error('password')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -75,14 +76,14 @@
             <!-- Confirmation mot de passe -->
             <div class="mb-6">
                 <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
-                    Confirmer le mot de passe <span class="text-red-500">*</span>
+                    Confirmer le mot de passe
                 </label>
                 <input 
                     type="password" 
                     id="password_confirmation" 
                     name="password_confirmation" 
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    required
+                    placeholder="Laisser vide pour ne pas modifier"
                 >
             </div>
 
@@ -95,7 +96,7 @@
                     type="text" 
                     id="matricule" 
                     name="matricule" 
-                    value="{{ old('matricule') }}"
+                    value="{{ old('matricule', $user->matricule) }}"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('matricule') border-red-500 @enderror"
                 >
                 @error('matricule')
@@ -115,9 +116,9 @@
                     required
                 >
                     <option value="">-- Sélectionner --</option>
-                    <option value="M" {{ old('sexe') === 'M' ? 'selected' : '' }}>Masculin</option>
-                    <option value="F" {{ old('sexe') === 'F' ? 'selected' : '' }}>Féminin</option>
-                    <option value="Autre" {{ old('sexe') === 'Autre' ? 'selected' : '' }}>Autre</option>
+                    <option value="M" {{ old('sexe', $user->sexe) === 'M' ? 'selected' : '' }}>Masculin</option>
+                    <option value="F" {{ old('sexe', $user->sexe) === 'F' ? 'selected' : '' }}>Féminin</option>
+                    <option value="Autre" {{ old('sexe', $user->sexe) === 'Autre' ? 'selected' : '' }}>Autre</option>
                 </select>
                 @error('sexe')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -133,7 +134,7 @@
                     type="text" 
                     id="profile" 
                     name="profile" 
-                    value="{{ old('profile') }}"
+                    value="{{ old('profile', $user->profile) }}"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('profile') border-red-500 @enderror"
                 >
                 @error('profile')
@@ -153,11 +154,11 @@
                     required
                 >
                     <option value="">-- Sélectionner --</option>
-                    <option value="3eme" {{ old('niveau') === '3eme' ? 'selected' : '' }}>3ème</option>
-                    <option value="bepc" {{ old('niveau') === 'bepc' ? 'selected' : '' }}>BEPC</option>
-                    <option value="premiere" {{ old('niveau') === 'premiere' ? 'selected' : '' }}>Première</option>
-                    <option value="probatoire" {{ old('niveau') === 'probatoire' ? 'selected' : '' }}>Probatoire</option>
-                    <option value="terminale" {{ old('niveau') === 'terminale' ? 'selected' : '' }}>Terminale</option>
+                    <option value="3eme" {{ old('niveau', $user->niveau) === '3eme' ? 'selected' : '' }}>3ème</option>
+                    <option value="bepc" {{ old('niveau', $user->niveau) === 'bepc' ? 'selected' : '' }}>BEPC</option>
+                    <option value="premiere" {{ old('niveau', $user->niveau) === 'premiere' ? 'selected' : '' }}>Première</option>
+                    <option value="probatoire" {{ old('niveau', $user->niveau) === 'probatoire' ? 'selected' : '' }}>Probatoire</option>
+                    <option value="terminale" {{ old('niveau', $user->niveau) === 'terminale' ? 'selected' : '' }}>Terminale</option>
                 </select>
                 @error('niveau')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -176,7 +177,7 @@
                 >
                     <option value="">-- Sélectionner --</option>
                     @foreach ($specialites as $specialite)
-                        <option value="{{ $specialite->id }}" {{ old('specialite_id') == $specialite->id ? 'selected' : '' }}>
+                        <option value="{{ $specialite->id }}" {{ old('specialite_id', $user->specialite_id) == $specialite->id ? 'selected' : '' }}>
                             {{ $specialite->intitule }}
                         </option>
                     @endforeach
@@ -197,10 +198,9 @@
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('annee_academique_id') border-red-500 @enderror"
                 >
                     <option value="">-- Sélectionner --</option>
-                    @foreach ( $anneesAcademiques as $annee)
-                        <option value="{{ $annee->id }}" {{ old('annee_academique_id') == $annee->id ? 'selected' : '' }}>
-                     {{ $annee->libelle }} {{ $annee->is_active ? '(Active)' : '' }}
-
+                    @foreach ($anneesAcademiques as $annee)
+                        <option value="{{ $annee->id }}" {{ old('annee_academique_id', $user->annee_academique_id) == $annee->id ? 'selected' : '' }}>
+                            {{ $annee->libelle }} {{ $annee->is_active ? '(Active)' : '' }}
                         </option>
                     @endforeach
                 </select>
@@ -215,7 +215,7 @@
                     type="submit" 
                     class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                 >
-                    Créer l'utilisateur
+                    Modifier l'utilisateur
                 </button>
                 <a 
                     href="{{ route('users.index') }}" 

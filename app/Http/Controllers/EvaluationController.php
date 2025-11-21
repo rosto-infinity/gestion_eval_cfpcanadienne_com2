@@ -43,7 +43,7 @@ class EvaluationController extends Controller
     {
         $userId = $request->query('user_id');
         $user = $userId ? User::with(['specialite', 'anneeAcademique'])->findOrFail($userId) : null;
-
+        // dd($user);
         $modules = Module::ordered()->get();
         $users = User::with(['specialite', 'anneeAcademique'])->ordered()->get();
         $annees = AnneeAcademique::ordered()->get();

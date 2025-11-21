@@ -5,6 +5,7 @@
 @section('content')
 <div class="mb-6 flex justify-between items-center">
     <h1 class="text-3xl font-bold text-gray-900">👨‍🎓 Étudiants</h1>
+    <a href="{{ route('users.index') }}" class="btn btn-primary">  Recharger</a>
     <a href="{{ route('users.create') }}" class="btn btn-primary">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -149,7 +150,7 @@
                                     {{-- 📚 {{ $user->specialite->intitule ?? $user->specialite->code }} --}}
                                 </span>
                             @else
-                                <span class="text-gray-400 text-sm">-</span>
+                                <span class="text-gray-400 text-sm">-+++</span>
                             @endif
                         </td>
 

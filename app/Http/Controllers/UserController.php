@@ -117,10 +117,10 @@ class UserController extends Controller
         $user->load(['specialite', 'anneeAcademique']);
         
         $specialites = Specialite::ordered()->get();
-        $annees = AnneeAcademique::ordered()->get();
+        $anneesAcademiques = AnneeAcademique::ordered()->get();
         $niveaux = Niveau::grouped();
 
-        return view('users.edit', compact('user', 'specialites', 'annees', 'niveaux'));
+        return view('users.edit', compact('user', 'specialites', 'anneesAcademiques', 'niveaux'));
     }
 
     public function update(Request $request, User $user): RedirectResponse

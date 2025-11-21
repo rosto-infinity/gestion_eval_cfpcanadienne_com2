@@ -74,8 +74,8 @@
                     @foreach($modules as $module)
                     <option value="{{ $module->id }}" 
                             data-code="{{ $module->code }}"
-                            data-semestre="{{ $module->semestre }}"
-                            data-credit="{{ $module->credit }}"
+                            data-semestre="{{ $module->ordre }}"
+                            data-credit="{{ $module->coefficient}}"
                             {{ old('module_id') == $module->id ? 'selected' : '' }}>
                         {{ $module->code }} - {{ $module->intitule }}
                     </option>
