@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Evaluation;
 use App\Models\User;
 use App\Models\Module;
-use App\Models\AnneeAcademique;
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use App\Models\Evaluation;
+use Illuminate\Http\Request;
+use App\Models\AnneeAcademique;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\RedirectResponse;
 
 class EvaluationController extends Controller
 {
@@ -227,6 +228,34 @@ class EvaluationController extends Controller
             'moyenneSemestre1',
             'moyenneSemestre2'
         ));
+    }
+    public function releveNotesPdf(User $user)
+    {
+        $user->load(['specialite', 'anneeAcademique']);
+
+        $evaluationsSemestre1 = $user->getEvaluationsBySemestre(1);
+        $evaluationsSemestre2 = $user->getEvaluationsBySemestre(2);
+
+        $moyenneSemestre1 = $user->getMoyenneSemestre(1);
+        $moyenneSemestre2 = $user->getMoyenneSemestre(2);
+
+        $pdf = Pdf::loadView('evaluations.releve-notes-pdf', compact(
+            'user',
+            'evaluationsSemestre1',
+            'evaluationsSemestre2',
+            'moyenneSemestre1',
+            'moyenneSemestre2'
+        ))
+        ->setPaper('a4', 'portrait')
+        ->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+        ]);
+
+        $filename = 'releve_notes_' . $user->matricule . '_' . now()->format('Ymd') . '.pdf';
+
+        return $pdf->download($filename);
     }
 }
 

@@ -3,7 +3,7 @@
 @section('title', 'Bilans de Compétences')
 
 @section('content')
-<div class="mb-6 flex justify-between items-center">
+<div class="mb-6 flex justify-between items-center p-6">
     <h1 class="text-3xl font-bold text-gray-900">📊 Bilans de Compétences</h1>
     <a href="{{ route('bilans.create') }}" class="btn btn-primary">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -14,7 +14,7 @@
 </div>
 
 <!-- Filtres -->
-<div class="card mb-6">
+<div class="card mb-6 p-6">
     <div class="card-body">
         <form method="GET" action="{{ route('bilans.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -54,7 +54,7 @@
 </div>
 
 <!-- Liste des bilans -->
-<div class="card">
+<div class="card" >
     <div class="card-body">
         @if($bilans->isEmpty())
         <div class="text-center py-12">
@@ -129,9 +129,9 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
-                            <span class="badge {{ $bilan->getMentionBadgeClass() }}">
+                            {{-- <span class="badge {{ $bilan->getMentionBadgeClass() }}">
                                 {{ $bilan->getMention() }}
-                            </span>
+                            </span> --}}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                             <a href="{{ route('bilans.show', $bilan) }}" class="text-blue-600 hover:text-blue-900" title="Voir">
@@ -145,11 +145,11 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                                 </svg>
                             </a>
-                            <a href="{{ route('bilans.pdf', $bilan) }}" class="text-red-600 hover:text-red-900" title="Télécharger PDF" target="_blank">
+                            {{-- <a href="{{ route('bilans.pdf', $bilan) }}" class="text-red-600 hover:text-red-900" title="Télécharger PDF" target="_blank">
                                 <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                 </svg>
-                            </a>
+                            </a> --}}
                             <form action="{{ route('bilans.destroy', $bilan) }}" method="POST" class="inline" onsubmit="return confirm('Supprimer ce bilan ?');">
                                 @csrf
                                 @method('DELETE')
@@ -175,7 +175,7 @@
 
 <!-- Statistiques globales -->
 @if(!$bilans->isEmpty())
-<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6 p-6">
     <div class="card">
         <div class="card-body">
             <div class="flex items-center justify-between">

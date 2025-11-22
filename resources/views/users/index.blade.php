@@ -3,7 +3,7 @@
 @section('title', 'Étudiants')
 
 @section('content')
-<div class="mb-6 flex justify-between items-center">
+<div class="mb-6 flex justify-between items-center gap-3">
     <h1 class="text-3xl font-bold text-gray-900">👨‍🎓 Étudiants</h1>
     <a href="{{ route('users.index') }}" class="btn btn-primary">  Recharger</a>
     <a href="{{ route('users.create') }}" class="btn btn-primary">
@@ -15,7 +15,7 @@
 </div>
 
 <!-- Filtres -->
-<div class="card mb-6">
+<div class="card mb-6 p-8">
     <div class="card-body">
         <form method="GET" action="{{ route('users.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>

@@ -26,13 +26,19 @@ Route::middleware('auth')->group(function (): void {
      Route::get('evaluations/saisir-multiple', [EvaluationController::class, 'saisirMultiple'])->name('evaluations.saisir-multiple');
      Route::resource('evaluations', EvaluationController::class);
     Route::post('evaluations/store-multiple', [EvaluationController::class, 'storeMultiple'])->name('evaluations.store-multiple');
+
+   // Relevé de notes
     Route::get('users/{user}/releve-notes', [EvaluationController::class, 'releveNotes'])->name('evaluations.releve-notes');
+    Route::get('users/{user}/releve-notes/pdf', [EvaluationController::class, 'releveNotesPdf'])->name('evaluations.releve-notes.pdf');
+
 
     // Bilans
+    Route::get('bilans/tableau-recapitulatif', [BilanCompetenceController::class, 'tableauRecapitulatif'])->name('bilans.tableau-recapitulatif');
+    Route::get('bilans/tableau-recapitulatif/export-pdf', [BilanCompetenceController::class, 'exportPdfTableau'])->name('bilans.tableau-recapitulatif.export-pdf');
     Route::resource('bilans', BilanCompetenceController::class);
+    Route::get('bilans/{bilan}/pdf', [BilanCompetenceController::class, 'exportPdf'])->name('bilans.pdf');
     Route::post('bilans/{bilan}/recalculer', [BilanCompetenceController::class, 'recalculer'])->name('bilans.recalculer');
     Route::post('bilans/generer-tous', [BilanCompetenceController::class, 'genererTous'])->name('bilans.generer-tous');
-    Route::get('bilans/tableau-recapitulatif', [BilanCompetenceController::class, 'tableauRecapitulatif'])->name('bilans.tableau-recapitulatif');
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

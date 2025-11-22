@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\BilanCompetence;
 use App\Models\User;
-use App\Models\AnneeAcademique;
+use Illuminate\View\View;
 use App\Models\Specialite;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use App\Models\AnneeAcademique;
+use App\Models\BilanCompetence;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\RedirectResponse;
 
 class BilanCompetenceController extends Controller
 {
@@ -244,5 +245,65 @@ class BilanCompetenceController extends Controller
         $specialites = Specialite::ordered()->get();
 
         return view('bilans.tableau-recapitulatif', compact('bilans', 'stats', 'annees', 'specialites'));
+    }
+    public function exportPdfTableau(Request $request)
+    {
+        $anneeId = $request->input('annee_id') ?? AnneeAcademique::active()->first()?->id;
+        $specialiteId = $request->input('specialite_id');
+
+        $query = BilanCompetence::with(['user.specialite', 'anneeAcademique'])
+            ->whereNotNull('moyenne_generale');
+
+        if ($anneeId) {
+            $query->where('annee_academique_id', $anneeId);
+        }
+
+        if ($specialiteId) {
+            $query->whereHas('user', fn($q) => $q->where('specialite_id', $specialiteId));
+        }
+
+        $bilans = $query->get()->sortByDesc('moyenne_generale');
+
+        $stats = [
+            'total' => $bilans->count(),
+            'admis' => $bilans->filter(fn($b) => $b->isAdmis())->count(),
+            'moyenne_generale' => $bilans->avg('moyenne_generale'),
+            'meilleure_moyenne' => $bilans->max('moyenne_generale'),
+            'moyenne_la_plus_basse' => $bilans->min('moyenne_generale'),
+        ];
+
+        $annee = AnneeAcademique::find($anneeId);
+        $specialite = $specialiteId ? Specialite::find($specialiteId) : null;
+
+        $pdf = Pdf::loadView('bilans.tableau-recapitulatif-pdf', compact('bilans', 'stats', 'annee', 'specialite'))
+            ->setPaper('a4', 'landscape')
+            ->setOptions([
+                'defaultFont' => 'sans-serif',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+            ]);
+
+        $filename = 'tableau_recapitulatif_' . ($annee ? $annee->libelle : 'all') . '_' . now()->format('Ymd') . '.pdf';
+
+        return $pdf->download($filename);
+    }
+     public function exportPdf(BilanCompetence $bilan)
+    {
+        $bilan->load(['user.specialite', 'anneeAcademique']);
+
+        $evaluationsSemestre1 = $bilan->user->getEvaluationsBySemestre(1);
+        $evaluationsSemestre2 = $bilan->user->getEvaluationsBySemestre(2);
+
+        $pdf = Pdf::loadView('bilans.bilan-pdf', compact('bilan', 'evaluationsSemestre1', 'evaluationsSemestre2'))
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'defaultFont' => 'sans-serif',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+            ]);
+
+        $filename = 'bilan_competences_' . $bilan->user->matricule . '_' . now()->format('Ymd') . '.pdf';
+
+        return $pdf->download($filename);
     }
 }

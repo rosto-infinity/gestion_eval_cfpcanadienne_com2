@@ -1,4 +1,4 @@
-edit-evaluations.blade.php@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Modifier l\'Évaluation')
 

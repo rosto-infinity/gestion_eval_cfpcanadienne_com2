@@ -52,10 +52,11 @@
                         @foreach($users as $u)
                         <option value="{{ $u->id }}" {{ old('user_id', $user?->id) == $u->id ? 'selected' : '' }}
                                 data-matricule="{{ $u->matricule }}"
-                                data-name="{{ $u->name }}"
-                                data-specialite="{{ $u->specialite->intitule }}"
-                                data-annee="{{ $u->anneeAcademique->libelle }}">
-                            {{ $u->matricule }} - {{ $u->name }} ({{ $u->specialite->code }})
+                                data-name="{{ $u->name }}">    
+                                {{-- data-specialite="{{ $u->specialite->intitule }}" --}}
+                                {{-- data-annee="{{ $u->anneeAcademique->libelle }}"> --}}
+                            {{-- {{ $u->matricule }} - {{ $u->name }} ({{ $u->specialite->code }}) --}}
+                            {{ $u->matricule }} - {{ $u->name }} 
                         </option>
                         @endforeach
                     </select>
