@@ -3,78 +3,84 @@
 @section('title', 'Détails du Module')
 
 @section('content')
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-    <!-- Header -->
+    <!-- En-tête -->
     <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">
+        <h1 class="text-2xl font-bold text-foreground">
             {{ $module->intitule }}
         </h1>
-        <p class="mt-2 text-sm text-gray-600">
+        <p class="mt-1 text-xs text-muted-foreground">
             Détails du module d'enseignement
         </p>
     </div>
 
     <!-- Card -->
-    <div class="bg-white shadow-md rounded-lg overflow-hidden p-6 space-y-6">
+    <div class="bg-card border border-border rounded-lg p-6 space-y-5">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Grille 2 colonnes -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            
             <!-- Code -->
             <div>
-                <h3 class="text-sm font-medium text-gray-500">Code</h3>
-                <p class="mt-1 text-lg text-gray-900 font-semibold">
+                <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Code</h3>
+                <p class="mt-2 text-lg font-semibold text-foreground">
                     {{ $module->code }}
                 </p>
             </div>
 
             <!-- Ordre -->
             <div>
-                <h3 class="text-sm font-medium text-gray-500">Ordre d'affichage</h3>
-                <p class="mt-1 text-lg text-gray-900 font-semibold">
+                <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Ordre</h3>
+                <p class="mt-2 text-lg font-semibold text-foreground">
                     {{ $module->ordre }}
                 </p>
             </div>
+
         </div>
 
         <!-- Intitulé -->
-        <div>
-            <h3 class="text-sm font-medium text-gray-500">Intitulé</h3>
-            <p class="mt-1 text-lg text-gray-900 font-semibold">
+        <div class="pt-2">
+            <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Intitulé</h3>
+            <p class="mt-2 text-base font-medium text-foreground">
                 {{ $module->intitule }}
             </p>
         </div>
 
         <!-- Coefficient -->
-        <div>
-            <h3 class="text-sm font-medium text-gray-500">Coefficient</h3>
-            <p class="mt-1 text-lg text-gray-900 font-semibold">
+        <div class="pt-2">
+            <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Coefficient</h3>
+            <p class="mt-2 text-lg font-semibold text-foreground">
                 {{ number_format($module->coefficient, 2) }}
             </p>
         </div>
 
         <!-- Actions -->
-        <div class="flex justify-end space-x-3 pt-4 border-t">
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-border">
+            
             <a href="{{ route('modules.index') }}"
-               class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+               class="px-4 py-2 text-sm font-medium text-muted-foreground bg-muted hover:bg-muted/80 rounded-md transition-colors">
                 Retour
             </a>
 
             <a href="{{ route('modules.edit', $module) }}"
-               class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+               class="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-md transition-colors">
                 Modifier
             </a>
 
-            <form action="{{ route('modules.destroy', $module) }}" method="POST"
+            <form action="{{ route('modules.destroy', $module) }}" method="POST" class="inline"
                   onsubmit="return confirm('Voulez-vous vraiment supprimer ce module ?');">
                 @csrf
                 @method('DELETE')
                 <button type="submit"
-                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                        class="px-4 py-2 text-sm font-medium text-destructive-foreground bg-destructive hover:bg-destructive/90 rounded-md transition-colors">
                     Supprimer
                 </button>
             </form>
+
         </div>
 
     </div>
+
 </div>
 @endsection

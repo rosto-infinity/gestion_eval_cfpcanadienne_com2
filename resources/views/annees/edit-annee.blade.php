@@ -3,24 +3,73 @@
 @section('title', "Modifier l'Année Académique")
 
 @section('content')
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
-    <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Modifier l'Année Académique</h1>
-        <p class="mt-2 text-sm text-gray-700">
-            Vous pouvez ici modifier les informations de l'année académique sélectionnée.
-        </p>
+    <!-- En-tête -->
+    <div class="mb-8">
+        <div class="flex items-center gap-3 mb-3">
+            <a href="{{ route('annees.index') }}" 
+               class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors duration-200">
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+            </a>
+            <div>
+                <h1 class="text-3xl font-bold text-foreground">✏️ Modifier l'Année Académique</h1>
+                <p class="mt-1 text-sm text-muted-foreground">
+                    Vous pouvez ici modifier les informations de l'année académique sélectionnée.
+                </p>
+            </div>
+        </div>
     </div>
 
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <form action="{{ route('annees.update', $annee) }}" class="p-6 space-y-6">
+    <!-- Informations de l'année -->
+    <div class="mb-6 p-4 bg-muted/30 border border-border rounded-lg">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+                <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Libellé actuel</p>
+                <p class="mt-1 text-lg font-bold text-foreground">{{ $annee->libelle }}</p>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Période</p>
+                <p class="mt-1 text-lg font-bold text-foreground">
+                    {{ $annee->date_debut->format('d/m/Y') }} → {{ $annee->date_fin->format('d/m/Y') }}
+                </p>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Statut</p>
+                <div class="mt-1">
+                    @if($annee->is_active)
+                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-sm">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            Active
+                        </span>
+                    @else
+                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-muted-foreground font-bold text-sm">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                            Inactive
+                        </span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
+        <form action="{{ route('annees.update', $annee) }}" method="POST" class="p-6 space-y-6">
             @csrf
             @method('PATCH')
 
             <!-- Libellé -->
             <div>
-                <label for="libelle" class="block text-sm font-medium text-gray-700 mb-2">
-                    Libellé <span class="text-red-500">*</span>
+                <label for="libelle" class="block text-sm font-semibold text-foreground mb-2">
+                    Libellé 
+                    <span class="text-destructive font-bold">*</span>
                 </label>
 
                 <input
@@ -29,24 +78,35 @@
                     id="libelle"
                     value="{{ old('libelle', $annee->libelle) }}"
                     required
-                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('libelle') border-red-500 @enderror"
                     placeholder="Ex: 2025-2026"
+                    class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('libelle') border-destructive ring-2 ring-destructive/50 @enderror"
                 >
 
                 @error('libelle')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-2 text-sm text-destructive font-medium flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        {{ $message }}
+                    </p>
                 @enderror
 
-                <p class="mt-1 text-xs text-gray-500">Format recommandé : YYYY-YYYY (ex : 2025-2026)</p>
+                <p class="mt-2 text-xs text-muted-foreground flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                    </svg>
+                    Format recommandé : YYYY-YYYY (ex : 2025-2026)
+                </p>
             </div>
 
             <!-- Dates -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <!-- Date début -->
+                <!-- Date de début -->
                 <div>
-                    <label for="date_debut" class="block text-sm font-medium text-gray-700 mb-2">
-                        Date de début <span class="text-red-500">*</span>
+                    <label for="date_debut" class="block text-sm font-semibold text-foreground mb-2">
+                        Date de début 
+                        <span class="text-destructive font-bold">*</span>
                     </label>
 
                     <input
@@ -55,18 +115,24 @@
                         id="date_debut"
                         value="{{ old('date_debut', $annee->date_debut->format('Y-m-d')) }}"
                         required
-                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('date_debut') border-red-500 @enderror"
+                        class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('date_debut') border-destructive ring-2 ring-destructive/50 @enderror"
                     >
 
                     @error('date_debut')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-2 text-sm text-destructive font-medium flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                            {{ $message }}
+                        </p>
                     @enderror
                 </div>
 
-                <!-- Date fin -->
+                <!-- Date de fin -->
                 <div>
-                    <label for="date_fin" class="block text-sm font-medium text-gray-700 mb-2">
-                        Date de fin <span class="text-red-500">*</span>
+                    <label for="date_fin" class="block text-sm font-semibold text-foreground mb-2">
+                        Date de fin 
+                        <span class="text-destructive font-bold">*</span>
                     </label>
 
                     <input
@@ -75,94 +141,197 @@
                         id="date_fin"
                         value="{{ old('date_fin', $annee->date_fin->format('Y-m-d')) }}"
                         required
-                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('date_fin') border-red-500 @enderror"
+                        class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('date_fin') border-destructive ring-2 ring-destructive/50 @enderror"
                     >
 
                     @error('date_fin')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-2 text-sm text-destructive font-medium flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                            {{ $message }}
+                        </p>
                     @enderror
                 </div>
 
             </div>
 
             <!-- Statut actif -->
-            <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-4">
-                <div class="flex items-start">
-                    <div class="flex items-center h-5">
+            <div class="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                <div class="flex items-start gap-3">
+                    <div class="flex items-center h-6 mt-0.5">
                         <input 
                             type="checkbox"
                             name="is_active"
                             id="is_active"
                             value="1"
                             {{ old('is_active', $annee->is_active) ? 'checked' : '' }}
-                            class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                            class="w-5 h-5 rounded border-border bg-background text-primary focus:ring-2 focus:ring-primary/50 cursor-pointer transition-all"
                         >
                     </div>
-                    <div class="ml-3">
-                        <label for="is_active" class="font-medium text-gray-900">
+                    <div class="flex-1">
+                        <label for="is_active" class="font-semibold text-foreground cursor-pointer">
                             Définir comme année active
                         </label>
-                        <p class="text-sm text-gray-600 mt-1">
-                            Si cochée, cette année deviendra l'année active.  
-                            Toute autre année active sera automatiquement désactivée.
+                        <p class="text-sm text-muted-foreground mt-1">
+                            Si cochée, cette année deviendra l'année active. Toute autre année active sera automatiquement désactivée.
                         </p>
                     </div>
                 </div>
             </div>
 
             <!-- Informations -->
-            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-blue-400" fill="currentColor">
-                            <path fill-rule="evenodd" d="M18 10a8..." clip-rule="evenodd"/>
-                        </svg>
+            <div class="p-4 bg-accent/5 border-l-4 border-accent rounded-lg">
+                <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0 mt-0.5">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-lg bg-accent/20">
+                            <svg class="h-5 w-5 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
                     </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-medium text-blue-800">À propos de l'année active</h3>
-                        <ul class="mt-2 text-sm text-blue-700 list-disc list-inside space-y-1">
-                            <li>Une seule année peut être active à la fois</li>
-                            <li>Utilisée par défaut dans les formulaires</li>
-                            <li>Les nouveaux étudiants y sont automatiquement rattachés</li>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-foreground">À propos de l'année active</h3>
+                        <ul class="mt-3 space-y-2 text-sm text-muted-foreground">
+                            <li class="flex items-start gap-2">
+                                <svg class="w-4 h-4 text-accent flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Une seule année peut être active à la fois</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <svg class="w-4 h-4 text-accent flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Utilisée par défaut dans les formulaires</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <svg class="w-4 h-4 text-accent flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Les nouveaux étudiants y sont automatiquement rattachés</span>
+                            </li>
                         </ul>
                     </div>
                 </div>
             </div>
 
             <!-- Boutons -->
-            <div class="flex items-center justify-end space-x-3 pt-4 border-t">
+            <div class="flex items-center justify-end gap-3 pt-6 border-t border-border">
                 <a href="{{ route('annees.index') }}"
-                   class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                   class="px-6 py-2.5 bg-muted hover:bg-muted/80 text-muted-foreground rounded-lg font-semibold transition-all duration-200">
                     Annuler
                 </a>
 
                 <button type="submit"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                        class="px-6 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
                     Mettre à jour l'Année Académique
                 </button>
             </div>
         </form>
     </div>
+
+    <!-- Aide supplémentaire -->
+    <div class="mt-8 p-4 bg-muted/30 border border-border rounded-lg">
+        <div class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+            </svg>
+            <div class="text-sm text-muted-foreground">
+                <p class="font-semibold text-foreground mb-2">📝 Conseils de modification :</p>
+                <ul class="space-y-1 list-disc list-inside">
+                    <li>Vérifiez bien le libellé avant de valider</li>
+                    <li>La date de fin doit être postérieure à la date de début</li>
+                    <li>Attention : modifier l'année active affectera tous les utilisateurs</li>
+                    <li>Les modifications sont enregistrées immédiatement</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+@endsection
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const dateDebut = document.getElementById('date_debut');
     const dateFin = document.getElementById('date_fin');
+    const form = document.querySelector('form');
 
-    dateDebut.addEventListener('change', () => {
-        dateFin.min = dateDebut.value;
+    // Validation des dates en temps réel
+    const validateDates = () => {
+        if (dateFin.value && dateDebut.value) {
+            if (new Date(dateFin.value) <= new Date(dateDebut.value)) {
+                dateFin.classList.add('border-destructive', 'ring-2', 'ring-destructive/50');
+                
+                let errorMsg = dateFin.parentElement.querySelector('.error-message');
+                if (!errorMsg) {
+                    errorMsg = document.createElement('p');
+                    errorMsg.className = 'error-message mt-2 text-sm text-destructive font-medium flex items-center gap-1';
+                    errorMsg.innerHTML = `
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        La date de fin doit être postérieure à la date de début
+                    `;
+                    dateFin.parentElement.appendChild(errorMsg);
+                }
+                return false;
+            } else {
+                dateFin.classList.remove('border-destructive', 'ring-2', 'ring-destructive/50');
+                const errorMsg = dateFin.parentElement.querySelector('.error-message');
+                if (errorMsg) errorMsg.remove();
+                return true;
+            }
+        }
+        return true;
+    };
+
+    dateDebut.addEventListener('change', function() {
+        if (this.value) {
+            dateFin.min = this.value;
+            validateDates();
+        }
     });
 
-    dateFin.addEventListener('change', () => {
-        if (dateFin.value && dateDebut.value && dateFin.value <= dateDebut.value) {
-            alert('La date de fin doit être postérieure à la date de début');
-            dateFin.value = '';
+    dateFin.addEventListener('change', validateDates);
+
+    // Validation avant soumission
+    form.addEventListener('submit', function(e) {
+        if (!validateDates()) {
+            e.preventDefault();
+            dateFin.focus();
         }
     });
 });
 </script>
 @endpush
 
-@endsection
+@push('styles')
+<style>
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        opacity: 0.6;
+    }
+    
+    input[type="date"]::-webkit-calendar-picker-indicator:hover {
+        opacity: 1;
+    }
+    
+    input[type="checkbox"]:checked {
+        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+
+    .card {
+        display: block;
+    }
+</style>
+@endpush

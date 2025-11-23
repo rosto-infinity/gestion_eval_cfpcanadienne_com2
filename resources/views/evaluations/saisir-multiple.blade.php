@@ -3,204 +3,230 @@
 @section('title', 'Saisie Multiple des Évaluations')
 
 @section('content')
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- En-tête -->
     <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Saisie Multiple des Évaluations</h1>
-        <p class="mt-2 text-sm text-gray-700">Saisir toutes les notes d'un semestre pour un étudiant</p>
+        <h1 class="text-2xl font-bold text-foreground">Saisie Multiple des Évaluations</h1>
+        <p class="mt-1 text-xs text-muted-foreground">Saisir les notes d'un semestre</p>
     </div>
 
-    <!-- Sélection étudiant et semestre -->
-    <div class="bg-white rounded-lg shadow p-6 mb-6">
-        <form method="GET" action="{{ route('evaluations.saisir-multiple') }}" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Sélectionner un étudiant <span class="text-red-500">*</span>
-                    </label>
-                    <select name="user_id" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" onchange="this.form.submit()">
-                        <option value="">Choisir un étudiant...</option>
-                        @foreach($users as $user)
-                            <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
-                                {{ $user->matricule }} - {{ $user->getFullName() }} 
-                                {{-- ({{ $user->specialite->code }} - {{ $user->anneeAcademique->libelle }}) --}}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Semestre <span class="text-red-500">*</span>
-                    </label>
-                    <select name="semestre" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" onchange="this.form.submit()">
-                        <option value="1" {{ $semestre == 1 ? 'selected' : '' }}>Semestre 1</option>
-                        <option value="2" {{ $semestre == 2 ? 'selected' : '' }}>Semestre 2</option>
-                    </select>
-                </div>
+    <!-- Filtres -->
+    <div class="bg-card border border-border rounded-lg p-4 mb-6">
+        <form method="GET" action="{{ route('evaluations.saisir-multiple') }}" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="md:col-span-2">
+                <label class="block text-xs font-semibold text-foreground mb-1.5">Étudiant <span class="text-destructive">*</span></label>
+                <select name="user_id" required 
+                        class="w-full px-3 py-2 rounded-md border border-border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                        onchange="this.form.submit()">
+                    <option value="">Choisir...</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                            {{ $user->matricule }} - {{ $user->getFullName() }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-foreground mb-1.5">Semestre <span class="text-destructive">*</span></label>
+                <select name="semestre" required 
+                        class="w-full px-3 py-2 rounded-md border border-border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                        onchange="this.form.submit()">
+                    <option value="1" {{ $semestre == 1 ? 'selected' : '' }}>S1</option>
+                    <option value="2" {{ $semestre == 2 ? 'selected' : '' }}>S2</option>
+                </select>
             </div>
         </form>
     </div>
 
     @if($user && $modules->isNotEmpty())
-    <!-- Informations étudiant -->
-    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow p-6 mb-6 text-white">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-2xl font-bold">{{ $user->getFullName() }}</h2>
-                <p class="mt-1 text-indigo-100">
-                    Matricule: {{ $user->matricule }} | 
-                    Spécialité: {{ $user->specialite->intitule }} | 
-                    Année: {{ $user->anneeAcademique->libelle }}
-                </p>
-            </div>
-            <div class="text-right">
-                <span class="px-4 py-2 bg-white text-indigo-600 rounded-full font-bold text-lg">
-                    Semestre {{ $semestre }}
-                </span>
+
+        <!-- Infos Étudiant -->
+        <div class="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="font-bold text-foreground">{{ $user->getFullName() }}</h2>
+                    <p class="text-xs text-muted-foreground mt-0.5">
+                        {{ $user->matricule }} • {{ $user->specialite->intitule }}
+                    </p>
+                </div>
+                <div class="text-right">
+                    <span class="inline-block px-3 py-1 bg-primary text-primary-foreground rounded text-xs font-bold">
+                        S{{ $semestre }}
+                    </span>
+                    <p class="text-xs text-muted-foreground mt-1">{{ $user->anneeAcademique->libelle }}</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Formulaire de saisie -->
-    <form action="{{ route('evaluations.store-multiple') }}" method="POST" class="bg-white rounded-lg shadow overflow-hidden">
-        @csrf
-        <input type="hidden" name="user_id" value="{{ $user->id }}">
-        <input type="hidden" name="semestre" value="{{ $semestre }}">
+        <!-- Formulaire -->
+        <form action="{{ route('evaluations.store-multiple') }}" method="POST" class="bg-card border border-border rounded-lg overflow-hidden">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ $user->id }}">
+            <input type="hidden" name="semestre" value="{{ $semestre }}">
 
-        <div class="p-6">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">
-                Notes des Modules - Semestre {{ $semestre }}
-            </h3>
+            <!-- Header -->
+            <div class="p-4 border-b border-border bg-muted/20">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-foreground text-sm">Modules - Semestre {{ $semestre }}</h3>
+                        <p class="text-xs text-muted-foreground mt-0.5">{{ $modules->count() }} module(s)</p>
+                    </div>
+                    @if($evaluations->isNotEmpty())
+                        <span class="text-xs font-bold text-green-600">✓ {{ $evaluations->count() }}/{{ $modules->count() }}</span>
+                    @endif
+                </div>
+            </div>
 
-            <div class="space-y-4">
+            <!-- Modules List -->
+            <div class="divide-y divide-border">
                 @foreach($modules as $module)
                     @php
                         $evaluation = $evaluations->get($module->id);
+                        $isSaisie = $evaluation !== null;
                     @endphp
-                    <div class="flex items-center p-4 border rounded-lg {{ $evaluation ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200' }}">
-                        <div class="flex-1">
-                            <div class="flex items-center">
-                                <span class="px-3 py-1 bg-{{ $semestre == 1 ? 'green' : 'blue' }}-100 text-{{ $semestre == 1 ? 'green' : 'blue' }}-800 rounded-full text-sm font-bold mr-3">
+                    <div class="p-4 flex items-center gap-3 {{ $isSaisie ? 'bg-green-50 dark:bg-green-950/10' : 'hover:bg-muted/30' }}">
+                        
+                        <!-- Numéro -->
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full {{ $isSaisie ? 'bg-green-100 dark:bg-green-900/30' : 'bg-muted' }} flex items-center justify-center">
+                            @if($isSaisie)
+                                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                            @else
+                                <span class="text-xs font-bold text-muted-foreground">{{ $loop->iteration }}</span>
+                            @endif
+                        </div>
+
+                        <!-- Infos -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold px-2 py-0.5 rounded {{ $semestre == 1 ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700' }}">
                                     {{ $module->code }}
                                 </span>
-                                <div>
-                                    <p class="font-medium text-gray-900">{{ $module->intitule }}</p>
-                                    <p class="text-sm text-gray-500">Coefficient: {{ number_format($module->coefficient, 2) }}</p>
-                                </div>
+                                @if($isSaisie)
+                                    <span class="text-xs font-bold text-green-600">Saisi</span>
+                                @endif
                             </div>
+                            <p class="text-sm font-medium text-foreground truncate">{{ $module->intitule }}</p>
+                            <p class="text-xs text-muted-foreground">Coef: {{ number_format($module->coefficient, 2) }}</p>
                         </div>
-                        <div class="ml-4 w-32">
+
+                        <!-- Input -->
+                        <div class="flex-shrink-0 w-32">
                             <input type="hidden" name="evaluations[{{ $loop->index }}][module_id]" value="{{ $module->id }}">
                             <div class="relative">
                                 <input 
                                     type="number" 
                                     name="evaluations[{{ $loop->index }}][note]" 
                                     value="{{ old('evaluations.'.$loop->index.'.note', $evaluation?->note) }}"
-                                    min="0" 
-                                    max="20" 
-                                    step="0.01"
-                                    required
-                                    class="w-full px-3 py-2 border rounded-md text-center text-lg font-bold focus:border-indigo-500 focus:ring-indigo-500 @error('evaluations.'.$loop->index.'.note') border-red-500 @enderror"
-                                    placeholder="0.00">
-                                <span class="absolute right-2 top-2 text-gray-500 text-sm">/20</span>
+                                    min="0" max="20" step="0.01" required
+                                    class="w-full px-3 py-2 border rounded-md text-center text-sm font-bold bg-background focus:outline-none focus:ring-1 focus:ring-primary @error('evaluations.'.$loop->index.'.note') border-destructive @enderror"
+                                    placeholder="0.00"
+                                    onchange="validateNote(this)"
+                                    oninput="validateNote(this)">
+                                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">/20</span>
                             </div>
                             @error('evaluations.'.$loop->index.'.note')
-                                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                <p class="mt-0.5 text-xs text-destructive">{{ $message }}</p>
                             @enderror
                         </div>
-                        @if($evaluation)
-                            <div class="ml-3">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                    </svg>
-                                    Saisi
-                                </span>
-                            </div>
-                        @endif
                     </div>
                 @endforeach
             </div>
-        </div>
 
-        <!-- Boutons -->
-        <div class="bg-gray-50 px-6 py-4 flex items-center justify-between border-t">
-            <div class="text-sm text-gray-600">
-                @if($evaluations->isNotEmpty())
-                    <span class="font-medium text-green-600">{{ $evaluations->count() }} note(s) déjà saisie(s)</span>
-                @else
-                    <span class="text-gray-500">Aucune note saisie pour ce semestre</span>
-                @endif
+            <!-- Footer -->
+            <div class="p-4 border-t border-border bg-muted/20 flex items-center justify-between gap-3">
+                <div class="text-xs text-muted-foreground">
+                    @if($evaluations->isNotEmpty())
+                        <span class="font-semibold text-green-600">{{ $evaluations->count() }} note(s) saisie(s)</span>
+                    @else
+                        <span>Aucune note saisie</span>
+                    @endif
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('evaluations.index') }}" 
+                       class="px-4 py-2 text-sm font-medium text-foreground bg-muted hover:bg-muted/80 rounded-md transition-colors">
+                        Annuler
+                    </a>
+                    <button type="submit" 
+                            class="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-md transition-colors">
+                        Enregistrer
+                    </button>
+                </div>
             </div>
-            <div class="space-x-3">
-                <a href="{{ route('evaluations.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
-                    Annuler
-                </a>
-                <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium">
-                    💾 Enregistrer les Notes
-                </button>
-            </div>
-        </div>
-    </form>
+        </form>
 
-    <!-- Aperçu des statistiques -->
-    @if($evaluations->isNotEmpty())
-    <div class="mt-6 bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">Statistiques Actuelles</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-blue-50 rounded-lg p-4">
-                <p class="text-sm text-gray-600">Notes Saisies</p>
-                <p class="text-2xl font-bold text-blue-600">{{ $evaluations->count() }}/{{ $modules->count() }}</p>
+        <!-- Stats -->
+        @if($evaluations->isNotEmpty())
+        <div class="mt-6 grid grid-cols-3 gap-3">
+            <div class="bg-card border border-border rounded-lg p-3">
+                <p class="text-xs text-muted-foreground mb-1">Progression</p>
+                <p class="text-lg font-bold text-foreground">{{ $evaluations->count() }}/{{ $modules->count() }}</p>
+                <div class="mt-2 w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-primary rounded-full" 
+                         style="width: {{ ($evaluations->count() / $modules->count()) * 100 }}%"></div>
+                </div>
             </div>
-            <div class="bg-green-50 rounded-lg p-4">
-                <p class="text-sm text-gray-600">Moyenne Semestre</p>
-                <p class="text-2xl font-bold text-green-600">{{ number_format($evaluations->avg('note'), 2) }}/20</p>
+            <div class="bg-card border border-border rounded-lg p-3">
+                <p class="text-xs text-muted-foreground mb-1">Moyenne</p>
+                <p class="text-lg font-bold {{ $evaluations->avg('note') >= 10 ? 'text-green-600' : 'text-orange-600' }}">
+                    {{ number_format($evaluations->avg('note'), 2) }}
+                </p>
             </div>
-            <div class="bg-purple-50 rounded-lg p-4">
-                <p class="text-sm text-gray-600">Meilleure Note</p>
-                <p class="text-2xl font-bold text-purple-600">{{ number_format($evaluations->max('note'), 2) }}/20</p>
+            <div class="bg-card border border-border rounded-lg p-3">
+                <p class="text-xs text-muted-foreground mb-1">Meilleure</p>
+                <p class="text-lg font-bold text-foreground">{{ number_format($evaluations->max('note'), 2) }}</p>
             </div>
         </div>
-    </div>
-    @endif
+        @endif
 
     @elseif($user && $modules->isEmpty())
-    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
-        <div class="flex">
-            <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                </svg>
-            </div>
-            <div class="ml-3">
-                <p class="text-sm text-yellow-700">Aucun module trouvé pour le semestre {{ $semestre }}. Veuillez d'abord créer les modules.</p>
-            </div>
+
+        <div class="bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+            <p class="text-sm text-yellow-800 dark:text-yellow-200">
+                Aucun module pour le semestre {{ $semestre }}.
+            </p>
         </div>
-    </div>
+
     @else
-    <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
-        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-        </svg>
-        <h3 class="mt-2 text-sm font-medium text-gray-900">Sélectionner un étudiant</h3>
-        <p class="mt-1 text-sm text-gray-500">Choisissez un étudiant et un semestre pour commencer la saisie</p>
-    </div>
+
+        <div class="bg-card border border-border rounded-lg p-8 text-center">
+            <p class="text-sm text-muted-foreground">Sélectionnez un étudiant et un semestre</p>
+        </div>
+
     @endif
+
 </div>
+
+@endsection
+
+@push('styles')
+<style>
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+</style>
+@endpush
 
 @push('scripts')
 <script>
+function validateNote(input) {
+    if (input.value < 0) input.value = 0;
+    if (input.value > 20) input.value = 20;
+    if (input.value) input.value = parseFloat(input.value).toFixed(2);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-calcul de la moyenne
     const noteInputs = document.querySelectorAll('input[type="number"][name*="note"]');
-    
     noteInputs.forEach(input => {
-        input.addEventListener('input', function() {
-            if (this.value < 0) this.value = 0;
-            if (this.value > 20) this.value = 20;
-        });
+        input.addEventListener('blur', () => validateNote(input));
     });
 });
 </script>
 @endpush
-@endsection

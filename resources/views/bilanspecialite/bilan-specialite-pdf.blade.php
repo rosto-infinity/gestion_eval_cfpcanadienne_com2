@@ -3,118 +3,125 @@
 @section('title', 'Bilan par Spécialité - ' . ($annee ? $annee->libelle : 'Toutes les années'))
 
 @section('content')
-<div class="w-full min-h-screen bg-white p-8">
+<div class="w-full min-h-screen bg-background p-8">
     <!-- En-tête du document -->
-    <div class="mb-8 text-center border-b-2 border-gray-200 pb-6">
+    <div class="mb-8 text-center border-b-2 border-border pb-6">
         <div class="flex items-center justify-center mb-4">
-            <div class="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl">
+            <div class="bg-primary text-primary-foreground w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl">
                 📊
             </div>
         </div>
-        <h1 class="text-2xl font-bold text-gray-900 mb-2">BILAN DES PERFORMANCES ACADEMIQUES</h1>
-        <h2 class="text-xl font-semibold text-blue-700 mb-1">PAR SPÉCIALITÉ</h2>
+        <h1 class="text-2xl font-bold text-foreground mb-2">BILAN DES PERFORMANCES ACADÉMIQUES</h1>
+        <h2 class="text-xl font-semibold text-primary mb-1">PAR SPÉCIALITÉ</h2>
         @if($annee)
-            <p class="text-lg text-gray-700 font-medium">{{ $annee->libelle }} {{ $annee->annee_debut }}/{{ $annee->annee_fin }}</p>
+            <p class="text-lg text-foreground font-medium">{{ $annee->libelle }} {{ $annee->annee_debut }}/{{ $annee->annee_fin }}</p>
         @else
-            <p class="text-lg text-gray-700 font-medium">Toutes les années académiques</p>
+            <p class="text-lg text-foreground font-medium">Toutes les années académiques</p>
         @endif
-        <p class="text-sm text-gray-500 mt-2">Document généré le {{ now()->format('d/m/Y à H:i') }}</p>
+        <p class="text-sm text-muted-foreground mt-2">Document généré le {{ now()->format('d/m/Y à H:i') }}</p>
     </div>
 
     <!-- Statistiques globales -->
     <div class="mb-8">
-        <h3 class="text-lg font-bold text-gray-900 mb-4 text-center">RÉSUMÉ DES STATISTIQUES GLOBALES</h3>
+        <h3 class="text-lg font-bold text-foreground mb-4 text-center">RÉSUMÉ DES STATISTIQUES GLOBALES</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="border rounded-lg p-4 bg-blue-50">
-                <p class="text-sm font-medium text-blue-800 mb-1">SPÉCIALITÉS</p>
-                <p class="text-2xl font-bold text-blue-900">{{ $statsGlobales['total_specialites'] }}</p>
+            <!-- Spécialités -->
+            <div class="border border-border rounded-lg p-4 bg-primary/5">
+                <p class="text-sm font-semibold text-primary uppercase tracking-wide mb-1">Spécialités</p>
+                <p class="text-2xl font-bold text-foreground">{{ $statsGlobales['total_specialites'] }}</p>
             </div>
-            <div class="border rounded-lg p-4 bg-green-50">
-                <p class="text-sm font-medium text-green-800 mb-1">TOTAL ÉTUDIANTS</p>
-                <p class="text-2xl font-bold text-green-900">{{ $statsGlobales['total_etudiants'] }}</p>
+
+            <!-- Total Étudiants -->
+            <div class="border border-border rounded-lg p-4 bg-muted/50">
+                <p class="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-1">Total Étudiants</p>
+                <p class="text-2xl font-bold text-foreground">{{ $statsGlobales['total_etudiants'] }}</p>
             </div>
-            <div class="border rounded-lg p-4 bg-purple-50">
-                <p class="text-sm font-medium text-purple-800 mb-1">TAUX D'ADMISSION</p>
-                <p class="text-2xl font-bold text-purple-900">{{ number_format($statsGlobales['taux_admission'], 1) }}%</p>
+
+            <!-- Taux d'Admission -->
+            <div class="border border-border rounded-lg p-4 bg-primary/5">
+                <p class="text-sm font-semibold text-primary uppercase tracking-wide mb-1">Taux d'Admission</p>
+                <p class="text-2xl font-bold text-primary">{{ number_format($statsGlobales['taux_admission'], 1) }}%</p>
             </div>
-            <div class="border rounded-lg p-4 bg-yellow-50">
-                <p class="text-sm font-medium text-yellow-800 mb-1">MOY. GÉNÉRALE</p>
-                <p class="text-2xl font-bold text-yellow-900">{{ number_format($statsGlobales['moyenne_generale'], 2) }}/20</p>
+
+            <!-- Moyenne Générale -->
+            <div class="border border-border rounded-lg p-4 bg-primary/10">
+                <p class="text-sm font-semibold text-primary uppercase tracking-wide mb-1">Moy. Générale</p>
+                <p class="text-2xl font-bold text-primary">{{ number_format($statsGlobales['moyenne_generale'], 2) }}/20</p>
             </div>
         </div>
     </div>
 
     <!-- Tableau principal -->
     @if($bilanParSpecialite->isEmpty())
-        <div class="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-            <p class="text-xl font-semibold text-gray-700 mb-2">Aucune donnée disponible</p>
-            <p class="text-gray-600">Aucun bilan trouvé pour les paramètres sélectionnés.</p>
+        <div class="text-center py-12 bg-muted/30 rounded-lg border-2 border-dashed border-border">
+            <p class="text-xl font-semibold text-foreground mb-2">Aucune donnée disponible</p>
+            <p class="text-muted-foreground">Aucun bilan trouvé pour les paramètres sélectionnés.</p>
         </div>
     @else
         <div class="mb-8">
-            <h3 class="text-lg font-bold text-gray-900 mb-4 text-center">DÉTAIL PAR SPÉCIALITÉ</h3>
+            <h3 class="text-lg font-bold text-foreground mb-4 text-center">DÉTAIL PAR SPÉCIALITÉ</h3>
             <div class="overflow-x-auto">
                 <table class="min-w-full border-collapse">
                     <thead>
-                        <tr class="bg-gray-100 border-b-2 border-gray-300">
-                            <th class="px-4 py-3 text-left text-sm font-bold text-gray-700 border-r border-gray-200">Spécialité</th>
-                            <th class="px-4 py-3 text-center text-sm font-bold text-gray-700 border-r border-gray-200 bg-blue-50">Étudiants</th>
-                            <th class="px-4 py-3 text-center text-sm font-bold text-gray-700 border-r border-gray-200 bg-blue-100">Moy. S1</th>
-                            <th class="px-4 py-3 text-center text-sm font-bold text-gray-700 border-r border-gray-200 bg-green-50">Moy. S2</th>
-                            <th class="px-4 py-3 text-center text-sm font-bold text-gray-700 border-r border-gray-200 bg-purple-50">Moy. Comp.</th>
-                            <th class="px-4 py-3 text-center text-sm font-bold text-gray-700 border-r border-gray-200 bg-yellow-50">Moy. Gén.</th>
-                            <th class="px-4 py-3 text-center text-sm font-bold text-gray-700 border-r border-gray-200 bg-green-100">Admis</th>
-                            <th class="px-4 py-3 text-center text-sm font-bold text-gray-700 border-r border-gray-200 bg-red-100">Non Admis</th>
-                            <th class="px-4 py-3 text-center text-sm font-bold text-gray-700 bg-gray-50">Taux Adm.</th>
+                        <tr class="bg-muted/50 border-b-2 border-border">
+                            <th class="px-4 py-3 text-left text-sm font-bold text-foreground border-r border-border">Spécialité</th>
+                            <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-primary/5">Étudiants</th>
+                            <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-primary/5">Moy. S1</th>
+                            <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-primary/5">Moy. S2</th>
+                            <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-primary/5">Moy. Comp.</th>
+                            <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-primary/10">Moy. Gén.</th>
+                            <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-muted/50">Admis</th>
+                            <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-muted/50">Non Admis</th>
+                            <th class="px-4 py-3 text-center text-sm font-bold text-foreground bg-muted/30">Taux Adm.</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($bilanParSpecialite as $bilan)
-                            <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <tr class="border-b border-border hover:bg-muted/20">
                                 <td class="px-4 py-3">
-                                    <div class="font-semibold text-gray-900">{{ $bilan->specialite->code }}</div>
-                                    <div class="text-xs text-gray-600 mt-1">{{ Str::limit($bilan->specialite->intitule, 30) }}</div>
+                                    <div class="font-semibold text-foreground">{{ $bilan->specialite->code }}</div>
+                                    <div class="text-xs text-muted-foreground mt-1">{{ Str::limit($bilan->specialite->intitule, 30) }}</div>
                                 </td>
-                                <td class="px-4 py-3 text-center bg-blue-50 font-medium text-blue-800">{{ $bilan->total_etudiants }}</td>
-                                <td class="px-4 py-3 text-center bg-blue-100 font-medium {{ $bilan->moy_semestre1 >= 10 ? 'text-green-700' : 'text-red-700' }}">
+                                <td class="px-4 py-3 text-center bg-primary/5 font-semibold text-foreground">{{ $bilan->total_etudiants }}</td>
+                                <td class="px-4 py-3 text-center bg-primary/5 font-semibold text-foreground">
                                     {{ number_format($bilan->moy_semestre1, 2) }}
                                 </td>
-                                <td class="px-4 py-3 text-center bg-green-50 font-medium {{ $bilan->moy_semestre2 >= 10 ? 'text-green-700' : 'text-red-700' }}">
+                                <td class="px-4 py-3 text-center bg-primary/5 font-semibold text-foreground">
                                     {{ number_format($bilan->moy_semestre2, 2) }}
                                 </td>
-                                <td class="px-4 py-3 text-center bg-purple-50 font-medium {{ $bilan->moy_competences >= 10 ? 'text-green-700' : 'text-red-700' }}">
+                                <td class="px-4 py-3 text-center bg-primary/5 font-semibold text-foreground">
                                     {{ number_format($bilan->moy_competences, 2) }}
                                 </td>
-                                <td class="px-4 py-3 text-center bg-yellow-50 font-bold text-lg {{ $bilan->moyenne_generale >= 10 ? 'text-green-700' : 'text-red-700' }}">
+                                <td class="px-4 py-3 text-center bg-primary/10 font-bold text-lg text-primary">
                                     {{ number_format($bilan->moyenne_generale, 2) }}
                                 </td>
-                                <td class="px-4 py-3 text-center bg-green-100 font-bold text-green-800">{{ $bilan->admis }}</td>
-                                <td class="px-4 py-3 text-center bg-red-100 font-bold text-red-800">{{ $bilan->non_admis }}</td>
-                                <td class="px-4 py-3 text-center bg-gray-50">
-                                    <div class="font-medium {{ $bilan->taux_admission >= 50 ? 'text-green-700' : 'text-red-700' }}">
+                                <td class="px-4 py-3 text-center bg-muted/50 font-bold text-foreground">{{ $bilan->admis }}</td>
+                                <td class="px-4 py-3 text-center bg-muted/50 font-bold text-muted-foreground">{{ $bilan->non_admis }}</td>
+                                <td class="px-4 py-3 text-center bg-muted/30">
+                                    <div class="font-semibold text-foreground">
                                         {{ number_format($bilan->taux_admission, 1) }}%
                                     </div>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
-                    <tfoot class="bg-gray-50 border-t-2 border-gray-300">
+                    <tfoot class="bg-muted/50 border-t-2 border-border">
                         <tr>
-                            <td class="px-4 py-3 font-bold text-right" colspan="1">TOTAL</td>
-                            <td class="px-4 py-3 text-center font-bold bg-blue-50">{{ $statsGlobales['total_etudiants'] }}</td>
-                            <td class="px-4 py-3 text-center bg-blue-100"></td>
-                            <td class="px-4 py-3 text-center bg-green-50"></td>
-                            <td class="px-4 py-3 text-center bg-purple-50"></td>
-                            <td class="px-4 py-3 text-center bg-yellow-50 font-bold">
+                            <td class="px-4 py-3 font-bold text-right text-foreground" colspan="1">TOTAL</td>
+                            <td class="px-4 py-3 text-center font-bold bg-primary/5 text-foreground">{{ $statsGlobales['total_etudiants'] }}</td>
+                            <td class="px-4 py-3 text-center bg-primary/5"></td>
+                            <td class="px-4 py-3 text-center bg-primary/5"></td>
+                            <td class="px-4 py-3 text-center bg-primary/5"></td>
+                            <td class="px-4 py-3 text-center bg-primary/10 font-bold text-primary">
                                 {{ number_format($statsGlobales['moyenne_generale'], 2) }}/20
                             </td>
-                            <td class="px-4 py-3 text-center bg-green-100 font-bold text-green-800">
+                            <td class="px-4 py-3 text-center bg-muted/50 font-bold text-foreground">
                                 {{ $statsGlobales['total_admis'] }}
                             </td>
-                            <td class="px-4 py-3 text-center bg-red-100 font-bold text-red-800">
+                            <td class="px-4 py-3 text-center bg-muted/50 font-bold text-muted-foreground">
                                 {{ $statsGlobales['total_non_admis'] }}
                             </td>
-                            <td class="px-4 py-3 text-center bg-gray-50 font-bold">
+                            <td class="px-4 py-3 text-center bg-muted/30 font-bold text-foreground">
                                 {{ number_format($statsGlobales['taux_admission'], 1) }}%
                             </td>
                         </tr>
@@ -125,32 +132,37 @@
 
         <!-- Résumé analytique -->
         <div class="mb-8">
-            <h3 class="text-lg font-bold text-gray-900 mb-4 text-center">ANALYSE COMPARATIVE</h3>
+            <h3 class="text-lg font-bold text-foreground mb-4 text-center">ANALYSE COMPARATIVE</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="border rounded-lg p-4">
-                    <h4 class="font-bold text-gray-800 mb-3">🏆 MEILLEURES PERFORMANCES</h4>
+                <!-- Meilleures performances -->
+                <div class="border border-border rounded-lg p-4 bg-card">
+                    <h4 class="font-bold text-foreground mb-3">🏆 MEILLEURES PERFORMANCES</h4>
                     <ul class="space-y-2">
                         @php
                             $topMoyennes = $bilanParSpecialite->sortByDesc('moyenne_generale')->take(3);
-                            $topAdmission = $bilanParSpecialite->sortByDesc('taux_admission')->take(3);
                         @endphp
                         
                         @foreach($topMoyennes as $index => $bilan)
-                            <li class="flex justify-between items-center border-b border-gray-100 pb-2 last:border-b-0">
-                                <span class="font-medium text-blue-700">{{ $bilan->specialite->code }}</span>
-                                <span class="font-bold text-green-700">{{ number_format($bilan->moyenne_generale, 2) }}/20</span>
+                            <li class="flex justify-between items-center border-b border-border pb-2 last:border-b-0">
+                                <span class="font-semibold text-primary">{{ $bilan->specialite->code }}</span>
+                                <span class="font-bold text-primary">{{ number_format($bilan->moyenne_generale, 2) }}/20</span>
                             </li>
                         @endforeach
                     </ul>
                 </div>
                 
-                <div class="border rounded-lg p-4">
-                    <h4 class="font-bold text-gray-800 mb-3">📈 TAUX D'ADMISSION</h4>
+                <!-- Taux d'admission -->
+                <div class="border border-border rounded-lg p-4 bg-card">
+                    <h4 class="font-bold text-foreground mb-3">📈 TAUX D'ADMISSION</h4>
                     <ul class="space-y-2">
+                        @php
+                            $topAdmission = $bilanParSpecialite->sortByDesc('taux_admission')->take(3);
+                        @endphp
+                        
                         @foreach($topAdmission as $index => $bilan)
-                            <li class="flex justify-between items-center border-b border-gray-100 pb-2 last:border-b-0">
-                                <span class="font-medium text-purple-700">{{ $bilan->specialite->code }}</span>
-                                <span class="font-bold {{ $bilan->taux_admission >= 80 ? 'text-green-700' : 'text-amber-700' }}">
+                            <li class="flex justify-between items-center border-b border-border pb-2 last:border-b-0">
+                                <span class="font-semibold text-primary">{{ $bilan->specialite->code }}</span>
+                                <span class="font-bold text-primary">
                                     {{ number_format($bilan->taux_admission, 1) }}%
                                 </span>
                             </li>
@@ -162,11 +174,11 @@
     @endif
 
     <!-- Pied de page -->
-    <div class="mt-8 pt-6 border-t-2 border-gray-200 text-center">
-        <p class="text-sm text-gray-600 mb-2">
+    <div class="mt-8 pt-6 border-t-2 border-border text-center">
+        <p class="text-sm text-muted-foreground mb-2">
             Document confidentiel - Usage interne uniquement
         </p>
-        <p class="text-xs text-gray-500">
+        <p class="text-xs text-muted-foreground/70">
             Généré par le système de gestion académique | Page {{ $page ?? 1 }}/{{ $totalPages ?? 1 }}
         </p>
     </div>
@@ -180,10 +192,25 @@
         size: landscape;
     }
     
+    :root {
+        --background: #ffffff;
+        --foreground: #1a1a1a;
+        --primary: #09e540;
+        --primary-foreground: #ffffff;
+        --secondary: #f5f5f5;
+        --secondary-foreground: #1a1a1a;
+        --muted: #e5e5e5;
+        --muted-foreground: #666666;
+        --border: #d0d0d0;
+        --card: #fafafa;
+        --card-foreground: #1a1a1a;
+    }
+    
     body {
-        font-family: 'DejaVu Sans', sans-serif;
-        color: #333;
+        font-family: 'DejaVu Sans', 'Helvetica', sans-serif;
+        color: var(--foreground);
         line-height: 1.5;
+        background-color: var(--background);
     }
     
     table {
@@ -194,42 +221,70 @@
     }
     
     th, td {
-        border: 1px solid #ddd;
+        border: 1px solid var(--border);
         padding: 8px;
         text-align: left;
     }
     
     th {
-        background-color: #f8fafc;
+        background-color: var(--secondary);
         font-weight: 600;
+        color: var(--foreground);
     }
     
     tr:hover {
-        background-color: #f8fafc;
+        background-color: var(--secondary);
     }
     
-    .bg-blue-50 { background-color: #eff6ff; }
-    .bg-green-50 { background-color: #f0fdf4; }
-    .bg-purple-50 { background-color: #f5f3ff; }
-    .bg-yellow-50 { background-color: #fffbeb; }
-    .bg-blue-100 { background-color: #dbeafe; }
-    .bg-green-100 { background-color: #dcfce7; }
-    .bg-red-100 { background-color: #fee2e2; }
-    .bg-gray-50 { background-color: #f9fafb; }
+    /* Variables de couleur */
+    .bg-background { background-color: var(--background); }
+    .bg-card { background-color: var(--card); }
+    .bg-primary { background-color: var(--primary); }
+    .bg-primary-foreground { background-color: var(--primary-foreground); }
+    .bg-secondary { background-color: var(--secondary); }
+    .bg-muted { background-color: var(--muted); }
+    .bg-primary\/5 { background-color: rgba(9, 229, 64, 0.05); }
+    .bg-primary\/10 { background-color: rgba(9, 229, 64, 0.1); }
+    .bg-muted\/20 { background-color: rgba(229, 229, 229, 0.2); }
+    .bg-muted\/30 { background-color: rgba(229, 229, 229, 0.3); }
+    .bg-muted\/50 { background-color: rgba(229, 229, 229, 0.5); }
     
-    .text-green-700 { color: #166534; }
-    .text-red-700 { color: #b91c1c; }
-    .text-blue-700 { color: #1d4ed8; }
-    .text-purple-700 { color: #7e22ce; }
+    .text-foreground { color: var(--foreground); }
+    .text-primary { color: var(--primary); }
+    .text-primary-foreground { color: var(--primary-foreground); }
+    .text-muted-foreground { color: var(--muted-foreground); }
+    .text-card-foreground { color: var(--card-foreground); }
     
-    .border { border: 1px solid #e5e7eb; }
+    .border { border: 1px solid var(--border); }
+    .border-b-2 { border-bottom: 2px solid var(--border); }
+    .border-t-2 { border-top: 2px solid var(--border); }
+    .border-r { border-right: 1px solid var(--border); }
+    .border-border { border-color: var(--border); }
+    
     .rounded-lg { border-radius: 0.5rem; }
+    .rounded-full { border-radius: 9999px; }
+    
     .p-4 { padding: 1rem; }
+    .p-8 { padding: 2rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    
+    .mb-1 { margin-bottom: 0.25rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-3 { margin-bottom: 0.75rem; }
     .mb-4 { margin-bottom: 1rem; }
     .mb-6 { margin-bottom: 1.5rem; }
     .mb-8 { margin-bottom: 2rem; }
+    .mt-1 { margin-top: 0.25rem; }
+    .mt-2 { margin-top: 0.5rem; }
     .mt-8 { margin-top: 2rem; }
     .pt-6 { padding-top: 1.5rem; }
+    .pb-6 { padding-bottom: 1.5rem; }
+    .pb-2 { padding-bottom: 0.5rem; }
+    
+    .gap-4 { gap: 1rem; }
+    .gap-6 { gap: 1.5rem; }
+    .space-y-2 > * + * { margin-top: 0.5rem; }
     
     .font-bold { font-weight: 700; }
     .font-semibold { font-weight: 600; }
@@ -239,18 +294,53 @@
     .text-right { text-align: right; }
     .text-left { text-align: left; }
     
+    .text-xs { font-size: 0.75rem; }
+    .text-sm { font-size: 0.875rem; }
+    .text-lg { font-size: 1.125rem; }
+    .text-xl { font-size: 1.25rem; }
+    .text-2xl { font-size: 1.5rem; }
+    
     .w-full { width: 100%; }
+    .w-12 { width: 3rem; }
+    .h-12 { height: 3rem; }
     .min-h-screen { min-height: 100vh; }
-    .p-8 { padding: 2rem; }
+    
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .items-start { align-items: flex-start; }
+    .justify-center { justify-content: center; }
+    .justify-between { justify-content: space-between; }
+    
+    .grid { display: grid; }
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    
+    .overflow-x-auto { overflow-x: auto; }
+    
+    .last\:border-b-0:last-child { border-bottom: 0 !important; }
     
     @media print {
         body {
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
+            color-adjust: exact;
         }
         .no-print, .no-print * {
             display: none !important;
         }
+        table {
+            page-break-inside: avoid;
+        }
+        tr {
+            page-break-inside: avoid;
+        }
+    }
+    
+    @media (min-width: 768px) {
+        .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     }
 </style>
 @endsection

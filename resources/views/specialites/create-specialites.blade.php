@@ -3,65 +3,82 @@
 @section('title', 'Créer une Spécialité')
 
 @section('content')
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Créer une Spécialité</h1>
-        <p class="mt-2 text-sm text-gray-700">Ajouter une nouvelle spécialité académique</p>
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold text-foreground">Créer une Spécialité</h1>
+        <p class="mt-1 text-sm text-muted-foreground">Ajouter une nouvelle spécialité académique</p>
     </div>
 
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <form action="{{ route('specialites.store') }}" method="POST" class="p-6 space-y-6">
+    <!-- Form Card -->
+    <div class="bg-card rounded-[var(--radius)] shadow-sm border border-border">
+        <form action="{{ route('specialites.store') }}" method="POST" class="p-6 space-y-5">
             @csrf
 
             <!-- Code -->
             <div>
-                <label for="code" class="block text-sm font-medium text-gray-700 mb-2">
-                    Code <span class="text-red-500">*</span>
+                <label for="code" class="block text-sm font-medium text-foreground mb-1">
+                    Code <span class="text-destructive">*</span>
                 </label>
-                <input type="text" name="code" id="code" value="{{ old('code') }}" required
-                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('code') border-red-500 @enderror"
+                <input type="text" 
+                    name="code" 
+                    id="code" 
+                    value="{{ old('code') }}" 
+                    required
+                    class="w-full px-3 py-2 border border-input rounded-[calc(var(--radius)-2px)] text-foreground placeholder-muted-foreground bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors @error('code') border-destructive @enderror"
                     placeholder="Ex: INFO, GC, ELEC">
                 @error('code')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-destructive">{{ $message }}</p>
                 @enderror
             </div>
 
             <!-- Intitulé -->
             <div>
-                <label for="intitule" class="block text-sm font-medium text-gray-700 mb-2">
-                    Intitulé <span class="text-red-500">*</span>
+                <label for="intitule" class="block text-sm font-medium text-foreground mb-1">
+                    Intitulé <span class="text-destructive">*</span>
                 </label>
-                <input type="text" name="intitule" id="intitule" value="{{ old('intitule') }}" required
-                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('intitule') border-red-500 @enderror"
+                <input type="text" 
+                    name="intitule" 
+                    id="intitule" 
+                    value="{{ old('intitule') }}" 
+                    required
+                    class="w-full px-3 py-2 border border-input rounded-[calc(var(--radius)-2px)] text-foreground placeholder-muted-foreground bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors @error('intitule') border-destructive @enderror"
                     placeholder="Ex: Informatique et Réseaux">
                 @error('intitule')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-destructive">{{ $message }}</p>
                 @enderror
             </div>
 
             <!-- Description -->
             <div>
-                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="description" class="block text-sm font-medium text-foreground mb-1">
                     Description
                 </label>
-                <textarea name="description" id="description" rows="4"
-                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('description') border-red-500 @enderror"
+                <textarea name="description" 
+                    id="description" 
+                    rows="4"
+                    class="w-full px-3 py-2 border border-input rounded-[calc(var(--radius)-2px)] text-foreground placeholder-muted-foreground bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors resize-none @error('description') border-destructive @enderror"
                     placeholder="Description de la spécialité...">{{ old('description') }}</textarea>
                 @error('description')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-destructive">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- Boutons -->
-            <div class="flex items-center justify-end space-x-3 pt-4 border-t">
-                <a href="{{ route('specialites.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+            <!-- Buttons -->
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-border">
+                <a href="{{ route('specialites.index') }}" 
+                    class="px-4 py-2 text-sm font-medium text-secondary-foreground bg-secondary hover:bg-accent rounded-[calc(var(--radius)-2px)] transition-colors">
                     Annuler
                 </a>
-                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                <button type="submit" 
+                    class="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-[calc(var(--radius)-2px)] transition-colors">
                     Créer la Spécialité
                 </button>
             </div>
+
         </form>
     </div>
+
 </div>
 @endsection
