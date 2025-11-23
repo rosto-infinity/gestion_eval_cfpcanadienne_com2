@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Specialite;
-use App\Models\AnneeAcademique;
 use App\Enums\Niveau;
-use Illuminate\Http\Request;
+use App\Models\AnneeAcademique;
+use App\Models\Specialite;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\View\View;
 
 class UserController extends Controller
 {
@@ -65,7 +65,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => ['required', 'confirmed', Password::defaults()],
             'sexe' => 'nullable|in:M,F,Autre',
-            'niveau' => 'nullable|in:' . implode(',', Niveau::values()),
+            'niveau' => 'nullable|in:'.implode(',', Niveau::values()),
             'profile' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'specialite_id' => 'nullable|exists:specialites,id',
             'annee_academique_id' => 'nullable|exists:annees_academiques,id',
@@ -92,7 +92,7 @@ class UserController extends Controller
 
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la création: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la création: '.$e->getMessage());
         }
     }
 
@@ -115,7 +115,7 @@ class UserController extends Controller
     public function edit(User $user): View
     {
         $user->load(['specialite', 'anneeAcademique']);
-        
+
         $specialites = Specialite::ordered()->get();
         $anneesAcademiques = AnneeAcademique::ordered()->get();
         $niveaux = Niveau::grouped();
@@ -126,12 +126,12 @@ class UserController extends Controller
     public function update(Request $request, User $user): RedirectResponse
     {
         $validated = $request->validate([
-            'matricule' => 'required|string|max:20|unique:users,matricule,' . $user->id,
+            'matricule' => 'required|string|max:20|unique:users,matricule,'.$user->id,
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => 'required|email|unique:users,email,'.$user->id,
             'password' => ['nullable', 'confirmed', Password::defaults()],
             'sexe' => 'required|in:M,F,Autre',
-            'niveau' => 'required|in:' . implode(',', Niveau::values()),
+            'niveau' => 'required|in:'.implode(',', Niveau::values()),
             'profile' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'specialite_id' => 'required|exists:specialites,id',
             'annee_academique_id' => 'required|exists:annees_academiques,id',
@@ -162,7 +162,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la mise à jour: '.$e->getMessage());
         }
     }
 
@@ -190,7 +190,7 @@ class UserController extends Controller
                 ->route('users.index')
                 ->with('success', 'Étudiant supprimé avec succès.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Erreur lors de la suppression: ' . $e->getMessage());
+            return back()->with('error', 'Erreur lors de la suppression: '.$e->getMessage());
         }
     }
 }

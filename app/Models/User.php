@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\Niveau;
-use Illuminate\Support\Str;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -89,7 +89,7 @@ class User extends Authenticatable
     }
 
     // Relations
-  // ✅ RELATIONS - CORRIGÉES AVEC LES NOMS DE TABLES CORRECTS
+    // ✅ RELATIONS - CORRIGÉES AVEC LES NOMS DE TABLES CORRECTS
     /**
      * Relation avec Specialite
      * ⚠️ IMPORTANT : Spécifier le nom de la table correctement
@@ -127,10 +127,10 @@ class User extends Authenticatable
 
     public function scopeSearch(Builder $query, string $search): Builder
     {
-        return $query->where(function ($q) use ($search) {
+        return $query->where(function ($q) use ($search): void {
             $q->where('name', 'like', "%{$search}%")
-              ->orWhere('matricule', 'like', "%{$search}%")
-              ->orWhere('email', 'like', "%{$search}%");
+                ->orWhere('matricule', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
         });
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -8,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('bilans_competences', function (Blueprint $table) {
+        Schema::create('bilans_competences', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('annee_academique_id')->constrained('annees_academiques')->onDelete('cascade');
@@ -19,7 +21,7 @@ return new class extends Migration
             $table->decimal('moyenne_generale', 5, 2)->nullable();
             $table->text('observations')->nullable();
             $table->timestamps();
-            
+
             $table->unique(['user_id', 'annee_academique_id'], 'bilan_unique');
         });
     }

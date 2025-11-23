@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\View\View;
-use App\Models\Specialite;
-use Illuminate\Http\Request;
 use App\Models\AnneeAcademique;
 use App\Models\BilanCompetence;
+use App\Models\Specialite;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class BilanCompetenceController extends Controller
 {
@@ -21,11 +21,11 @@ class BilanCompetenceController extends Controller
         $query = BilanCompetence::with(['user.specialite', 'anneeAcademique']);
 
         if ($anneeId = $request->input('annee_id')) {
-            $query->byAnneeAcademique((int)$anneeId);
+            $query->byAnneeAcademique((int) $anneeId);
         }
 
         if ($specialiteId = $request->input('specialite_id')) {
-            $query->whereHas('user', fn($q) => $q->where('specialite_id', $specialiteId));
+            $query->whereHas('user', fn ($q) => $q->where('specialite_id', $specialiteId));
         }
 
         $bilans = $query->latest()->paginate(20);
@@ -86,7 +86,7 @@ class BilanCompetenceController extends Controller
                 'observations' => $validated['observations'] ?? null,
             ]);
 
-            $bilan->calculateAndSave((float)$validated['moy_competences']);
+            $bilan->calculateAndSave((float) $validated['moy_competences']);
 
             DB::commit();
 
@@ -95,9 +95,10 @@ class BilanCompetenceController extends Controller
                 ->with('success', 'Bilan de compétences créé avec succès.');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la création: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la création: '.$e->getMessage());
         }
     }
 
@@ -129,7 +130,7 @@ class BilanCompetenceController extends Controller
             DB::beginTransaction();
 
             $bilan->observations = $validated['observations'] ?? null;
-            $bilan->calculateAndSave((float)$validated['moy_competences']);
+            $bilan->calculateAndSave((float) $validated['moy_competences']);
 
             DB::commit();
 
@@ -138,9 +139,10 @@ class BilanCompetenceController extends Controller
                 ->with('success', 'Bilan de compétences mis à jour avec succès.');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la mise à jour: '.$e->getMessage());
         }
     }
 
@@ -153,7 +155,7 @@ class BilanCompetenceController extends Controller
                 ->route('bilans.index')
                 ->with('success', 'Bilan de compétences supprimé avec succès.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Erreur lors de la suppression: ' . $e->getMessage());
+            return back()->with('error', 'Erreur lors de la suppression: '.$e->getMessage());
         }
     }
 
@@ -169,7 +171,8 @@ class BilanCompetenceController extends Controller
             return back()->with('success', 'Bilan recalculé avec succès.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Erreur lors du recalcul: ' . $e->getMessage());
+
+            return back()->with('error', 'Erreur lors du recalcul: '.$e->getMessage());
         }
     }
 
@@ -185,7 +188,7 @@ class BilanCompetenceController extends Controller
             DB::beginTransaction();
 
             $query = User::where('annee_academique_id', $validated['annee_academique_id'])
-                ->whereDoesntHave('bilanCompetence', function($q) use ($validated) {
+                ->whereDoesntHave('bilanCompetence', function ($q) use ($validated): void {
                     $q->where('annee_academique_id', $validated['annee_academique_id']);
                 });
 
@@ -202,7 +205,7 @@ class BilanCompetenceController extends Controller
                     'annee_academique_id' => $user->annee_academique_id,
                 ]);
 
-                $bilan->calculateAndSave((float)$validated['moy_competences_defaut']);
+                $bilan->calculateAndSave((float) $validated['moy_competences_defaut']);
                 $count++;
             }
 
@@ -211,7 +214,8 @@ class BilanCompetenceController extends Controller
             return back()->with('success', "{$count} bilans générés avec succès.");
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Erreur lors de la génération: ' . $e->getMessage());
+
+            return back()->with('error', 'Erreur lors de la génération: '.$e->getMessage());
         }
     }
 
@@ -228,14 +232,14 @@ class BilanCompetenceController extends Controller
         }
 
         if ($specialiteId) {
-            $query->whereHas('user', fn($q) => $q->where('specialite_id', $specialiteId));
+            $query->whereHas('user', fn ($q) => $q->where('specialite_id', $specialiteId));
         }
 
         $bilans = $query->get()->sortByDesc('moyenne_generale');
 
         $stats = [
             'total' => $bilans->count(),
-            'admis' => $bilans->filter(fn($b) => $b->isAdmis())->count(),
+            'admis' => $bilans->filter(fn ($b) => $b->isAdmis())->count(),
             'moyenne_generale' => $bilans->avg('moyenne_generale'),
             'meilleure_moyenne' => $bilans->max('moyenne_generale'),
             'moyenne_la_plus_basse' => $bilans->min('moyenne_generale'),
@@ -246,6 +250,7 @@ class BilanCompetenceController extends Controller
 
         return view('bilans.tableau-recapitulatif', compact('bilans', 'stats', 'annees', 'specialites'));
     }
+
     public function exportPdfTableau(Request $request)
     {
         $anneeId = $request->input('annee_id') ?? AnneeAcademique::active()->first()?->id;
@@ -259,14 +264,14 @@ class BilanCompetenceController extends Controller
         }
 
         if ($specialiteId) {
-            $query->whereHas('user', fn($q) => $q->where('specialite_id', $specialiteId));
+            $query->whereHas('user', fn ($q) => $q->where('specialite_id', $specialiteId));
         }
 
         $bilans = $query->get()->sortByDesc('moyenne_generale');
 
         $stats = [
             'total' => $bilans->count(),
-            'admis' => $bilans->filter(fn($b) => $b->isAdmis())->count(),
+            'admis' => $bilans->filter(fn ($b) => $b->isAdmis())->count(),
             'moyenne_generale' => $bilans->avg('moyenne_generale'),
             'meilleure_moyenne' => $bilans->max('moyenne_generale'),
             'moyenne_la_plus_basse' => $bilans->min('moyenne_generale'),
@@ -283,11 +288,12 @@ class BilanCompetenceController extends Controller
                 'isRemoteEnabled' => true,
             ]);
 
-        $filename = 'tableau_recapitulatif_' . ($annee ? $annee->libelle : 'all') . '_' . now()->format('Ymd') . '.pdf';
+        $filename = 'tableau_recapitulatif_'.($annee ? $annee->libelle : 'all').'_'.now()->format('Ymd').'.pdf';
 
         return $pdf->download($filename);
     }
-     public function exportPdf(BilanCompetence $bilan)
+
+    public function exportPdf(BilanCompetence $bilan)
     {
         $bilan->load(['user.specialite', 'anneeAcademique']);
 
@@ -302,7 +308,7 @@ class BilanCompetenceController extends Controller
                 'isRemoteEnabled' => true,
             ]);
 
-        $filename = 'bilan_competences_' . $bilan->user->matricule . '_' . now()->format('Ymd') . '.pdf';
+        $filename = 'bilan_competences_'.$bilan->user->matricule.'_'.now()->format('Ymd').'.pdf';
 
         return $pdf->download($filename);
     }

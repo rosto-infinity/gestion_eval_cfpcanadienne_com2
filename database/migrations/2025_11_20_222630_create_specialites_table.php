@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('specialites', function (Blueprint $table): void {
             $table->id();
             $table->string('code', 20)
-            ->unique();
+                ->unique();
             $table->string('intitule', 100);
             $table->text('description')->nullable();
             $table->timestamps();

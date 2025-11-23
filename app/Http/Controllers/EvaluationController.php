@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Module;
-use Illuminate\View\View;
-use App\Models\Evaluation;
-use Illuminate\Http\Request;
 use App\Models\AnneeAcademique;
+use App\Models\Evaluation;
+use App\Models\Module;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class EvaluationController extends Controller
 {
@@ -21,15 +21,15 @@ class EvaluationController extends Controller
         $query = Evaluation::with(['user', 'module', 'anneeAcademique']);
 
         if ($userId = $request->input('user_id')) {
-            $query->byUser((int)$userId);
+            $query->byUser((int) $userId);
         }
 
         if ($semestre = $request->input('semestre')) {
-            $query->bySemestre((int)$semestre);
+            $query->bySemestre((int) $semestre);
         }
 
         if ($anneeId = $request->input('annee_id')) {
-            $query->byAnneeAcademique((int)$anneeId);
+            $query->byAnneeAcademique((int) $anneeId);
         }
 
         $evaluations = $query->latest()->paginate(20);
@@ -84,7 +84,7 @@ class EvaluationController extends Controller
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la création: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la création: '.$e->getMessage());
         }
     }
 
@@ -98,7 +98,7 @@ class EvaluationController extends Controller
     public function edit(Evaluation $evaluation): View
     {
         $evaluation->load(['user', 'module', 'anneeAcademique']);
-        
+
         $modules = Module::ordered()->get();
         $users = User::with(['specialite', 'anneeAcademique'])->ordered()->get();
         $annees = AnneeAcademique::ordered()->get();
@@ -121,7 +121,7 @@ class EvaluationController extends Controller
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la mise à jour: '.$e->getMessage());
         }
     }
 
@@ -134,7 +134,7 @@ class EvaluationController extends Controller
                 ->route('evaluations.index')
                 ->with('success', 'Évaluation supprimée avec succès.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Erreur lors de la suppression: ' . $e->getMessage());
+            return back()->with('error', 'Erreur lors de la suppression: '.$e->getMessage());
         }
     }
 
@@ -149,8 +149,8 @@ class EvaluationController extends Controller
 
         if ($userId) {
             $user = User::with(['specialite', 'anneeAcademique'])->findOrFail($userId);
-            
-            $modules = $semestre == 1 
+
+            $modules = $semestre == 1
                 ? Module::semestre1()->ordered()->get()
                 : Module::semestre2()->ordered()->get();
 
@@ -200,14 +200,15 @@ class EvaluationController extends Controller
             return redirect()
                 ->route('evaluations.saisir-multiple', [
                     'user_id' => $user->id,
-                    'semestre' => $validated['semestre']
+                    'semestre' => $validated['semestre'],
                 ])
                 ->with('success', 'Évaluations enregistrées avec succès.');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de l\'enregistrement: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de l\'enregistrement: '.$e->getMessage());
         }
     }
 
@@ -229,6 +230,7 @@ class EvaluationController extends Controller
             'moyenneSemestre2'
         ));
     }
+
     public function releveNotesPdf(User $user)
     {
         $user->load(['specialite', 'anneeAcademique']);
@@ -246,16 +248,15 @@ class EvaluationController extends Controller
             'moyenneSemestre1',
             'moyenneSemestre2'
         ))
-        ->setPaper('a4', 'portrait')
-        ->setOptions([
-            'defaultFont' => 'sans-serif',
-            'isHtml5ParserEnabled' => true,
-            'isRemoteEnabled' => true,
-        ]);
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'defaultFont' => 'sans-serif',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+            ]);
 
-        $filename = 'releve_notes_' . $user->matricule . '_' . now()->format('Ymd') . '.pdf';
+        $filename = 'releve_notes_'.$user->matricule.'_'.now()->format('Ymd').'.pdf';
 
         return $pdf->download($filename);
     }
 }
-
