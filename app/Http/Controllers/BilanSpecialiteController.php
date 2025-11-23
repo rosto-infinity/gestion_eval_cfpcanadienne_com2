@@ -18,7 +18,7 @@ class BilanSpecialiteController extends Controller
      */
     public function index(Request $request): View
     {
-        $anneeId = $request->input('annee_id') ?? AnneeAcademique::active()->first()?->id;
+      $anneeId = (int) ($request->input('annee_id') ?? AnneeAcademique::active()->first()?->id);
         $anneeActive = AnneeAcademique::active()->first();
 
         $bilanParSpecialite = $this->getBilanParSpecialite($anneeId);
