@@ -35,53 +35,6 @@
     </div>
 </div>
 
-<!-- Statistiques de la spécialité -->
-<div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-    <div class="card bg-blue-50">
-        <div class="card-body">
-            <div class="text-center">
-                <p class="text-sm font-medium text-gray-600">Total Étudiants</p>
-                <p class="text-3xl font-bold text-blue-700">{{ $stats['total'] }}</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="card bg-green-50">
-        <div class="card-body">
-            <div class="text-center">
-                <p class="text-sm font-medium text-gray-600">Admis</p>
-                <p class="text-3xl font-bold text-green-700">{{ $stats['admis'] }}</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="card bg-red-50">
-        <div class="card-body">
-            <div class="text-center">
-                <p class="text-sm font-medium text-gray-600">Non Admis</p>
-                <p class="text-3xl font-bold text-red-700">{{ $stats['non_admis'] }}</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="card bg-purple-50">
-        <div class="card-body">
-            <div class="text-center">
-                <p class="text-sm font-medium text-gray-600">Taux d'Admission</p>
-                <p class="text-3xl font-bold text-purple-700">{{ number_format($stats['taux_admission'], 1) }}%</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="card bg-yellow-50">
-        <div class="card-body">
-            <div class="text-center">
-                <p class="text-sm font-medium text-gray-600">Moy. Générale</p>
-                <p class="text-3xl font-bold text-yellow-700">{{ number_format($stats['moy_generale'], 2) }}</p>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Filtre année -->
 <div class="card mb-6 no-print">
@@ -107,26 +60,6 @@
     </div>
 </div>
 
-<!-- Légende -->
-<div class="card mb-6 no-print">
-    <div class="card-body bg-blue-50">
-        <div class="flex items-start">
-            <svg class="h-5 w-5 text-blue-600 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-            </svg>
-            <div class="text-sm text-blue-800">
-                <p class="font-semibold mb-2">💡 Information sur le calcul :</p>
-                <ul class="list-disc list-inside space-y-1">
-                    <li><strong>Évaluations semestrielles (30%)</strong> : Moyenne des modules M1 à M10</li>
-                    <li><strong>MOY/20 EVAL1</strong> = Moyenne des modules M1 à M5 (Semestre 1)</li>
-                    <li><strong>MOY/20 EVAL2</strong> = Moyenne des modules M6 à M10 (Semestre 2)</li>
-                    <li><strong>Bilan des compétences (70%)</strong> = Évaluation pratique des compétences</li>
-                    <li><strong>MOY.GEN (100%)</strong> = [(MOY EVAL1 + MOY EVAL2) / 2 × 30%] + [Bilan compétences × 70%]</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Tableau principal -->
 <div class="card">
@@ -264,6 +197,75 @@
             </tbody>
         </table>
         @endif
+    </div>
+</div>
+
+<!-- Statistiques de la spécialité -->
+<div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+    <div class="card bg-blue-50">
+        <div class="card-body">
+            <div class="text-center">
+                <p class="text-sm font-medium text-gray-600">Total Étudiants</p>
+                <p class="text-3xl font-bold text-blue-700">{{ $stats['total'] }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-green-50">
+        <div class="card-body">
+            <div class="text-center">
+                <p class="text-sm font-medium text-gray-600">Admis</p>
+                <p class="text-3xl font-bold text-green-700">{{ $stats['admis'] }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-red-50">
+        <div class="card-body">
+            <div class="text-center">
+                <p class="text-sm font-medium text-gray-600">Non Admis</p>
+                <p class="text-3xl font-bold text-red-700">{{ $stats['non_admis'] }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-purple-50">
+        <div class="card-body">
+            <div class="text-center">
+                <p class="text-sm font-medium text-gray-600">Taux d'Admission</p>
+                <p class="text-3xl font-bold text-purple-700">{{ number_format($stats['taux_admission'], 1) }}%</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-yellow-50">
+        <div class="card-body">
+            <div class="text-center">
+                <p class="text-sm font-medium text-gray-600">Moy. Générale</p>
+                <p class="text-3xl font-bold text-yellow-700">{{ number_format($stats['moy_generale'], 2) }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Légende -->
+<div class="card mb-6 no-print">
+    <div class="card-body bg-blue-50">
+        <div class="flex items-start">
+            <svg class="h-5 w-5 text-blue-600 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+            </svg>
+            <div class="text-sm text-blue-800">
+                <p class="font-semibold mb-2">💡 Information sur le calcul :</p>
+                <ul class="list-disc list-inside space-y-1">
+                    <li><strong>Évaluations semestrielles (30%)</strong> : Moyenne des modules M1 à M10</li>
+                    <li><strong>MOY/20 EVAL1</strong> = Moyenne des modules M1 à M5 (Semestre 1)</li>
+                    <li><strong>MOY/20 EVAL2</strong> = Moyenne des modules M6 à M10 (Semestre 2)</li>
+                    <li><strong>Bilan des compétences (70%)</strong> = Évaluation pratique des compétences</li>
+                    <li><strong>MOY.GEN (100%)</strong> = [(MOY EVAL1 + MOY EVAL2) / 2 × 30%] + [Bilan compétences × 70%]</li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
 

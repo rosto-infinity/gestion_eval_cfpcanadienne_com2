@@ -63,7 +63,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="{{ route('bilan.specialite.index') }}"  class="border-2 {{ request()->routeIs('bilan.specialite') ?
+				<a href="{{ route('bilan.specialite.index') }}"  class="border-2 {{ request()->routeIs('bilan.specialite.*') ?
          'border-red-600' : 
          'border-transparent' }} ">
 					<i class='bx bxs-doughnut-chart' ></i>
