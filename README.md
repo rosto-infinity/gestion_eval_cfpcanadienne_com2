@@ -382,7 +382,7 @@ MAIL_PASSWORD=mail_password
 
 ---
 
-## 🛠️ Maintenance
+##  Maintenance
 
 ### Journal des Modifications
 - **v1.2.0** (2025-03-15): Ajout des exports PDF, génération massive de bilans
