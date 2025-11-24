@@ -88,12 +88,16 @@
         </li>
 
         <!-- Logout -->
-        <li>
-            <a href="#" class="logout">
-                <i class='bx bxs-log-out-circle'></i>
-                <span class="text">Déconnexion</span>
-            </a>
-        </li>
+       <li>
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="logout pl-3" style="background: none; border: none; cursor: pointer; padding: 0;">
+            <i class='bx bxs-log-out-circle'></i>
+            <span class="text">Déconnexion</span>
+        </button>
+    </form>
+</li>
+
     </ul>
 </section>
 <!-- SIDEBAR -->
