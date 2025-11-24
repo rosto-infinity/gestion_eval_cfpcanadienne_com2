@@ -11,112 +11,101 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-            font-size: 9px;
-            line-height: 1.5;
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            font-size: 10px;
+            line-height: 1.4;
             color: #1f2937;
-            background: #f9fafb;
         }
 
         .container {
             width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
+            padding: 15px;
         }
 
         /* ============ EN-TÊTE ============ */
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.15);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
         }
 
         .header-content {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .header-left h1 {
-            font-size: 24px;
+            font-size: 22px;
             margin-bottom: 8px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+            font-weight: bold;
         }
 
         .header-left p {
-            font-size: 12px;
-            opacity: 0.9;
-            line-height: 1.6;
+            font-size: 11px;
+            line-height: 1.5;
+            opacity: 0.95;
         }
 
         .header-right {
             text-align: right;
-            font-size: 11px;
-            opacity: 0.85;
+            font-size: 10px;
+            opacity: 0.9;
         }
 
         .header-right strong {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
             margin-top: 5px;
-            opacity: 1;
         }
 
         /* ============ STATISTIQUES ============ */
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-            margin-bottom: 25px;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .stat-card {
+            flex: 1;
+            min-width: 150px;
             background: white;
-            padding: 16px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 5px;
             border: 1px solid #e5e7eb;
             text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            border-color: #667eea;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
         }
 
         .stat-card.primary {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
             border-color: #667eea;
+            background: #f0f4ff;
         }
 
         .stat-card.success {
-            background: linear-gradient(135deg, #10b98115 0%, #059669 100%);
             border-color: #10b981;
+            background: #f0fdf4;
         }
 
         .stat-card.danger {
-            background: linear-gradient(135deg, #ef444415 0%, #dc262615 100%);
             border-color: #ef4444;
+            background: #fef2f2;
         }
 
         .stat-label {
             font-size: 8px;
             color: #6b7280;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-            margin-bottom: 6px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
         }
 
         .stat-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1f2937;
+            font-size: 18px;
+            font-weight: bold;
             margin-bottom: 2px;
         }
 
@@ -133,37 +122,37 @@
         }
 
         .stat-subtext {
-            font-size: 7px;
+            font-size: 8px;
             color: #9ca3af;
         }
 
         /* ============ TABLEAU ============ */
         .table-wrapper {
             background: white;
-            border-radius: 10px;
+            border-radius: 5px;
             border: 1px solid #e5e7eb;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
+            overflow: hidden;
         }
 
         .table-header {
-            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-            padding: 12px 16px;
+            background: #f3f4f6;
+            padding: 12px 15px;
             border-bottom: 2px solid #d1d5db;
         }
 
         .table-header h3 {
             font-size: 12px;
-            font-weight: 700;
+            font-weight: bold;
             color: #1f2937;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 9px;
         }
 
         thead {
@@ -172,25 +161,33 @@
         }
 
         th {
-            padding: 10px 8px;
+            padding: 10px 6px;
             text-align: center;
             font-size: 8px;
-            font-weight: 700;
+            font-weight: bold;
             color: #6b7280;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            background: #f9fafb;
+            letter-spacing: 0.3px;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        th:last-child {
+            border-right: none;
         }
 
         th.left {
             text-align: left;
+            border-right: 1px solid #e5e7eb;
         }
 
         td {
-            padding: 10px 8px;
+            padding: 9px 6px;
             border-bottom: 1px solid #f3f4f6;
-            font-size: 8.5px;
-            color: #374151;
+            border-right: 1px solid #f3f4f6;
+        }
+
+        td:last-child {
+            border-right: none;
         }
 
         td.center {
@@ -199,26 +196,26 @@
 
         /* ============ LIGNES DU TABLEAU ============ */
         tbody tr {
-            transition: background-color 0.2s ease;
+            page-break-inside: avoid;
+        }
+
+        tbody tr.podium-1 {
+            background: #fef3c7;
+            border-left: 3px solid #fbbf24;
+        }
+
+        tbody tr.podium-2 {
+            background: #e0f2fe;
+            border-left: 3px solid #0ea5e9;
+        }
+
+        tbody tr.podium-3 {
+            background: #fee2e2;
+            border-left: 3px solid #f87171;
         }
 
         tbody tr:hover {
             background: #f9fafb;
-        }
-
-        tbody tr.podium-1 {
-            background: linear-gradient(90deg, #fef3c7 0%, #fef08a 100%);
-            border-left: 4px solid #fbbf24;
-        }
-
-        tbody tr.podium-2 {
-            background: linear-gradient(90deg, #f0f9ff 0%, #e0f2fe 100%);
-            border-left: 4px solid #0ea5e9;
-        }
-
-        tbody tr.podium-3 {
-            background: linear-gradient(90deg, #fef2f2 0%, #fee2e2 100%);
-            border-left: 4px solid #f87171;
         }
 
         /* ============ RANG ============ */
@@ -226,28 +223,25 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            font-weight: 700;
-            font-size: 10px;
+            font-weight: bold;
+            font-size: 9px;
             color: white;
         }
 
         .rank.gold {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            box-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
+            background: #fbbf24;
         }
 
         .rank.silver {
-            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+            background: #d1d5db;
             color: #374151;
-            box-shadow: 0 2px 4px rgba(209, 213, 219, 0.3);
         }
 
         .rank.bronze {
-            background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
-            box-shadow: 0 2px 4px rgba(249, 115, 22, 0.3);
+            background: #f97316;
         }
 
         .rank.normal {
@@ -258,12 +252,12 @@
         /* ============ BADGES ============ */
         .badge {
             display: inline-block;
-            padding: 3px 8px;
-            border-radius: 6px;
+            padding: 3px 6px;
+            border-radius: 4px;
             font-size: 7px;
-            font-weight: 600;
+            font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
         }
 
         .badge-code {
@@ -289,9 +283,9 @@
         /* ============ NOTES ============ */
         .note-value {
             font-size: 9px;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 4px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 3px;
             display: inline-block;
         }
 
@@ -313,20 +307,21 @@
         /* ============ RÉSUMÉ ============ */
         .summary-section {
             background: white;
-            border-radius: 10px;
+            border-radius: 5px;
             border: 1px solid #e5e7eb;
-            padding: 20px;
+            padding: 15px;
             margin-bottom: 20px;
+            page-break-inside: avoid;
         }
 
         .summary-title {
             font-size: 11px;
-            font-weight: 700;
+            font-weight: bold;
             color: #1f2937;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             margin-bottom: 12px;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
             border-bottom: 2px solid #e5e7eb;
         }
 
@@ -340,22 +335,20 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #f3f4f6;
-        }
-
-        .summary-item:last-child {
-            border-bottom: none;
+            padding: 8px;
+            background: #f9fafb;
+            border-radius: 4px;
         }
 
         .summary-label {
-            font-size: 8px;
+            font-size: 9px;
             color: #6b7280;
+            font-weight: 500;
         }
 
         .summary-value {
             font-size: 10px;
-            font-weight: 700;
+            font-weight: bold;
             color: #1f2937;
         }
 
@@ -365,40 +358,40 @@
 
         /* ============ FOOTER ============ */
         .footer {
-            margin-top: 25px;
-            padding-top: 15px;
-            border-top: 2px solid #e5e7eb;
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
             text-align: center;
-            font-size: 7px;
+            font-size: 8px;
             color: #9ca3af;
+            page-break-inside: avoid;
         }
 
         .footer p {
-            margin: 3px 0;
-        }
-
-        .footer strong {
-            color: #6b7280;
+            margin: 2px 0;
         }
 
         /* ============ EMPTY STATE ============ */
         .empty-state {
             text-align: center;
-            padding: 40px;
+            padding: 30px;
             color: #9ca3af;
             font-style: italic;
             background: white;
-            border-radius: 10px;
+            border-radius: 5px;
             border: 1px dashed #e5e7eb;
         }
 
-        /* ============ RESPONSIVE ============ */
+        /* ============ PRINT ============ */
         @media print {
             body {
                 background: white;
             }
             .container {
-                max-width: 100%;
+                padding: 10px;
+            }
+            .table-wrapper {
+                page-break-inside: avoid;
             }
         }
     </style>
@@ -412,9 +405,9 @@
                 <div class="header-left">
                     <h1>🏆 Tableau Récapitulatif</h1>
                     <p>
-                        Année: <strong>{{ $annee ? $annee->libelle : 'Toutes' }}</strong>
+                        <strong>Année:</strong> {{ $annee ? $annee->libelle : 'Toutes' }}
                         @if($specialite)
-                        <br/>Spécialité: <strong>{{ $specialite->intitule }}</strong>
+                            <br/><strong>Spécialité:</strong> {{ $specialite->intitule }}
                         @endif
                     </p>
                 </div>
@@ -462,105 +455,116 @@
 
         <!-- TABLEAU -->
         @if($bilans->isEmpty())
-        <div class="empty-state">
-            <p>Aucun résultat à afficher</p>
-        </div>
-        @else
-        <div class="table-wrapper">
-            <div class="table-header">
-                <h3>📋 Classement des Étudiants</h3>
+            <div class="empty-state">
+                <p>Aucun résultat à afficher</p>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 35px;">Rang</th>
-                        <th class="left" style="width: 70px;">Matricule</th>
-                        <th class="left" style="width: 140px;">Nom et Prénom</th>
-                        <th style="width: 50px;">Spé.</th>
-                        <th style="width: 40px;">S1</th>
-                        <th style="width: 40px;">S2</th>
-                        <th style="width: 45px;">Éval<br/>(30%)</th>
-                        <th style="width: 45px;">Comp<br/>(70%)</th>
-                        <th style="width: 50px;">Moy.<br/>Gén.</th>
-                        <th style="width: 65px;">Mention</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($bilans as $index => $bilan)
-                    <tr class="
-                        @if($index === 0) podium-1 @elseif($index === 1) podium-2 @elseif($index === 2) podium-3 @endif
-                    ">
-                        <td class="center">
-                            @if($index === 0)
-                            <span class="rank gold">1</span>
-                            @elseif($index === 1)
-                            <span class="rank silver">2</span>
-                            @elseif($index === 2)
-                            <span class="rank bronze">3</span>
-                            @else
-                            <span class="rank normal">{{ $index + 1 }}</span>
-                            @endif
-                        </td>
-                        <td>{{ $bilan->user->matricule }}</td>
-                        <td>{{ $bilan->user->name }}</td>
-                        <td class="center">
-                            <span class="badge badge-code">{{ $bilan->user->specialite->code }}</span>
-                        </td>
-                        <td class="center">
-                            {{ $bilan->moy_eval_semestre1 ? number_format($bilan->moy_eval_semestre1, 2) : '-' }}
-                        </td>
-                        <td class="center">
-                            {{ $bilan->moy_eval_semestre2 ? number_format($bilan->moy_eval_semestre2, 2) : '-' }}
-                        </td>
-                        <td class="center">
-                            {{ $bilan->moy_evaluations ? number_format($bilan->moy_evaluations, 2) : '-' }}
-                        </td>
-                        <td class="center">
-                            {{ $bilan->moy_competences ? number_format($bilan->moy_competences, 2) : '-' }}
-                        </td>
-                        <td class="center">
-                            <span class="note-value 
-                                @if($bilan->moyenne_generale >= 14) pass
-                                @elseif($bilan->moyenne_generale >= 10) warning
-                                @else fail
+        @else
+            <div class="table-wrapper">
+                <div class="table-header">
+                    <h3>📋 Classement des Étudiants</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 30px;">Rang</th>
+                            <th class="left" style="width: 60px;">Matricule</th>
+                            <th class="left" style="width: 130px;">Nom et Prénom</th>
+                            <th style="width: 35px;">Spé.</th>
+                            <th style="width: 35px;">S1</th>
+                            <th style="width: 35px;">S2</th>
+                            <th style="width: 40px;">Éval</th>
+                            <th style="width: 40px;">Comp</th>
+                            <th style="width: 45px;">Moy. Gén.</th>
+                            <th style="width: 60px;">Mention</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($bilans as $index => $bilan)
+                            <tr class="
+                                @if($index === 0) podium-1 
+                                @elseif($index === 1) podium-2 
+                                @elseif($index === 2) podium-3 
                                 @endif
                             ">
-                                {{ number_format($bilan->moyenne_generale, 2) }}
-                            </span>
-                        </td>
-                        <td class="center">
-                            <span class="badge badge-mention {{ $bilan->isAdmis() ? '' : 'fail' }}">
-                                {{ $bilan->getMention() }}
-                            </span>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                                <td class="center">
+                                    @if($index === 0)
+                                        <span class="rank gold">1</span>
+                                    @elseif($index === 1)
+                                        <span class="rank silver">2</span>
+                                    @elseif($index === 2)
+                                        <span class="rank bronze">3</span>
+                                    @else
+                                        <span class="rank normal">{{ $index + 1 }}</span>
+                                    @endif
+                                </td>
+                                <td class="center">{{ $bilan->user->matricule }}</td>
+                                <td>{{ $bilan->user->name }}</td>
+                                <td class="center">
+                                    <span class="badge badge-code">{{ $bilan->user->specialite->code }}</span>
+                                </td>
+                                <td class="center">
+                                    {{ $bilan->moy_eval_semestre1 ? number_format($bilan->moy_eval_semestre1, 2) : '-' }}
+                                </td>
+                                <td class="center">
+                                    {{ $bilan->moy_eval_semestre2 ? number_format($bilan->moy_eval_semestre2, 2) : '-' }}
+                                </td>
+                                <td class="center">
+                                    {{ $bilan->moy_evaluations ? number_format($bilan->moy_evaluations, 2) : '-' }}
+                                </td>
+                                <td class="center">
+                                    {{ $bilan->moy_competences ? number_format($bilan->moy_competences, 2) : '-' }}
+                                </td>
+                                <td class="center">
+                                    <span class="note-value 
+                                        @if($bilan->moyenne_generale >= 14) pass
+                                        @elseif($bilan->moyenne_generale >= 10) warning
+                                        @else fail
+                                        @endif
+                                    ">
+                                        {{ number_format($bilan->moyenne_generale, 2) }}
+                                    </span>
+                                </td>
+                                <td class="center">
+                                    <span class="badge badge-mention {{ $bilan->isAdmis() ? '' : 'fail' }}">
+                                        {{ $bilan->getMention() }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
 
-        <!-- RÉSUMÉ -->
-        <div class="summary-section">
-            <div class="summary-title">📊 Résumé des Résultats</div>
-            <div class="summary-grid">
-                <div class="summary-item">
-                    <span class="summary-label">Total d'étudiants</span>
-                    <span class="summary-value">{{ $stats['total'] }}</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Étudiants admis</span>
-                    <span class="summary-value highlight">{{ $stats['admis'] }} ({{ $stats['total'] > 0 ? number_format(($stats['admis'] / $stats['total']) * 100, 1) : 0 }}%)</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Étudiants ajournés</span>
-                    <span class="summary-value">{{ $stats['total'] - $stats['admis'] }} ({{ $stats['total'] > 0 ? number_format((($stats['total'] - $stats['admis']) / $stats['total']) * 100, 1) : 0 }}%)</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label">Moyenne de la promotion</span>
-                    <span class="summary-value highlight">{{ $stats['moyenne_generale'] ? number_format($stats['moyenne_generale'], 2) : '-' }}/20</span>
+            <!-- RÉSUMÉ -->
+            <div class="summary-section">
+                <div class="summary-title">📊 Résumé des Résultats</div>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-label">Total d'étudiants</span>
+                        <span class="summary-value">{{ $stats['total'] }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Étudiants admis</span>
+                        <span class="summary-value highlight">
+                            {{ $stats['admis'] }} 
+                            ({{ $stats['total'] > 0 ? number_format(($stats['admis'] / $stats['total']) * 100, 1) : 0 }}%)
+                        </span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Étudiants ajournés</span>
+                        <span class="summary-value">
+                            {{ $stats['total'] - $stats['admis'] }} 
+                            ({{ $stats['total'] > 0 ? number_format((($stats['total'] - $stats['admis']) / $stats['total']) * 100, 1) : 0 }}%)
+                        </span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Moyenne de la promotion</span>
+                        <span class="summary-value highlight">
+                            {{ $stats['moyenne_generale'] ? number_format($stats['moyenne_generale'], 2) : '-' }}/20
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
         @endif
 
         <!-- FOOTER -->
@@ -568,7 +572,7 @@
             <p><strong>Généré le:</strong> {{ now()->format('d/m/Y à H:i') }}</p>
             <p>Document officiel - Classement par ordre de mérite</p>
             @if($annee)
-            <p><strong>Période:</strong> {{ $annee->date_debut->format('d/m/Y') }} - {{ $annee->date_fin->format('d/m/Y') }}</p>
+                <p><strong>Période:</strong> {{ $annee->date_debut->format('d/m/Y') }} - {{ $annee->date_fin->format('d/m/Y') }}</p>
             @endif
         </div>
 

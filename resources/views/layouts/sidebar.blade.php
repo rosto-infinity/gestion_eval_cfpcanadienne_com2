@@ -81,7 +81,8 @@
     <ul class="side-menu">
         <!-- Settings -->
         <li>
-            <a href="#">
+            <a href="{{ route('profile.edit') }}"
+              class="border-2 {{ request()->routeIs('profile.edit') ? 'border-red-600' : 'border-transparent' }}">
                 <i class='bx bxs-cog'></i>
                 <span class="text">Paramètres</span>
             </a>
@@ -91,9 +92,9 @@
        <li>
     <form method="POST" action="{{ route('logout') }}">
         @csrf
-        <button type="submit" class="logout pl-3" style="background: none; border: none; cursor: pointer; padding: 0;">
-            <i class='bx bxs-log-out-circle'></i>
-            <span class="text">Déconnexion</span>
+        <button type="submit" class="logout pl-3" style="background: none; border: none; cursor: pointer; ">
+            <i class='bx bxs-log-out-circle text-primary'></i>
+            <span class="text text-primary">Déconnexion</span>
         </button>
     </form>
 </li>

@@ -28,10 +28,11 @@ Route::middleware('auth')->group(function (): void {
     Route::resource('evaluations', EvaluationController::class);
     Route::post('evaluations/store-multiple', [EvaluationController::class, 'storeMultiple'])->name('evaluations.store-multiple');
 
-    // Relevé de notes
-    Route::get('users/{user}/releve-notes', [EvaluationController::class, 'releveNotes'])->name('evaluations.releve-notes');
-    Route::get('users/{user}/releve-notes/pdf', [EvaluationController::class, 'releveNotesPdf'])->name('evaluations.releve-notes.pdf');
-
+    //Relevé de notes
+    Route::get('users/{user}/releve-notes', [EvaluationController::class, 'releveNotes'])
+        ->name('evaluations.releve-notes');
+    Route::get('users/{user}/releve-notes/pdf', [EvaluationController::class, 'releveNotesPdf'])
+        ->name('evaluations.releve-notes.pdf');
     // Routes pour le bilan par spécialité (à ajouter dans web.php)
     Route::prefix('bilan/specialite')->name('bilan.specialite.')->group(function (): void {
         Route::get('/', [BilanSpecialiteController::class, 'index'])->name('index');

@@ -231,6 +231,9 @@ class EvaluationController extends Controller
         ));
     }
 
+/**
+     * Générer le relevé de notes en PDF
+     */
     public function releveNotesPdf(User $user)
     {
         $user->load(['specialite', 'anneeAcademique']);
@@ -240,23 +243,75 @@ class EvaluationController extends Controller
 
         $moyenneSemestre1 = $user->getMoyenneSemestre(1);
         $moyenneSemestre2 = $user->getMoyenneSemestre(2);
+        $moyenneGenerale = $this->calculerMoyenneGenerale($moyenneSemestre1, $moyenneSemestre2);
+
+        // Statistiques supplémentaires
+        $stats = $this->calculerStatistiques($evaluationsSemestre1, $evaluationsSemestre2);
 
         $pdf = Pdf::loadView('evaluations.releve-notes-pdf', compact(
             'user',
             'evaluationsSemestre1',
             'evaluationsSemestre2',
             'moyenneSemestre1',
-            'moyenneSemestre2'
+            'moyenneSemestre2',
+            'moyenneGenerale',
+            'stats'
         ))
             ->setPaper('a4', 'portrait')
             ->setOptions([
-                'defaultFont' => 'sans-serif',
+                'defaultFont' => 'DejaVu Sans',
                 'isHtml5ParserEnabled' => true,
                 'isRemoteEnabled' => true,
+                'margin_top' => 10,
+                'margin_right' => 10,
+                'margin_bottom' => 10,
+                'margin_left' => 10,
             ]);
 
-        $filename = 'releve_notes_'.$user->matricule.'_'.now()->format('Ymd').'.pdf';
+        $filename = 'releve_notes_' . $user->matricule . '_' . now()->format('Ymd_His') . '.pdf';
 
         return $pdf->download($filename);
     }
+
+    /**
+     * Calculer la moyenne générale
+     */
+    private function calculerMoyenneGenerale($moyenneSemestre1, $moyenneSemestre2): float
+    {
+        if (empty($moyenneSemestre1) || empty($moyenneSemestre2)) {
+            return 0;
+        }
+        return ($moyenneSemestre1 + $moyenneSemestre2) / 2;
+    }
+
+    /**
+     * Calculer les statistiques
+     */
+   /**
+ * Calculer les statistiques
+ */
+private function calculerStatistiques($evaluationsSemestre1, $evaluationsSemestre2): array
+{
+    $allEvaluations = $evaluationsSemestre1->merge($evaluationsSemestre2);
+
+    $modulesValides = 0;
+    $modulesEchoues = 0;
+
+    foreach ($allEvaluations as $eval) {
+        $note = $eval->note ?? 0; // Utiliser directement le champ 'note'
+
+        if ($note >= 10) {
+            $modulesValides++;
+        } else {
+            $modulesEchoues++;
+        }
+    }
+
+    return [
+        'totalModules' => $allEvaluations->count(),
+        'modulesValides' => $modulesValides,
+        'modulesEchoues' => $modulesEchoues,
+    ];
 }
+}
+

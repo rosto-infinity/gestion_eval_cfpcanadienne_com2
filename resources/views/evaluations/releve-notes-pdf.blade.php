@@ -2,7 +2,6 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relevé de Notes - {{ $user->matricule }}</title>
     <style>
         * {
@@ -10,392 +9,557 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: 'DejaVu Sans', sans-serif;
-            font-size: 12px;
-            line-height: 1.6;
-            color: #333;
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            font-size: 10px;
+            line-height: 1.4;
+            color: #1f2937;
         }
+
         .container {
             width: 100%;
-            padding: 20px;
+            padding: 12px;
         }
+
+        /* ============ EN-TÊTE ============ */
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
+            padding: 18px;
+            margin-bottom: 18px;
+            border-radius: 5px;
             text-align: center;
-            margin-bottom: 30px;
-            border-radius: 10px;
         }
+
         .header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
+            font-size: 20px;
+            margin-bottom: 6px;
             font-weight: bold;
+            letter-spacing: 0.5px;
         }
+
         .header p {
-            font-size: 14px;
-            opacity: 0.9;
+            font-size: 10px;
+            opacity: 0.95;
+            margin: 2px 0;
+            line-height: 1.4;
         }
+
+        /* ============ INFORMATIONS ÉTUDIANT ============ */
         .info-section {
             background: #f8f9fa;
-            padding: 20px;
-            margin-bottom: 30px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #e5e7eb;
+            border-radius: 5px;
         }
+
         .info-grid {
             display: table;
             width: 100%;
+            table-layout: fixed;
         }
+
         .info-row {
             display: table-row;
         }
+
         .info-cell {
             display: table-cell;
-            padding: 8px;
+            padding: 6px;
             width: 50%;
+            vertical-align: top;
         }
+
         .info-label {
-            font-size: 10px;
-            color: #6c757d;
-            margin-bottom: 3px;
+            font-size: 8px;
+            color: #6b7280;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 2px;
         }
+
         .info-value {
-            font-size: 14px;
+            font-size: 10px;
             font-weight: bold;
-            color: #212529;
+            color: #1f2937;
         }
-        .semestre-section {
-            margin-bottom: 30px;
-            page-break-inside: avoid;
-        }
-        .semestre-title {
-            background: #4CAF50;
-            color: white;
-            padding: 12px 20px;
-            font-size: 16px;
+
+        .badge-code {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 8px;
             font-weight: bold;
-            margin-bottom: 15px;
-            border-radius: 5px;
         }
-        .semestre-title.s2 {
+
+        /* ============ SECTION TITRE ============ */
+        .section-title {
             background: #2196F3;
+            color: white;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin: 12px 0 8px 0;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
+
+        .section-title.semestre2 {
+            background: #FF9800;
+        }
+
+        .section-title.general {
+            background: #667eea;
+        }
+
+        /* ============ TABLEAU ============ */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
+            font-size: 9px;
         }
+
         thead {
-            background: #f8f9fa;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
         }
+
         th {
-            padding: 12px 8px;
-            text-align: left;
-            font-size: 10px;
-            font-weight: bold;
-            color: #495057;
-            border-bottom: 2px solid #dee2e6;
-            text-transform: uppercase;
-        }
-        th.center {
+            padding: 8px 5px;
             text-align: center;
+            font-size: 8px;
+            font-weight: bold;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            border-right: 1px solid #e5e7eb;
         }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        th.left {
+            text-align: left;
+        }
+
         td {
-            padding: 10px 8px;
-            border-bottom: 1px solid #dee2e6;
+            padding: 7px 5px;
+            border-bottom: 1px solid #f3f4f6;
+            border-right: 1px solid #f3f4f6;
         }
+
+        td:last-child {
+            border-right: none;
+        }
+
         td.center {
             text-align: center;
         }
-        tr.success {
+
+        /* ============ COULEURS DES NOTES ============ */
+        .note-excellent {
             background: #d4edda;
         }
-        tr.danger {
-            background: #f8d7da;
+
+        .note-good {
+            background: #cfe2ff;
         }
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 9px;
-            font-weight: bold;
-        }
-        .badge-module {
-            background: #e3f2fd;
-            color: #1976d2;
-        }
-        .badge-module.s2 {
-            background: #e8f5e9;
-            color: #388e3c;
-        }
-        .note-value {
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .note-value.pass {
-            color: #28a745;
-        }
-        .note-value.fail {
-            color: #dc3545;
-        }
-        .badge-appreciation {
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 9px;
-        }
-        .badge-excellent {
-            background: #d4edda;
-            color: #155724;
-        }
-        .badge-tres-bien {
-            background: #cce5ff;
-            color: #004085;
-        }
-        .badge-bien {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-        .badge-assez-bien {
+
+        .note-average {
             background: #fff3cd;
-            color: #856404;
         }
-        .badge-passable {
+
+        .note-poor {
             background: #f8d7da;
-            color: #721c24;
         }
-        .badge-insuffisant {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        .moyenne-row {
+
+        .row-total {
             background: #e9ecef;
             font-weight: bold;
         }
+
+        /* ============ SECTION RÉSUMÉ ============ */
         .recap-section {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 20px;
-            margin-top: 30px;
-            border-radius: 8px;
+            background: white;
+            padding: 12px;
+            margin: 12px 0;
+            border: 1px solid #e5e7eb;
+            border-radius: 5px;
             page-break-inside: avoid;
         }
+
         .recap-grid {
             display: table;
             width: 100%;
+            table-layout: fixed;
         }
+
         .recap-cell {
             display: table-cell;
             text-align: center;
-            padding: 15px;
-            background: white;
-            margin: 0 5px;
-            border-radius: 8px;
-            width: 33.33%;
+            padding: 10px;
+            background: linear-gradient(135deg, #f0f4ff 0%, #f8f9fa 100%);
+            border-radius: 4px;
+            border: 1px solid #e5e7eb;
+            margin-right: 6px;
         }
+
+        .recap-cell:last-child {
+            margin-right: 0;
+        }
+
         .recap-label {
-            font-size: 10px;
-            color: #6c757d;
-            margin-bottom: 5px;
-        }
-        .recap-value {
-            font-size: 20px;
+            font-size: 8px;
+            color: #6b7280;
+            margin-bottom: 3px;
+            text-transform: uppercase;
             font-weight: bold;
-            color: #495057;
+            letter-spacing: 0.2px;
         }
-        .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 2px solid #dee2e6;
+
+        .recap-value {
+            font-size: 15px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* ============ SECTION STATISTIQUES ============ */
+        .stats-section {
+            background: white;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #e5e7eb;
+            border-radius: 5px;
+            page-break-inside: avoid;
+        }
+
+        .stats-grid {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .stats-cell {
+            display: table-cell;
             text-align: center;
-            font-size: 10px;
-            color: #6c757d;
+            padding: 10px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #f8f9fa 100%);
+            border-radius: 4px;
+            border: 1px solid #e5e7eb;
+            margin-right: 6px;
         }
+
+        .stats-cell:last-child {
+            margin-right: 0;
+        }
+
+        .stats-label {
+            font-size: 8px;
+            color: #6b7280;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.2px;
+        }
+
+        .stats-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        /* ============ MESSAGE VIDE ============ */
         .empty-message {
             text-align: center;
-            padding: 40px;
-            color: #6c757d;
+            padding: 25px;
+            color: #9ca3af;
             font-style: italic;
+            background: white;
+            border-radius: 5px;
+            border: 1px dashed #e5e7eb;
+            font-size: 9px;
+        }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            margin-top: 18px;
+            padding-top: 10px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            font-size: 8px;
+            color: #9ca3af;
+            page-break-inside: avoid;
+        }
+
+        .footer p {
+            margin: 2px 0;
+            line-height: 1.3;
+        }
+
+        /* ============ PRINT ============ */
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                padding: 8px;
+            }
+            table {
+                page-break-inside: avoid;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- En-tête -->
+
+        <!-- EN-TÊTE -->
         <div class="header">
-            <h1>RELEVÉ DE NOTES</h1>
-            <p>Année Académique {{ $user->anneeAcademique->libelle }}</p>
+            <h1>📋 RELEVÉ DE NOTES</h1>
+            <p><strong>{{ $user->name }}</strong></p>
+            <p>Matricule: <strong>{{ $user->matricule }}</strong></p>
         </div>
 
-        <!-- Informations de l'étudiant -->
+        <!-- INFORMATIONS ÉTUDIANT -->
         <div class="info-section">
             <div class="info-grid">
                 <div class="info-row">
                     <div class="info-cell">
-                        <div class="info-label">Nom et Prénom</div>
-                        <div class="info-value">{{ $user->name }}</div>
+                        <div class="info-label">Matricule</div>
+                        <div class="info-value">
+                            <span class="badge-code">{{ $user->matricule }}</span>
+                        </div>
                     </div>
                     <div class="info-cell">
-                        <div class="info-label">Matricule</div>
-                        <div class="info-value">{{ $user->matricule }}</div>
+                        <div class="info-label">Nom Complet</div>
+                        <div class="info-value">{{ $user->name }}</div>
                     </div>
                 </div>
                 <div class="info-row">
                     <div class="info-cell">
-                        <div class="info-label">Spécialité</div>
-                        <div class="info-value">{{ $user->specialite->intitule }}</div>
+                        <div class="info-label">Email</div>
+                        <div class="info-value">{{ $user->email }}</div>
                     </div>
                     <div class="info-cell">
-                        <div class="info-label">Code Spécialité</div>
-                        <div class="info-value">{{ $user->specialite->code }}</div>
+                        <div class="info-label">Spécialité</div>
+                        <div class="info-value">{{ $user->specialite->intitule ?? 'N/A' }}</div>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-cell">
+                        <div class="info-label">Année Académique</div>
+                        <div class="info-value">{{ $user->anneeAcademique->libelle ?? 'N/A' }}</div>
+                    </div>
+                    <div class="info-cell">
+                        <div class="info-label">Date d'Édition</div>
+                        <div class="info-value">{{ now()->format('d/m/Y') }}</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Semestre 1 -->
-        <div class="semestre-section">
-            <div class="semestre-title">SEMESTRE 1</div>
-            
-            @if($evaluationsSemestre1->isEmpty())
+        <!-- SEMESTRE 1 -->
+        @if($evaluationsSemestre1->isNotEmpty())
+            <div class="section-title">SEMESTRE 1</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="left">Code</th>
+                        <th class="left">Module</th>
+                        <th class="center">Coef.</th>
+                        <th class="center">Note</th>
+                        <th class="center">Appréciation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $totalCoefficients1 = 0;
+                        $sommeNotesPonderees1 = 0;
+                    @endphp
+                    @foreach($evaluationsSemestre1 as $evaluation)
+                        @php
+                            $note = $evaluation->note ?? 0;
+                            $coefficient = $evaluation->module->coefficient ?? 1;
+                            $totalCoefficients1 += $coefficient;
+                            $sommeNotesPonderees1 += ($note * $coefficient);
+                            
+                            // Déterminer la couleur de la ligne
+                            if ($note >= 16) {
+                                $rowClass = 'note-excellent';
+                            } elseif ($note >= 14) {
+                                $rowClass = 'note-good';
+                            } elseif ($note >= 10) {
+                                $rowClass = 'note-average';
+                            } else {
+                                $rowClass = 'note-poor';
+                            }
+                            
+                            // Appréciation
+                            if ($note >= 16) {
+                                $appreciation = 'Très Bien';
+                            } elseif ($note >= 14) {
+                                $appreciation = 'Bien';
+                            } elseif ($note >= 12) {
+                                $appreciation = 'Assez Bien';
+                            } elseif ($note >= 10) {
+                                $appreciation = 'Passable';
+                            } else {
+                                $appreciation = 'Insuffisant';
+                            }
+                        @endphp
+                        <tr class="{{ $rowClass }}">
+                            <td>{{ $evaluation->module->code ?? 'N/A' }}</td>
+                            <td>{{ $evaluation->module->intitule ?? 'N/A' }}</td>
+                            <td class="center">{{ $coefficient }}</td>
+                            <td class="center"><strong>{{ number_format($note, 2) }}</strong></td>
+                            <td class="center">{{ $appreciation }}</td>
+                        </tr>
+                    @endforeach
+                    <tr class="row-total">
+                        <td colspan="3">MOYENNE SEMESTRE 1</td>
+                        <td class="center"><strong>{{ number_format($moyenneSemestre1 ?? 0, 2) }}</strong></td>
+                        <td class="center">
+                            @if($moyenneSemestre1 >= 10)
+                                Admis
+                            @else
+                                Non Admis
+                            @endif
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        @else
             <div class="empty-message">Aucune évaluation pour le semestre 1</div>
-            @else
-            <table>
-                <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>Intitulé du Module</th>
-                        <th class="center">Coeff.</th>
-                        <th class="center">Note /20</th>
-                        <th>Appréciation</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($evaluationsSemestre1 as $eval)
-                    <tr class="{{ $eval->note >= 10 ? 'success' : 'danger' }}">
-                        <td>
-                            <span class="badge badge-module">{{ $eval->module->code }}</span>
-                        </td>
-                        <td>{{ $eval->module->intitule }}</td>
-                        <td class="center">{{ number_format($eval->module->coefficient, 2) }}</td>
-                        <td class="center">
-                            <span class="note-value {{ $eval->note >= 10 ? 'pass' : 'fail' }}">
-                                {{ number_format($eval->note, 2) }}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge-appreciation 
-                                @if($eval->note >= 16) badge-excellent
-                                @elseif($eval->note >= 14) badge-tres-bien
-                                @elseif($eval->note >= 12) badge-bien
-                                @elseif($eval->note >= 10) badge-assez-bien
-                                @else badge-insuffisant
-                                @endif">
-                                {{ $eval->getAppreciation() }}
-                            </span>
-                        </td>
-                    </tr>
-                    @endforeach
-                    @if($moyenneSemestre1)
-                    <tr class="moyenne-row">
-                        <td colspan="3" style="text-align: right;">MOYENNE SEMESTRE 1:</td>
-                        <td class="center">
-                            <span class="note-value {{ $moyenneSemestre1 >= 10 ? 'pass' : 'fail' }}">
-                                {{ number_format($moyenneSemestre1, 2) }}
-                            </span>
-                        </td>
-                        <td></td>
-                    </tr>
-                    @endif
-                </tbody>
-            </table>
-            @endif
-        </div>
-
-        <!-- Semestre 2 -->
-        <div class="semestre-section">
-            <div class="semestre-title s2">SEMESTRE 2</div>
-            
-            @if($evaluationsSemestre2->isEmpty())
-            <div class="empty-message">Aucune évaluation pour le semestre 2</div>
-            @else
-            <table>
-                <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>Intitulé du Module</th>
-                        <th class="center">Coeff.</th>
-                        <th class="center">Note /20</th>
-                        <th>Appréciation</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($evaluationsSemestre2 as $eval)
-                    <tr class="{{ $eval->note >= 10 ? 'success' : 'danger' }}">
-                        <td>
-                            <span class="badge badge-module s2">{{ $eval->module->code }}</span>
-                        </td>
-                        <td>{{ $eval->module->intitule }}</td>
-                        <td class="center">{{ number_format($eval->module->coefficient, 2) }}</td>
-                        <td class="center">
-                            <span class="note-value {{ $eval->note >= 10 ? 'pass' : 'fail' }}">
-                                {{ number_format($eval->note, 2) }}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge-appreciation 
-                                @if($eval->note >= 16) badge-excellent
-                                @elseif($eval->note >= 14) badge-tres-bien
-                                @elseif($eval->note >= 12) badge-bien
-                                @elseif($eval->note >= 10) badge-assez-bien
-                                @else badge-insuffisant
-                                @endif">
-                                {{ $eval->getAppreciation() }}
-                            </span>
-                        </td>
-                    </tr>
-                    @endforeach
-                    @if($moyenneSemestre2)
-                    <tr class="moyenne-row">
-                        <td colspan="3" style="text-align: right;">MOYENNE SEMESTRE 2:</td>
-                        <td class="center">
-                            <span class="note-value {{ $moyenneSemestre2 >= 10 ? 'pass' : 'fail' }}">
-                                {{ number_format($moyenneSemestre2, 2) }}
-                            </span>
-                        </td>
-                        <td></td>
-                    </tr>
-                    @endif
-                </tbody>
-            </table>
-            @endif
-        </div>
-
-        <!-- Récapitulatif -->
-        @if($moyenneSemestre1 && $moyenneSemestre2)
-        <div class="recap-section">
-            <div class="recap-grid">
-                <div class="recap-cell">
-                    <div class="recap-label">Moyenne Semestre 1</div>
-                    <div class="recap-value">{{ number_format($moyenneSemestre1, 2) }}/20</div>
-                </div>
-                <div class="recap-cell">
-                    <div class="recap-label">Moyenne Semestre 2</div>
-                    <div class="recap-value">{{ number_format($moyenneSemestre2, 2) }}/20</div>
-                </div>
-                <div class="recap-cell">
-                    <div class="recap-label">Moyenne Annuelle</div>
-                    <div class="recap-value">{{ number_format(($moyenneSemestre1 + $moyenneSemestre2) / 2, 2) }}/20</div>
-                </div>
-            </div>
-        </div>
         @endif
 
-        <!-- Footer -->
+        <!-- SEMESTRE 2 -->
+        @if($evaluationsSemestre2->isNotEmpty())
+            <div class="section-title semestre2">SEMESTRE 2</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="left">Code</th>
+                        <th class="left">Module</th>
+                        <th class="center">Coef.</th>
+                        <th class="center">Note</th>
+                        <th class="center">Appréciation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $totalCoefficients2 = 0;
+                        $sommeNotesPonderees2 = 0;
+                    @endphp
+                    @foreach($evaluationsSemestre2 as $evaluation)
+                        @php
+                            $note = $evaluation->note ?? 0;
+                            $coefficient = $evaluation->module->coefficient ?? 1;
+                            $totalCoefficients2 += $coefficient;
+                            $sommeNotesPonderees2 += ($note * $coefficient);
+                            
+                            if ($note >= 16) {
+                                $rowClass = 'note-excellent';
+                                $appreciation = 'Très Bien';
+                            } elseif ($note >= 14) {
+                                $rowClass = 'note-good';
+                                $appreciation = 'Bien';
+                            } elseif ($note >= 12) {
+                                $rowClass = 'note-average';
+                                $appreciation = 'Assez Bien';
+                            } elseif ($note >= 10) {
+                                $rowClass = 'note-average';
+                                $appreciation = 'Passable';
+                            } else {
+                                $rowClass = 'note-poor';
+                                $appreciation = 'Insuffisant';
+                            }
+                        @endphp
+                        <tr class="{{ $rowClass }}">
+                            <td>{{ $evaluation->module->code ?? 'N/A' }}</td>
+                            <td>{{ $evaluation->module->intitule ?? 'N/A' }}</td>
+                            <td class="center">{{ $coefficient }}</td>
+                            <td class="center"><strong>{{ number_format($note, 2) }}</strong></td>
+                            <td class="center">{{ $appreciation }}</td>
+                        </tr>
+                    @endforeach
+                    <tr class="row-total">
+                        <td colspan="3">MOYENNE SEMESTRE 2</td>
+                        <td class="center"><strong>{{ number_format($moyenneSemestre2 ?? 0, 2) }}</strong></td>
+                        <td class="center">
+                            @if($moyenneSemestre2 >= 10)
+                                Admis
+                            @else
+                                Non Admis
+                            @endif
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        @else
+            <div class="empty-message">Aucune évaluation pour le semestre 2</div>
+        @endif
+
+        <!-- RÉSUMÉ GÉNÉRAL -->
+        @if($evaluationsSemestre1->isNotEmpty() || $evaluationsSemestre2->isNotEmpty())
+            <div class="section-title general">RÉSUMÉ GÉNÉRAL</div>
+            
+            <div class="recap-section">
+                <div class="recap-grid">
+                    <div class="recap-cell">
+                        <div class="recap-label">Moyenne S1</div>
+                        <div class="recap-value">{{ number_format($moyenneSemestre1 ?? 0, 2) }}/20</div>
+                    </div>
+                    <div class="recap-cell">
+                        <div class="recap-label">Moyenne S2</div>
+                        <div class="recap-value">{{ number_format($moyenneSemestre2 ?? 0, 2) }}/20</div>
+                    </div>
+                    <div class="recap-cell">
+                        <div class="recap-label">Moyenne Générale</div>
+                        <div class="recap-value">{{ number_format($moyenneGenerale ?? 0, 2) }}/20</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATISTIQUES -->
+            <div class="stats-section">
+                <div class="stats-grid">
+                    <div class="stats-cell">
+                        <div class="stats-label">Total Modules</div>
+                        <div class="stats-value">{{ $stats['totalModules'] ?? 0 }}</div>
+                    </div>
+                    <div class="stats-cell">
+                        <div class="stats-label">Modules Validés</div>
+                        <div class="stats-value">{{ $stats['modulesValides'] ?? 0 }}</div>
+                    </div>
+                    <div class="stats-cell">
+                        <div class="stats-label">Modules Échoués</div>
+                        <div class="stats-value" style="color: #ef4444;">{{ $stats['modulesEchoues'] ?? 0 }}</div>
+                    </div>
+                    <div class="stats-cell">
+                        <div class="stats-label">Résultat</div>
+                        <div class="stats-value" style="color: {{ ($moyenneGenerale ?? 0) >= 10 ? '#10b981' : '#ef4444' }}">
+                            {{ ($moyenneGenerale ?? 0) >= 10 ? 'ADMIS' : 'NON ADMIS' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <!-- FOOTER -->
         <div class="footer">
-            <p>Date d'édition: {{ now()->format('d/m/Y à H:i') }}</p>
-            <p>Ce document est un relevé officiel des notes de l'étudiant(e)</p>
+            <p><strong>Généré le:</strong> {{ now()->format('d/m/Y à H:i') }}</p>
+            <p>Document officiel - Relevé de notes de l'étudiant {{ $user->matricule }}</p>
+            <p>Centre de Formation Professionnelle la Canadienne - Bafoussam</p>
         </div>
+
     </div>
 </body>
 </html>
