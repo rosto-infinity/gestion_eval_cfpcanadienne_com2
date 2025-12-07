@@ -169,7 +169,7 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         try {
-            // Vérifier si l'utilisateur a des évaluations
+            // -Vérifier si l'utilisateur a des évaluations
             if ($user->evaluations()->exists()) {
                 return back()->with('error', 'Impossible de supprimer un étudiant avec des évaluations.');
             }
