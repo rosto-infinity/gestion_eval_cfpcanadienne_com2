@@ -3,7 +3,7 @@
 @section('title', 'Spécialités')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class=" mx-auto px-4 sm:px-6 lg:px-8">
     <!-- En-tête -->
     <div class="sm:flex sm:items-center sm:justify-between mb-6">
         <div>

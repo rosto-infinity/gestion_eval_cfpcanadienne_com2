@@ -3,27 +3,54 @@
 @section('title', 'Modules')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<div class="mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     <!-- En-tête -->
     <div class="sm:flex sm:items-center sm:justify-between mb-6">
         <div>
             <h1 class="text-2xl font-bold text-foreground">Modules d'Enseignement</h1>
-            <p class="mt-1 text-xs text-muted-foreground">Gestion des modules M1 à M10</p>
+            <p class="mt-1 text-xs text-muted-foreground">Gestion des modules par spécialité</p>
         </div>
         <div class="mt-4 sm:mt-0">
             <a href="{{ route('modules.create') }}" class="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md text-xs font-semibold hover:bg-primary/90 transition-colors">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
-                Nouveau
+                Nouveau Module
             </a>
         </div>
     </div>
 
+    <!-- Filtre par spécialité -->
+    <div class="bg-card border border-border rounded-lg p-4 mb-6">
+        <form method="GET" action="{{ route('modules.index') }}" class="flex items-center gap-4">
+            <div class="flex-1">
+                <label for="specialite_id" class="block text-sm font-semibold text-foreground mb-2">
+                    Filtrer par Spécialité
+                </label>
+                <select name="specialite_id" id="specialite_id" 
+                    onchange="this.form.submit()"
+                    class="w-full px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors">
+                    <option value="">Toutes les spécialités</option>
+                    @foreach($specialites as $specialite)
+                        <option value="{{ $specialite->id }}" {{ $selectedSpecialite == $specialite->id ? 'selected' : '' }}>
+                            {{ $specialite->intitule }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            @if($selectedSpecialite)
+                <div class="pt-6">
+                    <a href="{{ route('modules.index') }}" class="inline-flex items-center px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        Réinitialiser
+                    </a>
+                </div>
+            @endif
+        </form>
+    </div>
+
     <!-- Stats -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <!-- Total -->
         <div class="bg-card border border-border rounded-lg p-4">
             <div class="flex items-center gap-3">
                 <div class="p-2 rounded-lg bg-primary/10">
@@ -38,7 +65,6 @@
             </div>
         </div>
 
-        <!-- S1 -->
         <div class="bg-card border border-border rounded-lg p-4">
             <div class="flex items-center gap-3">
                 <div class="p-2 rounded-lg bg-green-100 dark:bg-green-950/30">
@@ -53,7 +79,6 @@
             </div>
         </div>
 
-        <!-- S2 -->
         <div class="bg-card border border-border rounded-lg p-4">
             <div class="flex items-center gap-3">
                 <div class="p-2 rounded-lg bg-blue-100 dark:bg-blue-950/30">
@@ -70,6 +95,7 @@
     </div>
 
     <!-- Semestre 1 -->
+    @if($semestre1->count() > 0)
     <div class="mb-6">
         <div class="flex items-center gap-2 mb-3">
             <span class="w-6 h-6 rounded-full bg-green-100 dark:bg-green-950/30 text-green-600 flex items-center justify-center text-xs font-bold">S1</span>
@@ -81,6 +107,7 @@
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="border-b border-border bg-muted/30">
+                            <th class="px-4 py-3 text-left font-semibold text-foreground">Spécialité</th>
                             <th class="px-4 py-3 text-left font-semibold text-foreground">Code</th>
                             <th class="px-4 py-3 text-left font-semibold text-foreground">Intitulé</th>
                             <th class="px-4 py-3 text-center font-semibold text-foreground">Coef</th>
@@ -89,8 +116,13 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-border">
-                        @forelse($semestre1 as $module)
+                        @foreach($semestre1 as $module)
                         <tr class="hover:bg-muted/30 transition-colors">
+                            <td class="px-4 py-3">
+                                <span class="text-xs font-medium px-2 py-1 rounded bg-purple-100 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400">
+                                    {{ $module->specialite->intitule ?? 'N/A' }}
+                                </span>
+                            </td>
                             <td class="px-4 py-3">
                                 <span class="text-xs font-bold px-2 py-1 rounded bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-400">
                                     {{ $module->code }}
@@ -115,20 +147,16 @@
                                 </div>
                             </td>
                         </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="px-4 py-6 text-center text-muted-foreground text-sm">
-                                Aucun module
-                            </td>
-                        </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    @endif
 
     <!-- Semestre 2 -->
+    @if($semestre2->count() > 0)
     <div>
         <div class="flex items-center gap-2 mb-3">
             <span class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-950/30 text-blue-600 flex items-center justify-center text-xs font-bold">S2</span>
@@ -140,6 +168,7 @@
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="border-b border-border bg-muted/30">
+                            <th class="px-4 py-3 text-left font-semibold text-foreground">Spécialité</th>
                             <th class="px-4 py-3 text-left font-semibold text-foreground">Code</th>
                             <th class="px-4 py-3 text-left font-semibold text-foreground">Intitulé</th>
                             <th class="px-4 py-3 text-center font-semibold text-foreground">Coef</th>
@@ -148,8 +177,13 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-border">
-                        @forelse($semestre2 as $module)
+                        @foreach($semestre2 as $module)
                         <tr class="hover:bg-muted/30 transition-colors">
+                            <td class="px-4 py-3">
+                                <span class="text-xs font-medium px-2 py-1 rounded bg-purple-100 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400">
+                                    {{ $module->specialite->intitule ?? 'N/A' }}
+                                </span>
+                            </td>
                             <td class="px-4 py-3">
                                 <span class="text-xs font-bold px-2 py-1 rounded bg-blue-100 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400">
                                     {{ $module->code }}
@@ -174,18 +208,19 @@
                                 </div>
                             </td>
                         </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="px-4 py-6 text-center text-muted-foreground text-sm">
-                                Aucun module
-                            </td>
-                        </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    @endif
+
+    @if($modules->count() === 0)
+    <div class="bg-card border border-border rounded-lg p-8 text-center">
+        <p class="text-muted-foreground">Aucun module trouvé.</p>
+    </div>
+    @endif
 
 </div>
 @endsection

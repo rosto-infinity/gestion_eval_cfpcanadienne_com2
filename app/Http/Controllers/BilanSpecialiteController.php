@@ -189,17 +189,28 @@ class BilanSpecialiteController extends Controller
     /**
      * Comparaison entre spécialités
      */
-    public function comparaison(Request $request): View
+   public function comparaison(Request $request): View
     {
-        $anneeId = $request->input('annee_id') ?? AnneeAcademique::active()->first()?->id;
-        $specialiteIds = $request->input('specialites', []);
-
-        if (empty($specialiteIds)) {
-            $specialiteIds = Specialite::pluck('id')->toArray();
+        // Récupérer l'année ID et le convertir en int
+        $anneeId = (int) ($request->input('annee_id') ?? AnneeAcademique::active()->first()?->id ?? 0);
+        
+        // Vérifier que l'année existe
+        if ($anneeId === 0) {
+            $anneeId = (int) AnneeAcademique::ordered()->first()?->id ?? 0;
         }
 
+        // Récupérer les spécialités sélectionnées et les convertir en int
+        $specialiteIds = array_map('intval', (array) $request->input('specialites', []));
+
+        // Si aucune spécialité n'est sélectionnée, prendre toutes les spécialités
+        if (empty($specialiteIds)) {
+            $specialiteIds = Specialite::pluck('id')->map(fn($id) => (int) $id)->toArray();
+        }
+
+        // Récupérer les données de bilan
         $bilanParSpecialite = $this->getBilanParSpecialite($anneeId, $specialiteIds);
 
+        // Récupérer les années et spécialités pour les filtres
         $annees = AnneeAcademique::ordered()->get();
         $specialites = Specialite::ordered()->get();
 
@@ -207,18 +218,26 @@ class BilanSpecialiteController extends Controller
             'bilanParSpecialite',
             'annees',
             'specialites',
-            'specialiteIds'
+            'specialiteIds',
+            'anneeId'
         ));
     }
 
     /**
      * Récupère les données de bilan par spécialité
      */
-    private function getBilanParSpecialite(int $anneeId, ?array $specialiteIds = null): \Illuminate\Support\Collection
+    private function getBilanParSpecialite(int $anneeId, array $specialiteIds = []): \Illuminate\Support\Collection
     {
+        // Vérifier que l'année existe
+        $annee = AnneeAcademique::find($anneeId);
+        if (!$annee) {
+            return collect([]);
+        }
+
         $query = Specialite::query();
 
-        if ($specialiteIds) {
+        // Filtrer par spécialités si des IDs sont fournis
+        if (!empty($specialiteIds)) {
             $query->whereIn('id', $specialiteIds);
         }
 

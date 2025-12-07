@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Module extends Model
@@ -16,6 +17,7 @@ class Module extends Model
     protected $table = 'modules';
 
     protected $fillable = [
+        'specialite_id',
         'code',
         'intitule',
         'coefficient',
@@ -25,9 +27,15 @@ class Module extends Model
     protected $casts = [
         'coefficient' => 'decimal:2',
         'ordre' => 'integer',
+        'specialite_id' => 'integer',
     ];
 
     // Relations
+    public function specialite(): BelongsTo
+    {
+        return $this->belongsTo(Specialite::class, 'specialite_id');
+    }
+
     public function evaluations(): HasMany
     {
         return $this->hasMany(Evaluation::class, 'module_id');
@@ -37,6 +45,11 @@ class Module extends Model
     public function scopeOrdered(Builder $query): Builder
     {
         return $query->orderBy('ordre', 'asc');
+    }
+
+    public function scopeBySpecialite(Builder $query, int $specialiteId): Builder
+    {
+        return $query->where('specialite_id', $specialiteId);
     }
 
     public function scopeSemestre1(Builder $query): Builder

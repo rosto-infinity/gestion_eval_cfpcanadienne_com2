@@ -1,4 +1,3 @@
-{{-- resources/views/modules/create.blade.php --}}
 @extends('layouts.app')
 
 @section('title', 'Créer un Module')
@@ -6,18 +5,34 @@
 @section('content')
 <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-    <!-- En-tête -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-foreground">Créer un Module</h1>
         <p class="mt-1 text-xs text-muted-foreground">Ajouter un nouveau module d'enseignement</p>
     </div>
 
-    <!-- Formulaire -->
     <div class="bg-card border border-border rounded-lg p-6">
         <form action="{{ route('modules.store') }}" method="POST" class="space-y-5">
             @csrf
 
-            <!-- Grille 2 colonnes -->
+            <!-- Spécialité -->
+            <div>
+                <label for="specialite_id" class="block text-sm font-semibold text-foreground mb-2">
+                    Spécialité <span class="text-destructive">*</span>
+                </label>
+                <select name="specialite_id" id="specialite_id" 
+                    class="w-full px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors @error('specialite_id') border-destructive focus:ring-destructive/50 @enderror">
+                    <option value="">Sélectionner une spécialité</option>
+                    @foreach($specialites as $specialite)
+                        <option value="{{ $specialite->id }}" {{ old('specialite_id') == $specialite->id ? 'selected' : '' }}>
+                            {{ $specialite->intitule }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('specialite_id')
+                    <p class="mt-1 text-xs text-destructive">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 
                 <!-- Code -->
@@ -25,7 +40,7 @@
                     <label for="code" class="block text-sm font-semibold text-foreground mb-2">
                         Code <span class="text-destructive">*</span>
                     </label>
-                    <input type="text" name="code" id="code" value="{{ old('code') }}" required
+                    <input type="text" name="code" id="code" value="{{ old('code') }}" 
                         class="w-full px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors @error('code') border-destructive focus:ring-destructive/50 @enderror"
                         placeholder="M1, M2, ...">
                     @error('code')
@@ -41,7 +56,7 @@
                     <label for="ordre" class="block text-sm font-semibold text-foreground mb-2">
                         Ordre <span class="text-destructive">*</span>
                     </label>
-                    <input type="number" name="ordre" id="ordre" value="{{ old('ordre', 1) }}" required min="1" max="100"
+                    <input type="number" name="ordre" id="ordre" value="{{ old('ordre', 1) }}"  min="1" max="100"
                         class="w-full px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors @error('ordre') border-destructive focus:ring-destructive/50 @enderror">
                     @error('ordre')
                         <p class="mt-1 text-xs text-destructive">{{ $message }}</p>
@@ -55,7 +70,7 @@
                 <label for="intitule" class="block text-sm font-semibold text-foreground mb-2">
                     Intitulé <span class="text-destructive">*</span>
                 </label>
-                <input type="text" name="intitule" id="intitule" value="{{ old('intitule') }}" required
+                <input type="text" name="intitule" id="intitule" value="{{ old('intitule') }}" 
                     class="w-full px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors @error('intitule') border-destructive focus:ring-destructive/50 @enderror"
                     placeholder="Ex: Algorithmique et Structures de Données">
                 @error('intitule')
@@ -69,7 +84,7 @@
                     Coefficient <span class="text-destructive">*</span>
                 </label>
                 <input type="number" name="coefficient" id="coefficient" value="{{ old('coefficient', 1.00) }}" 
-                    required min="0.1" max="10" step="0.01"
+                     min="0.1" max="10" step="0.01"
                     class="w-full px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors @error('coefficient') border-destructive focus:ring-destructive/50 @enderror">
                 @error('coefficient')
                     <p class="mt-1 text-xs text-destructive">{{ $message }}</p>

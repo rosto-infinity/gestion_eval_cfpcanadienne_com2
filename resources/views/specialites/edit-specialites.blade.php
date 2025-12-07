@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="min-h-screen" style="background-color: var(--background)">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class=" mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         <!-- En-tête -->
         <div class="mb-8">

@@ -2,7 +2,7 @@
 <section id="sidebar">
     <a href="#" class="brand pt-5">
 				<img src="/android-chrome-192x192.png" alt="logo-app-cfpc" srcset="" style="height:30px; margin-left:13px" >
-        <span class="text text-red-500 ml-2 ">CFPC</span>
+        <span class="text text-red-500 ml-2 "></span>
     </a>
     <ul class="side-menu top">
         <!-- Dashboard -->
@@ -13,6 +13,14 @@
             </a>
         </li>
 
+          <!-- Années Académiques -->
+        <li>
+            <a href="{{ route('annees.index') }}" 
+                class="border-2 {{ request()->routeIs('annees.*') ? 'border-red-600' : 'border-transparent' }}">
+                <i class='bx bxs-calendar'></i>
+                <span class="text">Années</span>
+            </a>
+        </li>
         <!-- Spécialités -->
         <li>
             <a href="{{ route('specialites.index') }}" 
@@ -31,14 +39,7 @@
             </a>
         </li>
 
-        <!-- Années Académiques -->
-        <li>
-            <a href="{{ route('annees.index') }}" 
-                class="border-2 {{ request()->routeIs('annees.*') ? 'border-red-600' : 'border-transparent' }}">
-                <i class='bx bxs-calendar'></i>
-                <span class="text">Années</span>
-            </a>
-        </li>
+      
 
         <!-- Utilisateurs -->
         <li>

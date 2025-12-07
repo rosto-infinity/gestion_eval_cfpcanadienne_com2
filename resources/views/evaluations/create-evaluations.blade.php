@@ -3,7 +3,7 @@
 @section('title', 'Nouvelle Évaluation')
 
 @section('content')
-<div class=" mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <!-- Breadcrumb -->
     <div class="mb-8">
@@ -49,15 +49,15 @@
                             </label>
                             <select name="user_id" id="user_id" 
                                     class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('user_id') border-destructive ring-2 ring-destructive/20 @enderror" 
-                                    required onchange="updateUserInfo()">
+                                    required onchange="loadUserModules()">
                                 <option value="">-- Sélectionner un étudiant --</option>
                                 @foreach($users as $user)
                                     <option value="{{ $user->id }}" 
                                             data-specialite="{{ $user->specialite?->intitule }}"
                                             data-annee="{{ $user->anneeAcademique?->libelle }}"
                                             data-annee-id="{{ $user->annee_academique_id }}"
-                                            {{ old('user_id') == $user->id || $user?->id == request('user_id') ? 'selected' : '' }}>
-                                        {{ $user->matricule }} - {{ $user->getFullName() }}
+                                            {{ old('user_id', $user?->id) == request('user_id') ? 'selected' : '' }}>
+                                        {{ $user->matricule }} - {{ $user->getFullName() }} ({{ $user->specialite?->intitule ?? 'N/A' }})
                                     </option>
                                 @endforeach
                             </select>
@@ -78,17 +78,19 @@
                             </label>
                             <select name="module_id" id="module_id" 
                                     class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('module_id') border-destructive ring-2 ring-destructive/20 @enderror" 
-                                    required onchange="updateModuleInfo()">
-                                <option value="">-- Sélectionner un module --</option>
-                                @foreach($modules as $module)
-                                    <option value="{{ $module->id }}" 
-                                            data-code="{{ $module->code }}"
-                                            data-semestre="{{ $module->ordre }}"
-                                            data-credit="{{ $module->coefficient }}"
-                                            {{ old('module_id') == $module->id ? 'selected' : '' }}>
-                                        {{ $module->code }} - {{ $module->intitule }}
-                                    </option>
-                                @endforeach
+                                    required onchange="updateModuleInfo()" {{ !$user ? 'disabled' : '' }}>
+                                <option value="">{{ $user ? '-- Sélectionner un module --' : '-- Sélectionner d\'abord un étudiant --' }}</option>
+                                @if($user && $modules->isNotEmpty())
+                                    @foreach($modules as $module)
+                                        <option value="{{ $module->id }}" 
+                                                data-code="{{ $module->code }}"
+                                                data-semestre="{{ $module->getSemestre() }}"
+                                                data-credit="{{ $module->coefficient }}"
+                                                {{ old('module_id') == $module->id ? 'selected' : '' }}>
+                                            {{ $module->code }} - {{ $module->intitule }}
+                                        </option>
+                                    @endforeach
+                                @endif
                             </select>
                             @error('module_id')
                                 <p class="mt-2 text-sm text-destructive flex items-center gap-1">
@@ -98,6 +100,14 @@
                                     {{ $message }}
                                 </p>
                             @enderror
+                            @if($user && $modules->isEmpty())
+                                <p class="mt-2 text-sm text-amber-600 flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Aucun module disponible pour cette spécialité
+                                </p>
+                            @endif
                         </div>
                     </div>
 
@@ -150,7 +160,7 @@
                                     required>
                                 <option value="">-- Sélectionner une année --</option>
                                 @foreach($annees as $annee)
-                                    <option value="{{ $annee->id }}" {{ old('annee_academique_id') == $annee->id ? 'selected' : '' }}>
+                                    <option value="{{ $annee->id }}" {{ old('annee_academique_id', $user?->annee_academique_id) == $annee->id ? 'selected' : '' }}>
                                         {{ $annee->libelle }} {{ $annee->is_active ? '(Active)' : '' }}
                                     </option>
                                 @endforeach
@@ -219,7 +229,7 @@
         <div class="lg:col-span-1 space-y-6">
 
             <!-- Informations de l'étudiant -->
-            <div class="bg-primary/5 border border-primary/20 rounded-lg p-5 hidden" id="userInfo">
+            <div class="bg-primary/5 border border-primary/20 rounded-lg p-5 {{ $user ? '' : 'hidden' }}" id="userInfo">
                 <div class="flex items-center gap-2 mb-4">
                     <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
@@ -229,11 +239,11 @@
                 <div class="space-y-3">
                     <div class="bg-white dark:bg-background/50 rounded p-3">
                         <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Spécialité</p>
-                        <p class="text-sm font-semibold text-foreground" id="specialiteDisplay">-</p>
+                        <p class="text-sm font-semibold text-foreground" id="specialiteDisplay">{{ $user?->specialite?->intitule ?? '-' }}</p>
                     </div>
                     <div class="bg-white dark:bg-background/50 rounded p-3">
                         <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Année Académique</p>
-                        <p class="text-sm font-semibold text-foreground" id="anneeDisplay">-</p>
+                        <p class="text-sm font-semibold text-foreground" id="anneeDisplay">{{ $user?->anneeAcademique?->libelle ?? '-' }}</p>
                     </div>
                     <div class="bg-white dark:bg-background/50 rounded p-3">
                         <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Statut</p>
@@ -300,11 +310,11 @@
                         <ul class="text-xs text-blue-800 dark:text-blue-200 space-y-1">
                             <li class="flex items-start gap-1.5">
                                 <span class="font-bold">•</span>
-                                <span>Note entre 0 et 20</span>
+                                <span>Modules filtrés par spécialité</span>
                             </li>
                             <li class="flex items-start gap-1.5">
                                 <span class="font-bold">•</span>
-                                <span>Appréciation auto</span>
+                                <span>Note entre 0 et 20</span>
                             </li>
                             <li class="flex items-start gap-1.5">
                                 <span class="font-bold">•</span>
@@ -325,7 +335,6 @@
 
 @push('styles')
 <style>
-    /* Select styling */
     select {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23666' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
         background-repeat: no-repeat;
@@ -341,7 +350,6 @@
         }
     }
 
-    /* Input number styling */
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button {
         -webkit-appearance: none;
@@ -351,41 +359,23 @@
     input[type="number"] {
         -moz-appearance: textfield;
     }
-
-    /* Radio button styling */
-    input[type="radio"] {
-        cursor: pointer;
-    }
-
-    input[type="radio"]:checked {
-        @apply ring-2 ring-offset-2 ring-primary;
-    }
-
-    /* Smooth transitions */
-    * {
-        @apply transition-colors duration-200;
-    }
-
-    /* Gradient text */
-    .gradient-text {
-        @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
-    }
 </style>
 @endpush
 
 @push('scripts')
 <script>
-function updateUserInfo() {
+function loadUserModules() {
     const select = document.getElementById('user_id');
-    const option = select.options[select.selectedIndex];
-    const userInfo = document.getElementById('userInfo');
+    const userId = select.value;
     
-    if (select.value) {
-        document.getElementById('specialiteDisplay').textContent = option.dataset.specialite || '-';
-        document.getElementById('anneeDisplay').textContent = option.dataset.annee || '-';
-        userInfo.classList.remove('hidden');
+    if (userId) {
+        // Recharger la page avec le user_id pour obtenir les modules
+        window.location.href = '{{ route("evaluations.create") }}?user_id=' + userId;
     } else {
-        userInfo.classList.add('hidden');
+        document.getElementById('module_id').disabled = true;
+        document.getElementById('module_id').innerHTML = '<option value="">-- Sélectionner d\'abord un étudiant --</option>';
+        document.getElementById('userInfo').classList.add('hidden');
+        document.getElementById('moduleInfo').classList.add('hidden');
     }
 }
 
@@ -450,7 +440,6 @@ function updateNoteAppreciation() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    updateUserInfo();
     updateModuleInfo();
     updateNoteAppreciation();
 });

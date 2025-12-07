@@ -44,8 +44,12 @@ class EvaluationController extends Controller
     {
         $userId = $request->query('user_id');
         $user = $userId ? User::with(['specialite', 'anneeAcademique'])->findOrFail($userId) : null;
-        // dd($user);
-        $modules = Module::ordered()->get();
+        
+        // Filtrer les modules par spécialité de l'étudiant
+        $modules = $user && $user->specialite_id
+            ? Module::where('specialite_id', $user->specialite_id)->ordered()->get()
+            : collect();
+        
         $users = User::with(['specialite', 'anneeAcademique'])->ordered()->get();
         $annees = AnneeAcademique::ordered()->get();
 
@@ -63,6 +67,16 @@ class EvaluationController extends Controller
         ]);
 
         try {
+            // -Vérifier que le module appartient à la spécialité de l'étudiant
+            $user = User::findOrFail($validated['user_id']);
+            $module = Module::findOrFail($validated['module_id']);
+
+            if ($user->specialite_id !== $module->specialite_id) {
+                return back()
+                    ->withInput()
+                    ->with('error', 'Ce module n\'appartient pas à la spécialité de l\'étudiant.');
+            }
+
             // Vérifier si l'évaluation existe déjà
             $exists = Evaluation::where('user_id', $validated['user_id'])
                 ->where('module_id', $validated['module_id'])
@@ -97,9 +111,13 @@ class EvaluationController extends Controller
 
     public function edit(Evaluation $evaluation): View
     {
-        $evaluation->load(['user', 'module', 'anneeAcademique']);
+        $evaluation->load(['user.specialite', 'module', 'anneeAcademique']);
 
-        $modules = Module::ordered()->get();
+        // Filtrer les modules par spécialité de l'étudiant
+        $modules = $evaluation->user && $evaluation->user->specialite_id
+            ? Module::where('specialite_id', $evaluation->user->specialite_id)->ordered()->get()
+            : collect();
+        
         $users = User::with(['specialite', 'anneeAcademique'])->ordered()->get();
         $annees = AnneeAcademique::ordered()->get();
 
@@ -150,9 +168,14 @@ class EvaluationController extends Controller
         if ($userId) {
             $user = User::with(['specialite', 'anneeAcademique'])->findOrFail($userId);
 
-            $modules = $semestre == 1
-                ? Module::semestre1()->ordered()->get()
-                : Module::semestre2()->ordered()->get();
+            // Filtrer les modules par spécialité ET par semestre
+            if ($user->specialite_id) {
+                $modulesQuery = Module::where('specialite_id', $user->specialite_id);
+                
+                $modules = $semestre == 1
+                    ? $modulesQuery->semestre1()->ordered()->get()
+                    : $modulesQuery->semestre2()->ordered()->get();
+            }
 
             $evaluations = Evaluation::where('user_id', $userId)
                 ->where('semestre', $semestre)
@@ -180,6 +203,19 @@ class EvaluationController extends Controller
             DB::beginTransaction();
 
             $user = User::findOrFail($validated['user_id']);
+
+            // Vérifier que tous les modules appartiennent à la spécialité de l'étudiant
+            $moduleIds = collect($validated['evaluations'])->pluck('module_id');
+            $invalidModules = Module::whereIn('id', $moduleIds)
+                ->where('specialite_id', '!=', $user->specialite_id)
+                ->exists();
+
+            if ($invalidModules) {
+                DB::rollBack();
+                return back()
+                    ->withInput()
+                    ->with('error', 'Certains modules n\'appartiennent pas à la spécialité de l\'étudiant.');
+            }
 
             foreach ($validated['evaluations'] as $evalData) {
                 Evaluation::updateOrCreate(
@@ -231,9 +267,6 @@ class EvaluationController extends Controller
         ));
     }
 
-/**
-     * Générer le relevé de notes en PDF
-     */
     public function releveNotesPdf(User $user)
     {
         $user->load(['specialite', 'anneeAcademique']);
@@ -245,7 +278,6 @@ class EvaluationController extends Controller
         $moyenneSemestre2 = $user->getMoyenneSemestre(2);
         $moyenneGenerale = $this->calculerMoyenneGenerale($moyenneSemestre1, $moyenneSemestre2);
 
-        // Statistiques supplémentaires
         $stats = $this->calculerStatistiques($evaluationsSemestre1, $evaluationsSemestre2);
 
         $pdf = Pdf::loadView('evaluations.releve-notes-pdf', compact(
@@ -273,9 +305,6 @@ class EvaluationController extends Controller
         return $pdf->download($filename);
     }
 
-    /**
-     * Calculer la moyenne générale
-     */
     private function calculerMoyenneGenerale($moyenneSemestre1, $moyenneSemestre2): float
     {
         if (empty($moyenneSemestre1) || empty($moyenneSemestre2)) {
@@ -284,34 +313,27 @@ class EvaluationController extends Controller
         return ($moyenneSemestre1 + $moyenneSemestre2) / 2;
     }
 
-    /**
-     * Calculer les statistiques
-     */
-   /**
- * Calculer les statistiques
- */
-private function calculerStatistiques($evaluationsSemestre1, $evaluationsSemestre2): array
-{
-    $allEvaluations = $evaluationsSemestre1->merge($evaluationsSemestre2);
+    private function calculerStatistiques($evaluationsSemestre1, $evaluationsSemestre2): array
+    {
+        $allEvaluations = $evaluationsSemestre1->merge($evaluationsSemestre2);
 
-    $modulesValides = 0;
-    $modulesEchoues = 0;
+        $modulesValides = 0;
+        $modulesEchoues = 0;
 
-    foreach ($allEvaluations as $eval) {
-        $note = $eval->note ?? 0; // Utiliser directement le champ 'note'
+        foreach ($allEvaluations as $eval) {
+            $note = $eval->note ?? 0;
 
-        if ($note >= 10) {
-            $modulesValides++;
-        } else {
-            $modulesEchoues++;
+            if ($note >= 10) {
+                $modulesValides++;
+            } else {
+                $modulesEchoues++;
+            }
         }
+
+        return [
+            'totalModules' => $allEvaluations->count(),
+            'modulesValides' => $modulesValides,
+            'modulesEchoues' => $modulesEchoues,
+        ];
     }
-
-    return [
-        'totalModules' => $allEvaluations->count(),
-        'modulesValides' => $modulesValides,
-        'modulesEchoues' => $modulesEchoues,
-    ];
 }
-}
-

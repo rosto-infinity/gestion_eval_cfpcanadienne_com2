@@ -5,7 +5,6 @@
 @section('content')
 <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-    <!-- En-tête -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-foreground">
             {{ $module->intitule }}
@@ -15,10 +14,18 @@
         </p>
     </div>
 
-    <!-- Card -->
     <div class="bg-card border border-border rounded-lg p-6 space-y-5">
 
-        <!-- Grille 2 colonnes -->
+        <!-- Spécialité -->
+        <div>
+            <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Spécialité</h3>
+            <p class="mt-2 text-base font-medium text-foreground">
+                <span class="inline-flex items-center px-3 py-1 rounded-md bg-purple-100 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400">
+                    {{ $module->specialite->nom ?? 'N/A' }}
+                </span>
+            </p>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             
             <!-- Code -->

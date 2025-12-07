@@ -8,7 +8,7 @@
     <!-- En-tête -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-foreground">Saisie Multiple des Évaluations</h1>
-        <p class="mt-1 text-xs text-muted-foreground">Saisir les notes d'un semestre</p>
+        <p class="mt-1 text-xs text-muted-foreground">Saisir les notes d'un semestre pour un étudiant</p>
     </div>
 
     <!-- Filtres -->
@@ -19,10 +19,10 @@
                 <select name="user_id" required 
                         class="w-full px-3 py-2 rounded-md border border-border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary"
                         onchange="this.form.submit()">
-                    <option value="">Choisir...</option>
+                    <option value="">Choisir un étudiant...</option>
                     @foreach($users as $user)
                         <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
-                            {{ $user->matricule }} - {{ $user->getFullName() }}
+                            {{ $user->matricule }} - {{ $user->getFullName() }} ({{ $user->specialite?->intitule ?? 'N/A' }})
                         </option>
                     @endforeach
                 </select>
@@ -32,8 +32,8 @@
                 <select name="semestre" required 
                         class="w-full px-3 py-2 rounded-md border border-border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary"
                         onchange="this.form.submit()">
-                    <option value="1" {{ $semestre == 1 ? 'selected' : '' }}>S1</option>
-                    <option value="2" {{ $semestre == 2 ? 'selected' : '' }}>S2</option>
+                    <option value="1" {{ $semestre == 1 ? 'selected' : '' }}>Semestre 1</option>
+                    <option value="2" {{ $semestre == 2 ? 'selected' : '' }}>Semestre 2</option>
                 </select>
             </div>
         </form>
@@ -47,14 +47,14 @@
                 <div>
                     <h2 class="font-bold text-foreground">{{ $user->getFullName() }}</h2>
                     <p class="text-xs text-muted-foreground mt-0.5">
-                        {{ $user->matricule }} • {{ $user->specialite->intitule }}
+                        {{ $user->matricule }} • {{ $user->specialite?->intitule ?? 'N/A' }}
                     </p>
                 </div>
                 <div class="text-right">
                     <span class="inline-block px-3 py-1 bg-primary text-primary-foreground rounded text-xs font-bold">
                         S{{ $semestre }}
                     </span>
-                    <p class="text-xs text-muted-foreground mt-1">{{ $user->anneeAcademique->libelle }}</p>
+                    <p class="text-xs text-muted-foreground mt-1">{{ $user->anneeAcademique?->libelle ?? 'N/A' }}</p>
                 </div>
             </div>
         </div>
@@ -70,7 +70,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="font-bold text-foreground text-sm">Modules - Semestre {{ $semestre }}</h3>
-                        <p class="text-xs text-muted-foreground mt-0.5">{{ $modules->count() }} module(s)</p>
+                        <p class="text-xs text-muted-foreground mt-0.5">{{ $modules->count() }} module(s) de {{ $user->specialite?->intitule ?? 'cette spécialité' }}</p>
                     </div>
                     @if($evaluations->isNotEmpty())
                         <span class="text-xs font-bold text-green-600">✓ {{ $evaluations->count() }}/{{ $modules->count() }}</span>
@@ -105,7 +105,7 @@
                                     {{ $module->code }}
                                 </span>
                                 @if($isSaisie)
-                                    <span class="text-xs font-bold text-green-600">Saisi</span>
+                                    <span class="text-xs font-bold text-green-600">✓ Saisi</span>
                                 @endif
                             </div>
                             <p class="text-sm font-medium text-foreground truncate">{{ $module->intitule }}</p>
@@ -151,7 +151,7 @@
                     </a>
                     <button type="submit" 
                             class="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-md transition-colors">
-                        Enregistrer
+                        Enregistrer les notes
                     </button>
                 </div>
             </div>
@@ -183,16 +183,27 @@
 
     @elseif($user && $modules->isEmpty())
 
-        <div class="bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+        <div class="bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 text-center">
+            <svg class="w-12 h-12 mx-auto text-yellow-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <h3 class="text-lg font-bold text-yellow-900 dark:text-yellow-100 mb-1">Aucun module disponible</h3>
             <p class="text-sm text-yellow-800 dark:text-yellow-200">
-                Aucun module pour le semestre {{ $semestre }}.
+                Aucun module trouvé pour <strong>{{ $user->specialite?->intitule ?? 'cette spécialité' }}</strong> au semestre {{ $semestre }}.
+            </p>
+            <p class="text-xs text-yellow-700 dark:text-yellow-300 mt-2">
+                Veuillez d'abord créer les modules pour cette spécialité.
             </p>
         </div>
 
     @else
 
         <div class="bg-card border border-border rounded-lg p-8 text-center">
-            <p class="text-sm text-muted-foreground">Sélectionnez un étudiant et un semestre</p>
+            <svg class="w-16 h-16 mx-auto text-muted-foreground mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <p class="text-sm text-muted-foreground mb-4">Sélectionnez un étudiant et un semestre pour commencer</p>
+            <p class="text-xs text-muted-foreground">Les modules seront automatiquement filtrés par la spécialité de l'étudiant</p>
         </div>
 
     @endif

@@ -5,19 +5,35 @@
 @section('content')
 <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-    <!-- En-tête -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-foreground">Modifier un Module</h1>
         <p class="mt-1 text-xs text-muted-foreground">Mettre à jour les informations</p>
     </div>
 
-    <!-- Formulaire -->
     <div class="bg-card border border-border rounded-lg p-6">
         <form action="{{ route('modules.update', $module) }}" method="POST" class="space-y-5">
             @csrf
             @method('PUT')
 
-            <!-- Grille 2 colonnes -->
+            <!-- Spécialité -->
+            <div>
+                <label for="specialite_id" class="block text-sm font-semibold text-foreground mb-2">
+                    Spécialité <span class="text-destructive">*</span>
+                </label>
+                <select name="specialite_id" id="specialite_id" required
+                    class="w-full px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors @error('specialite_id') border-destructive focus:ring-destructive/50 @enderror">
+                    <option value="">Sélectionner une spécialité</option>
+                    @foreach($specialites as $specialite)
+                        <option value="{{ $specialite->id }}" {{ old('specialite_id', $module->specialite_id) == $specialite->id ? 'selected' : '' }}>
+                            {{ $specialite->intitule }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('specialite_id')
+                    <p class="mt-1 text-xs text-destructive">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 
                 <!-- Code -->
