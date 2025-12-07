@@ -83,7 +83,7 @@ class BilanCompetence extends Model
             $this->moy_competences = round($moyCompetences, 2);
         }
 
-        // Calcul de la moyenne générale (30% évals + 70% compétences)
+        // -Calcul de la moyenne générale (30% évals + 70% compétences)
         if ($this->moy_evaluations !== null && $this->moy_competences !== null) {
             $this->moyenne_generale = round(
                 ($this->moy_evaluations * 0.30) + ($this->moy_competences * 0.70),
