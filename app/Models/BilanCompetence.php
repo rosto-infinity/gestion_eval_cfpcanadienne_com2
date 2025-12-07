@@ -78,7 +78,7 @@ class BilanCompetence extends Model
             $this->moy_evaluations = round($moyenneEvals, 2);
         }
 
-        // Si la moyenne des compétences est fournie
+        // -Si la moyenne des compétences est fournie
         if ($moyCompetences !== null) {
             $this->moy_competences = round($moyCompetences, 2);
         }
