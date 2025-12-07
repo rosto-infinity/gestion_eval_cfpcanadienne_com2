@@ -179,7 +179,7 @@ class UserController extends Controller
                 return back()->with('error', 'Impossible de supprimer un étudiant avec un bilan de compétences.');
             }
 
-            // Supprimer la photo de profil
+            // -Supprimer la photo de profil
             if ($user->profile) {
                 Storage::disk('public')->delete($user->profile);
             }
