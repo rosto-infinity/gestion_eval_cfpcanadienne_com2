@@ -41,7 +41,7 @@ class Module extends Model
         return $this->hasMany(Evaluation::class, 'module_id');
     }
 
-    // Scopes
+    // -Scopes
     public function scopeOrdered(Builder $query): Builder
     {
         return $query->orderBy('ordre', 'asc');
