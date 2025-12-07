@@ -58,7 +58,7 @@ class AnneeAcademique extends Model
     // Methods
     public function activate()
     {
-        // Désactiver toutes les autres années
+        // -Désactiver toutes les autres années
         self::where('id', '!=', $this->id)->update(['is_active' => false]);
 
         return $this->update(['is_active' => true]);
