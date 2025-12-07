@@ -62,7 +62,7 @@ class Module extends Model
         return $query->whereIn('code', ['M6', 'M7', 'M8', 'M9', 'M10']);
     }
 
-    // Methods
+    // -Methods
     public function isSemestre1(): bool
     {
         return in_array($this->code, ['M1', 'M2', 'M3', 'M4', 'M5']);
