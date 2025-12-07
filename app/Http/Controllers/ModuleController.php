@@ -34,6 +34,7 @@ class ModuleController extends Controller
     public function create(): View
     {
         $specialites = Specialite::orderBy('intitule')->get();
+
         return view('modules.create-modules', compact('specialites'));
     }
 
@@ -87,6 +88,7 @@ class ModuleController extends Controller
     public function edit(Module $module): View
     {
         $specialites = Specialite::orderBy('intitule')->get();
+
         return view('modules.edit-modules', compact('module', 'specialites'));
     }
 

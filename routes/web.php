@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function (): void {
     Route::resource('evaluations', EvaluationController::class);
     Route::post('evaluations/store-multiple', [EvaluationController::class, 'storeMultiple'])->name('evaluations.store-multiple');
 
-    //Relevé de notes
+    // Relevé de notes
     Route::get('users/{user}/releve-notes', [EvaluationController::class, 'releveNotes'])
         ->name('evaluations.releve-notes');
     Route::get('users/{user}/releve-notes/pdf', [EvaluationController::class, 'releveNotesPdf'])

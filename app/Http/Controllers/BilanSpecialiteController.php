@@ -189,11 +189,11 @@ class BilanSpecialiteController extends Controller
     /**
      * Comparaison entre spécialités
      */
-   public function comparaison(Request $request): View
+    public function comparaison(Request $request): View
     {
         // Récupérer l'année ID et le convertir en int
         $anneeId = (int) ($request->input('annee_id') ?? AnneeAcademique::active()->first()?->id ?? 0);
-        
+
         // Vérifier que l'année existe
         if ($anneeId === 0) {
             $anneeId = (int) AnneeAcademique::ordered()->first()?->id ?? 0;
@@ -204,7 +204,7 @@ class BilanSpecialiteController extends Controller
 
         // Si aucune spécialité n'est sélectionnée, prendre toutes les spécialités
         if (empty($specialiteIds)) {
-            $specialiteIds = Specialite::pluck('id')->map(fn($id) => (int) $id)->toArray();
+            $specialiteIds = Specialite::pluck('id')->map(fn ($id) => (int) $id)->toArray();
         }
 
         // Récupérer les données de bilan
@@ -230,14 +230,14 @@ class BilanSpecialiteController extends Controller
     {
         // Vérifier que l'année existe
         $annee = AnneeAcademique::find($anneeId);
-        if (!$annee) {
+        if (! $annee) {
             return collect([]);
         }
 
         $query = Specialite::query();
 
         // Filtrer par spécialités si des IDs sont fournis
-        if (!empty($specialiteIds)) {
+        if (! empty($specialiteIds)) {
             $query->whereIn('id', $specialiteIds);
         }
 

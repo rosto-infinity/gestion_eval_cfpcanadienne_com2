@@ -44,12 +44,12 @@ class EvaluationController extends Controller
     {
         $userId = $request->query('user_id');
         $user = $userId ? User::with(['specialite', 'anneeAcademique'])->findOrFail($userId) : null;
-        
+
         // Filtrer les modules par spécialité de l'étudiant
         $modules = $user && $user->specialite_id
             ? Module::where('specialite_id', $user->specialite_id)->ordered()->get()
             : collect();
-        
+
         $users = User::with(['specialite', 'anneeAcademique'])->ordered()->get();
         $annees = AnneeAcademique::ordered()->get();
 
@@ -117,7 +117,7 @@ class EvaluationController extends Controller
         $modules = $evaluation->user && $evaluation->user->specialite_id
             ? Module::where('specialite_id', $evaluation->user->specialite_id)->ordered()->get()
             : collect();
-        
+
         $users = User::with(['specialite', 'anneeAcademique'])->ordered()->get();
         $annees = AnneeAcademique::ordered()->get();
 
@@ -171,7 +171,7 @@ class EvaluationController extends Controller
             // Filtrer les modules par spécialité ET par semestre
             if ($user->specialite_id) {
                 $modulesQuery = Module::where('specialite_id', $user->specialite_id);
-                
+
                 $modules = $semestre == 1
                     ? $modulesQuery->semestre1()->ordered()->get()
                     : $modulesQuery->semestre2()->ordered()->get();
@@ -212,6 +212,7 @@ class EvaluationController extends Controller
 
             if ($invalidModules) {
                 DB::rollBack();
+
                 return back()
                     ->withInput()
                     ->with('error', 'Certains modules n\'appartiennent pas à la spécialité de l\'étudiant.');
@@ -300,7 +301,7 @@ class EvaluationController extends Controller
                 'margin_left' => 10,
             ]);
 
-        $filename = 'releve_notes_' . $user->matricule . '_' . now()->format('Ymd_His') . '.pdf';
+        $filename = 'releve_notes_'.$user->matricule.'_'.now()->format('Ymd_His').'.pdf';
 
         return $pdf->download($filename);
     }
@@ -310,6 +311,7 @@ class EvaluationController extends Controller
         if (empty($moyenneSemestre1) || empty($moyenneSemestre2)) {
             return 0;
         }
+
         return ($moyenneSemestre1 + $moyenneSemestre2) / 2;
     }
 

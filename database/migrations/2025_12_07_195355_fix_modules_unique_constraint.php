@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,10 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('modules', function (Blueprint $table) {
+        Schema::table('modules', function (Blueprint $table): void {
             // Supprimer l'ancienne contrainte unique sur 'code'
             $table->dropUnique('modules_code_unique');
-            
+
             // Ajouter une contrainte unique composite (specialite_id + code)
             $table->unique(['specialite_id', 'code'], 'modules_specialite_code_unique');
         });
@@ -25,10 +27,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('modules', function (Blueprint $table) {
+        Schema::table('modules', function (Blueprint $table): void {
             // Supprimer la contrainte composite
             $table->dropUnique('modules_specialite_code_unique');
-            
+
             // Remettre l'ancienne contrainte unique sur 'code'
             $table->unique('code', 'modules_code_unique');
         });

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,10 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('evaluations', function (Blueprint $table) {
+        Schema::table('evaluations', function (Blueprint $table): void {
             // Ajouter un index composite pour améliorer les performances
             $table->index(['user_id', 'semestre', 'annee_academique_id'], 'evaluations_user_semestre_annee_index');
-            
+
             // Index pour la contrainte unique (éviter les doublons)
             $table->unique(['user_id', 'module_id', 'semestre', 'annee_academique_id'], 'evaluations_unique_constraint');
         });
@@ -25,7 +27,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('evaluations', function (Blueprint $table) {
+        Schema::table('evaluations', function (Blueprint $table): void {
             $table->dropIndex('evaluations_user_semestre_annee_index');
             $table->dropUnique('evaluations_unique_constraint');
         });
