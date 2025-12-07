@@ -30,7 +30,7 @@ class Module extends Model
         'specialite_id' => 'integer',
     ];
 
-    // Relations
+    // -Relations
     public function specialite(): BelongsTo
     {
         return $this->belongsTo(Specialite::class, 'specialite_id');
