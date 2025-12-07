@@ -72,7 +72,7 @@ class BilanCompetence extends Model
             $this->annee_academique_id
         );
 
-        // Calcul de la moyenne des évaluations (30%)
+        // -Calcul de la moyenne des évaluations (30%)
         if ($this->moy_eval_semestre1 !== null && $this->moy_eval_semestre2 !== null) {
             $moyenneEvals = ($this->moy_eval_semestre1 + $this->moy_eval_semestre2) / 2;
             $this->moy_evaluations = round($moyenneEvals, 2);
