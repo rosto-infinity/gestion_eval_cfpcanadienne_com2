@@ -138,7 +138,7 @@ class UserController extends Controller
         ]);
 
         try {
-            // Upload de la nouvelle photo
+            // -Upload de la nouvelle photo
             if ($request->hasFile('profile')) {
                 // Supprimer l'ancienne photo
                 if ($user->profile) {
