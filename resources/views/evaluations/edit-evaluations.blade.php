@@ -3,7 +3,7 @@
 @section('title', 'Modifier l\'Évaluation')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <!-- Breadcrumb -->
     <div class="mb-8">

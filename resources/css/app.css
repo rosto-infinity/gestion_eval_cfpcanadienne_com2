@@ -63,7 +63,8 @@
 /* Scrollbar fine et stylisée */
 ::-webkit-scrollbar {
     width: 5px;
-    height: 6px;
+    height: 2px;
+    border-radius: 50px;
 }
 
 ::-webkit-scrollbar-track {
@@ -72,21 +73,12 @@
 
 ::-webkit-scrollbar-thumb {
     background: #ff0000;
-    border-radius: 3px;
+    border-radius: 2px;
 }
 
-/* Personnalisation de la barre NProgress utilisée par Inertia */
-#nprogress .bar {
-    height: 5px !important; /* Ajuste l'épaisseur ici */
-    background: #ff0000 !important; /* Couleur de la barre */
-    box-shadow: none !important;
-}
 
-#nprogress .peg {
-    box-shadow:
-        0 0 10px #ff2323,
-        0 0 5px #c00000 !important;
-}
+
+
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
