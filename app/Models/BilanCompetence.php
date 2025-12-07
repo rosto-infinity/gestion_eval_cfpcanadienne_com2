@@ -59,7 +59,7 @@ class BilanCompetence extends Model
     // Methods
     public function calculateAndSave(?float $moyCompetences = null): bool
     {
-        // Calcul des moyennes semestrielles
+        // -Calcul des moyennes semestrielles
         $this->moy_eval_semestre1 = Evaluation::calculateMoyenneSemestre(
             $this->user_id,
             1,
