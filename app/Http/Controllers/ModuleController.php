@@ -102,7 +102,7 @@ class ModuleController extends Controller
             'ordre' => 'required|integer|min:1|max:100',
         ]);
 
-        // Vérifier l'unicité du code par spécialité (sauf pour le module actuel)
+        // -Vérifier l'unicité du code par spécialité (sauf pour le module actuel)
         $exists = Module::where('specialite_id', $validated['specialite_id'])
             ->where('code', $validated['code'])
             ->where('id', '!=', $module->id)
