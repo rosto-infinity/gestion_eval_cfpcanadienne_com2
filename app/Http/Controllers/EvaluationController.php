@@ -188,7 +188,7 @@ class EvaluationController extends Controller
     {
         $evaluation->load(['user.specialite', 'module', 'anneeAcademique']);
 
-        // Filtrer les modules par spécialité de l'étudiant
+        // -Filtrer les modules par spécialité de l'étudiant
         $modules = collect();
         if ($evaluation->user && $evaluation->user->specialite_id) {
             $modules = Module::where('specialite_id', $evaluation->user->specialite_id)
