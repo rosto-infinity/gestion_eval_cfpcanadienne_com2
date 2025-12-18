@@ -96,7 +96,7 @@ class EvaluationController extends Controller
     }
 
     /**
-     * Filtre les modules par semestre (AJAX).
+     * -Filtre les modules par semestre (AJAX).
      * ✅ Nouveau endpoint pour filtrer par semestre
      */
     public function getModulesBySemestre(User $user, int $semestre): JsonResponse
