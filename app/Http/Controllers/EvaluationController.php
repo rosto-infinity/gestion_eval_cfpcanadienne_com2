@@ -46,9 +46,12 @@ class EvaluationController extends Controller
         $user = $userId ? User::with(['specialite', 'anneeAcademique'])->findOrFail($userId) : null;
 
         // Filtrer les modules par spécialité de l'étudiant
-        $modules = $user && $user->specialite_id
-            ? Module::where('specialite_id', $user->specialite_id)->ordered()->get()
-            : collect();
+        $modules = collect();
+        if ($user && $user->specialite_id) {
+            $modules = Module::where('specialite_id', $user->specialite_id)
+                ->ordered()
+                ->get();
+        }
 
         $users = User::with(['specialite', 'anneeAcademique'])->ordered()->get();
         $annees = AnneeAcademique::ordered()->get();
@@ -67,7 +70,7 @@ class EvaluationController extends Controller
         ]);
 
         try {
-            // -Vérifier que le module appartient à la spécialité de l'étudiant
+            // Vérifier que le module appartient à la spécialité de l'étudiant
             $user = User::findOrFail($validated['user_id']);
             $module = Module::findOrFail($validated['module_id']);
 
@@ -114,9 +117,12 @@ class EvaluationController extends Controller
         $evaluation->load(['user.specialite', 'module', 'anneeAcademique']);
 
         // Filtrer les modules par spécialité de l'étudiant
-        $modules = $evaluation->user && $evaluation->user->specialite_id
-            ? Module::where('specialite_id', $evaluation->user->specialite_id)->ordered()->get()
-            : collect();
+        $modules = collect();
+        if ($evaluation->user && $evaluation->user->specialite_id) {
+            $modules = Module::where('specialite_id', $evaluation->user->specialite_id)
+                ->ordered()
+                ->get();
+        }
 
         $users = User::with(['specialite', 'anneeAcademique'])->ordered()->get();
         $annees = AnneeAcademique::ordered()->get();
@@ -177,11 +183,13 @@ class EvaluationController extends Controller
                     : $modulesQuery->semestre2()->ordered()->get();
             }
 
-            $evaluations = Evaluation::where('user_id', $userId)
-                ->where('semestre', $semestre)
-                ->where('annee_academique_id', $user->annee_academique_id)
-                ->get()
-                ->keyBy('module_id');
+            if ($user->annee_academique_id) {
+                $evaluations = Evaluation::where('user_id', $userId)
+                    ->where('semestre', $semestre)
+                    ->where('annee_academique_id', $user->annee_academique_id)
+                    ->get()
+                    ->keyBy('module_id');
+            }
         }
 
         $users = User::with(['specialite', 'anneeAcademique'])->ordered()->get();

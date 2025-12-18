@@ -76,7 +76,7 @@
                             <label for="module_id" class="block text-sm font-semibold text-foreground mb-2">
                                 <span class="text-destructive">*</span> Module
                             </label>
-                            <select name="module_id" id="module_id" 
+                           <select name="module_id" id="module_id" 
                                     class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('module_id') border-destructive ring-2 ring-destructive/20 @enderror" 
                                     required onchange="updateModuleInfo()" {{ !$user ? 'disabled' : '' }}>
                                 <option value="">{{ $user ? '-- Sélectionner un module --' : '-- Sélectionner d\'abord un étudiant --' }}</option>
