@@ -63,7 +63,7 @@ class EvaluationController extends Controller
 
     /**
      * -Charge les modules pour un utilisateur (AJAX).
-     * ✅ Retourne tous les modules de la spécialité
+     * ✅ -Retourne tous les modules de la spécialité
      */
     public function getUserModules(User $user): JsonResponse
     {
