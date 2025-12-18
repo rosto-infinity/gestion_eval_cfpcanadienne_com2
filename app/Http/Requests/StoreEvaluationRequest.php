@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -57,17 +59,17 @@ class StoreEvaluationRequest extends FormRequest
         return [
             'user_id.required' => 'L\'étudiant est obligatoire.',
             'user_id.exists' => 'L\'étudiant sélectionné n\'existe pas.',
-            
+
             'module_id.required' => 'Le module est obligatoire.',
             'module_id.exists' => 'Le module sélectionné n\'existe pas.',
-            
+
             'annee_academique_id.required' => 'L\'année académique est obligatoire.',
             'annee_academique_id.exists' => 'L\'année académique sélectionnée n\'existe pas.',
-            
+
             'semestre.required' => 'Le semestre est obligatoire.',
             'semestre.integer' => 'Le semestre doit être un nombre entier.',
             'semestre.in' => 'Le semestre doit être 1 ou 2.',
-            
+
             'note.required' => 'La note est obligatoire.',
             'note.numeric' => 'La note doit être un nombre.',
             'note.min' => 'La note ne peut pas être inférieure à 0.',

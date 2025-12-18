@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Module;
-use Illuminate\View\View;
-use App\Models\Evaluation;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreEvaluationRequest;
 use App\Models\AnneeAcademique;
+use App\Models\Evaluation;
+use App\Models\Module;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
-use App\Http\Requests\StoreEvaluationRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class EvaluationController extends Controller
 {
@@ -61,8 +61,8 @@ class EvaluationController extends Controller
         return view('evaluations.create-evaluations', compact('modules', 'users', 'annees', 'user'));
     }
 
-/**
-     * Charge les modules pour un utilisateur (AJAX).
+    /**
+     * -Charge les modules pour un utilisateur (AJAX).
      * ✅ Retourne tous les modules de la spécialité
      */
     public function getUserModules(User $user): JsonResponse
@@ -95,8 +95,7 @@ class EvaluationController extends Controller
         ]);
     }
 
-    
-   /**
+    /**
      * Filtre les modules par semestre (AJAX).
      * ✅ Nouveau endpoint pour filtrer par semestre
      */
@@ -123,8 +122,7 @@ class EvaluationController extends Controller
         ]);
     }
 
-
-   /**
+    /**
      * Stocke une nouvelle évaluation.
      * ✅ Utilise StoreEvaluationRequest pour la validation
      */
@@ -175,9 +173,10 @@ class EvaluationController extends Controller
 
             return back()
                 ->withInput()
-                ->with('error', '❌ Erreur lors de la création: ' . $e->getMessage());
+                ->with('error', '❌ Erreur lors de la création: '.$e->getMessage());
         }
     }
+
     public function show(Evaluation $evaluation): View
     {
         $evaluation->load(['user.specialite', 'module', 'anneeAcademique']);
@@ -419,6 +418,4 @@ class EvaluationController extends Controller
             'modulesEchoues' => $modulesEchoues,
         ];
     }
-
-   
 }

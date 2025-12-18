@@ -24,15 +24,14 @@ Route::middleware('auth')->group(function (): void {
     Route::resource('modules', ModuleController::class);
     Route::resource('users', UserController::class);
     // Évaluations
-    
+
     Route::get('evaluations/saisir-multiple', [EvaluationController::class, 'saisirMultiple'])->name('evaluations.saisir-multiple');
     Route::resource('evaluations', EvaluationController::class);
-    
-    
+
     // ✅ AJAX pour charger les modules
     Route::get('/evaluations/get-user-modules/{user}', [EvaluationController::class, 'getUserModules'])
-    ->name('evaluations.get-user-modules');
-    
+        ->name('evaluations.get-user-modules');
+
     // ✅ AJAX pour filtrer les modules par semestre
     Route::get('/evaluations/get-modules-by-semestre/{user}/{semestre}', [EvaluationController::class, 'getModulesBySemestre'])
         ->name('evaluations.get-modules-by-semestre')
