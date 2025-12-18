@@ -284,7 +284,7 @@ class EvaluationController extends Controller
 
             $user = User::findOrFail($validated['user_id']);
 
-            // Vérifier que tous les modules appartiennent à la spécialité de l'étudiant
+            // -Vérifier que tous les modules appartiennent à la spécialité de l'étudiant
             $moduleIds = collect($validated['evaluations'])->pluck('module_id');
             $invalidModules = Module::whereIn('id', $moduleIds)
                 ->where('specialite_id', '!=', $user->specialite_id)
