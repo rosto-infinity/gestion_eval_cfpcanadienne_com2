@@ -246,7 +246,7 @@ class EvaluationController extends Controller
         if ($userId) {
             $user = User::with(['specialite', 'anneeAcademique'])->findOrFail($userId);
 
-            // Filtrer les modules par spécialité ET par semestre
+            // -Filtrer les modules par spécialité ET par semestre
             if ($user->specialite_id) {
                 $modulesQuery = Module::where('specialite_id', $user->specialite_id);
 
