@@ -141,7 +141,7 @@ class EvaluationController extends Controller
                     ->with('error', '❌ Ce module n\'appartient pas à la spécialité de l\'étudiant.');
             }
 
-            // ✅ Vérifier si l'évaluation existe déjà
+            // ✅ -Vérifier si l'évaluation existe déjà
             $exists = Evaluation::where('user_id', $validated['user_id'])
                 ->where('module_id', $validated['module_id'])
                 ->where('semestre', $validated['semestre'])
