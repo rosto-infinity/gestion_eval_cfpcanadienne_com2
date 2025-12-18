@@ -174,7 +174,7 @@ class UserController extends Controller
                 return back()->with('error', 'Impossible de supprimer un étudiant avec des évaluations.');
             }
 
-            // -Vérifier si l'utilisateur a un bilan
+            // --Vérifier si l'utilisateur a un bilan
             if ($user->bilanCompetence) {
                 return back()->with('error', 'Impossible de supprimer un étudiant avec un bilan de compétences.');
             }
