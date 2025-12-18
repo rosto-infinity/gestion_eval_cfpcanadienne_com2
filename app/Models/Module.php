@@ -62,6 +62,11 @@ class Module extends Model
         return $query->whereIn('code', ['M6', 'M7', 'M8', 'M9', 'M10']);
     }
 
+    public function scopeBySemestre(Builder $query, int $semestre): Builder
+    {
+        return $semestre === 1 ? $query->semestre1() : $query->semestre2();
+    }
+
     // -Methods
     public function isSemestre1(): bool
     {

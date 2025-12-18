@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\AnneeAcademique;
-use App\Models\Evaluation;
-use App\Models\Module;
 use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Module;
 use Illuminate\View\View;
+use App\Models\Evaluation;
+use Illuminate\Http\Request;
+use App\Models\AnneeAcademique;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\StoreEvaluationRequest;
 
 class EvaluationController extends Controller
 {
@@ -59,28 +61,89 @@ class EvaluationController extends Controller
         return view('evaluations.create-evaluations', compact('modules', 'users', 'annees', 'user'));
     }
 
-    public function store(Request $request): RedirectResponse
+/**
+     * Charge les modules pour un utilisateur (AJAX).
+     * ✅ Retourne tous les modules de la spécialité
+     */
+    public function getUserModules(User $user): JsonResponse
     {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'module_id' => 'required|exists:modules,id',
-            'annee_academique_id' => 'required|exists:annees_academiques,id',
-            'semestre' => 'required|integer|in:1,2',
-            'note' => 'required|numeric|min:0|max:20',
+        $user->load(['specialite', 'anneeAcademique']);
+
+        $modules = collect();
+        if ($user->specialite_id) {
+            $modules = Module::where('specialite_id', $user->specialite_id)
+                ->ordered()
+                ->get();
+        }
+
+        return response()->json([
+            'user' => [
+                'id' => $user->id,
+                'matricule' => $user->matricule,
+                'fullName' => $user->getFullName(),
+                'specialite' => $user->specialite?->intitule ?? 'N/A',
+                'annee' => $user->anneeAcademique?->libelle ?? 'N/A',
+                'annee_id' => $user->annee_academique_id,
+            ],
+            'modules' => $modules->map(fn ($m) => [
+                'id' => $m->id,
+                'code' => $m->code,
+                'intitule' => $m->intitule,
+                'semestre' => $m->getSemestre(),
+                'coefficient' => $m->coefficient,
+            ]),
         ]);
+    }
+
+    
+   /**
+     * Filtre les modules par semestre (AJAX).
+     * ✅ Nouveau endpoint pour filtrer par semestre
+     */
+    public function getModulesBySemestre(User $user, int $semestre): JsonResponse
+    {
+        $user->load('specialite');
+
+        $modules = collect();
+        if ($user->specialite_id) {
+            $modules = Module::where('specialite_id', $user->specialite_id)
+                ->bySemestre($semestre)
+                ->ordered()
+                ->get();
+        }
+
+        return response()->json([
+            'modules' => $modules->map(fn ($m) => [
+                'id' => $m->id,
+                'code' => $m->code,
+                'intitule' => $m->intitule,
+                'semestre' => $m->getSemestre(),
+                'coefficient' => $m->coefficient,
+            ]),
+        ]);
+    }
+
+
+   /**
+     * Stocke une nouvelle évaluation.
+     * ✅ Utilise StoreEvaluationRequest pour la validation
+     */
+    public function store(StoreEvaluationRequest $request): RedirectResponse
+    {
+        $validated = $request->validated(); // ✅ Données validées
 
         try {
-            // Vérifier que le module appartient à la spécialité de l'étudiant
+            // ✅ Vérifier que le module appartient à la spécialité de l'étudiant
             $user = User::findOrFail($validated['user_id']);
             $module = Module::findOrFail($validated['module_id']);
 
             if ($user->specialite_id !== $module->specialite_id) {
                 return back()
                     ->withInput()
-                    ->with('error', 'Ce module n\'appartient pas à la spécialité de l\'étudiant.');
+                    ->with('error', '❌ Ce module n\'appartient pas à la spécialité de l\'étudiant.');
             }
 
-            // Vérifier si l'évaluation existe déjà
+            // ✅ Vérifier si l'évaluation existe déjà
             $exists = Evaluation::where('user_id', $validated['user_id'])
                 ->where('module_id', $validated['module_id'])
                 ->where('semestre', $validated['semestre'])
@@ -90,21 +153,31 @@ class EvaluationController extends Controller
             if ($exists) {
                 return back()
                     ->withInput()
-                    ->with('error', 'Cette évaluation existe déjà pour cet étudiant.');
+                    ->with('error', '⚠️ Cette évaluation existe déjà pour cet étudiant.');
             }
 
-            Evaluation::create($validated);
+            // ✅ Créer l'évaluation
+            $evaluation = Evaluation::create($validated);
 
             return redirect()
                 ->route('evaluations.index')
-                ->with('success', 'Évaluation créée avec succès.');
-        } catch (\Exception $e) {
+                ->with('success', "✅ Évaluation créée avec succès pour {$user->getFullName()} - {$module->code}.");
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la création: '.$e->getMessage());
+                ->with('error', '❌ L\'étudiant ou le module n\'existe pas.');
+        } catch (\Exception $e) {
+            \Log::error('Erreur création évaluation:', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            return back()
+                ->withInput()
+                ->with('error', '❌ Erreur lors de la création: ' . $e->getMessage());
         }
     }
-
     public function show(Evaluation $evaluation): View
     {
         $evaluation->load(['user.specialite', 'module', 'anneeAcademique']);
@@ -346,4 +419,6 @@ class EvaluationController extends Controller
             'modulesEchoues' => $modulesEchoues,
         ];
     }
+
+   
 }
