@@ -147,7 +147,7 @@ class UserController extends Controller
                 $validated['profile'] = $request->file('profile')->store('profiles', 'public');
             }
 
-            // --Mettre à jour le mot de passe si fourni
+            // ---Mettre à jour le mot de passe si fourni
             if ($request->filled('password')) {
                 $validated['password'] = Hash::make($validated['password']);
             } else {
