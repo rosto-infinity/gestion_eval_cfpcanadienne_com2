@@ -38,7 +38,7 @@ class StoreEvaluationRequest extends FormRequest
     }
 
     /**
-     * Récupère la règle d'unicité pour l'évaluation.
+     * -Récupère la règle d'unicité pour l'évaluation.
      * ✅ Vérifie que l'évaluation n'existe pas déjà
      */
     private function getUniqueEvaluationRule()
