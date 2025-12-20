@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const moyCompetencesInput = document.getElementById('moy_competences');
     const calculationPreview = document.getElementById('calculation-preview');
     
-    // Charger les infos si un étudiant est déjà sélectionné
+    // -Charger les infos si un étudiant est déjà sélectionné
     const userSelect = document.getElementById('user_id');
     if (userSelect.value) {
         loadStudentInfo(userSelect.value);
