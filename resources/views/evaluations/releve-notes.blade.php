@@ -8,24 +8,26 @@
         <!-- Actions -->
         <div class="mb-4 flex justify-between items-center">
             {{-- On n'affiche le bouton Retour que si l'utilisateur est au moins MANAGER --}}
-    @if(auth()->user()->role->isAtLeast(\App\Enums\Role::MANAGER))
-        <a href="{{ route('evaluations.index') }}"
-            class="text-sm text-primary hover:text-primary/80 inline-flex items-center gap-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Retour
-        </a>
-    @else
-        {{-- Optionnel : Un bouton retour vers le Dashboard pour l'étudiant --}}
-        <a href="{{ route('dashboard') }}"
-            class="text-sm text-primary hover:text-primary/80 inline-flex items-center gap-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Tableau de bord
-        </a>
-    @endif
+            @if (auth()->user()->role->isAtLeast(\App\Enums\Role::MANAGER))
+                <a href="{{ route('evaluations.index') }}"
+                    class="text-sm text-primary hover:text-primary/80 inline-flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Retour
+                </a>
+            @else
+                {{-- Optionnel : Un bouton retour vers le Dashboard pour l'étudiant --}}
+                <a href="{{ route('dashboard') }}"
+                    class="text-sm text-primary hover:text-primary/80 inline-flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Tableau de bord
+                </a>
+            @endif
             <!-- Version finale et correcte -->
             <a href="{{ route('evaluations.releve-notes.pdf', $user) }}" target="_blank" class="inline-block">
                 <button
@@ -52,10 +54,55 @@
         <div class="bg-card border border-border rounded-lg p-6" id="releve-notes">
 
             <!-- En-tête -->
-            <div class="text-center mb-6 pb-4 border-b border-border">
-                <h1 class="text-2xl font-bold text-foreground">RELEVÉ DE NOTES</h1>
-                <p class="text-sm text-muted-foreground mt-1">{{ $user->anneeAcademique->libelle }}</p>
-            </div>
+            <table border="0" cellspacing="0" cellpadding="0"
+                style="width: 100%; border: 1px solid #ddd; font-family: sans-serif; font-size: 10px;">
+                <!-- Première rangée : Colonnes de texte et logo -->
+                <tr>
+                    <!-- Colonne de gauche (Français) -->
+                    <td style="width: 33%;line-height: 1; vertical-align: top; padding: 10px;text-align: center;">
+                        <p style="font-weight: bold; text-decoration: underline; margin: 0 0 5px 0;">Ministère de l’emploi
+                            et de la Formation Professionnelle</p>
+                        <p style="font-size: 8px; color: #666; margin: 0 0 5px 0;">*************</p>
+                        <p style="margin: 0 0 5px 0;">Centre de Formation Professionnelle la Canadienne</p>
+                        <p style="font-size: 8px; color: #666; margin: 0 0 5px 0;">*************</p>
+                        <p style="margin: 0;">B.P.: 837 Bafoussam</p>
+                        <p style="margin: 0 0 5px 0;">Tel: +237 695 82 92 30 / 671 33 78 29</p>
+                        <p style="font-size: 8px; color: #666; margin: 0 0 0 0;">*************</p>
+                    </td>
+
+                    <!-- Colonne centrale (Logo) -->
+                    <td style="width: 33%; vertical-align: middle; text-align: center; padding: 10px;">
+                        <!-- Remplacez ceci par votre balise image <img> -->
+                        <div
+                            style="width: 150px; height: 100px; background-color: #f0f0f0; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                              <img src="/android-chrome-192x192.png" alt="Logo CFPC" style="max-width: 100%; max-height: 100%;">
+                        </div>
+                    </td>
+
+                    <!-- Colonne de droite (Anglais) -->
+                    <td style="width: 33%; vertical-align: top; text-align: right; padding: 10px; text-align: center;">
+                        <p style="font-weight: bold; text-decoration: underline; margin: 0 0 5px 0;">Ministry of employment
+                            and Vacational Training</p>
+                        <p style="font-size: 8px; color: #666; margin: 0 0 5px 0;">*************</p>
+                        <p style="margin: 0 0 5px 0;">Canadian Vocational Training center</p>
+                        <p style="font-size: 8px; color: #666; margin: 0 0 5px 0;">*************</p>
+                        <p style="margin: 0;">contact@cfpcanadienne.com</p>
+                        <p style="margin: 0 0 0 0;">www.cfpcanadiennecom</p>
+                        <p style="font-size: 8px; color: #666; margin: 0 0 0 0;">*************</p>
+                    </td>
+                </tr>
+
+                <!-- Deuxième rangée : Ligne inférieure pleine largeur -->
+                <tr>
+                    <td colspan="3" style="border-top: 2px solid #000; text-align: center; padding-top: 5px;">
+                        <p style="font-size: 9px; margin: 0;">
+                            Créée et agréée, renouvelée par Arrêté ministériel N° 000355/MINEFOP/SG/DFOP/SDGSF/CSACD/CBAC
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+
 
             <!-- Infos Étudiant -->
             <div class="grid grid-cols-2 gap-4 mb-6 bg-muted/30 p-4 rounded">
@@ -169,7 +216,8 @@
                                 @foreach ($evaluationsSemestre2 as $eval)
                                     <tr class="hover:bg-muted/20">
                                         <td class="px-3 py-2">
-                                            <span class="text-xs font-bold px-2 py-0.5 rounded bg-green-100 text-green-700">
+                                            <span
+                                                class="text-xs font-bold px-2 py-0.5 rounded bg-green-100 text-green-700">
                                                 {{ $eval->module->code }}
                                             </span>
                                         </td>
@@ -219,22 +267,25 @@
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 bg-muted/20 p-4 rounded">
                         <div class="text-center">
-                            <p class="text-xs text-muted-foreground mb-1">Évaluations (30%)</p>
+                            <p class="text-xs text-muted-foreground mb-1">MOYENNE S1</p>
                             <p class="text-lg font-bold text-blue-600">
-                                {{ number_format($user->bilanCompetence->moy_evaluations, 2) }}
+                                {{-- {{ number_format($user->bilanCompetence->moy_evaluations, 2) }} --}}
+                                {{ $moyenneSemestre1 ? number_format($moyenneSemestre1, 2) : '-' }}
                             </p>
                         </div>
                         <div class="text-center">
-                            <p class="text-xs text-muted-foreground mb-1">Compétences (70%)</p>
+                            <p class="text-xs text-muted-foreground mb-1">MOYENNE S2</p>
                             <p class="text-lg font-bold text-purple-600">
-                                {{ number_format($user->bilanCompetence->moy_competences, 2) }}
+                                {{-- {{ number_format($user->bilanCompetence->moy_competences, 2) }} --}}
+                                {{ $moyenneSemestre2 ? number_format($moyenneSemestre2, 2) : '-' }}
                             </p>
                         </div>
                         <div class="text-center col-span-2">
                             <p class="text-xs text-muted-foreground mb-1">MOYENNE GÉNÉRALE</p>
                             <p
                                 class="text-2xl font-bold {{ $user->bilanCompetence->moyenne_generale >= 10 ? 'text-green-600' : 'text-red-600' }}">
-                                {{ number_format($user->bilanCompetence->moyenne_generale, 2) }}/20
+                                {{-- {{ number_format($user->bilanCompetence->moyenne_generale, 2) }}/20 --}}
+                                {{ number_format($moyenneGenerale ?? 0, 2) }}/20
                             </p>
                             <span
                                 class="text-xs font-bold px-2 py-0.5 rounded inline-block mt-1 {{ $user->bilanCompetence->moyenne_generale >= 10 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
@@ -261,27 +312,24 @@
 
     </div>
 @endsection
+<style>
+    @media print {
 
-@push('styles')
-    <style>
-        @media print {
-
-            .btn,
-            nav,
-            footer,
-            a[href*="retour"],
-            button {
-                display: none !important;
-            }
-
-            #releve-notes {
-                box-shadow: none;
-                border: 1px solid #ccc;
-            }
-
-            body {
-                padding: 0;
-            }
+        .btn,
+        nav,
+        footer,
+        a[href*="retour"],
+        button {
+            display: none !important;
         }
-    </style>
-@endpush
+
+        #releve-notes {
+            box-shadow: none;
+            border: 1px solid #ccc;
+        }
+
+        body {
+            padding: 0;
+        }
+    }
+</style>

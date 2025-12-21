@@ -180,7 +180,7 @@
 <body>
     <!-- En-tête -->
     <div class="header">
-        <h1>📊 DÉTAIL DE LA SPÉCIALITÉ</h1>
+        <h1>DÉTAIL DE LA SPÉCIALITÉ</h1>
         <p><strong>{{ $specialite->code }}</strong> - {{ $specialite->intitule }}</p>
         @if($annee)
         <p>Année académique : {{ $annee->libelle }}</p>
@@ -189,7 +189,7 @@
     </div>
 
     <!-- Statistiques -->
-    <div class="stats-container">
+    {{-- <div class="stats-container">
         <div class="stat-box total">
             <label>Total Étudiants</label>
             <div class="value">{{ $statsGlobales['total_etudiants'] }}</div>
@@ -210,7 +210,7 @@
             <label>Moy Générale</label>
             <div class="value">{{ number_format($statsGlobales['moyenne_generale'], 2) }}</div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Tableau des étudiants -->
     <div class="table-container">

@@ -342,13 +342,15 @@ class EvaluationController extends Controller
 
         $moyenneSemestre1 = $user->getMoyenneSemestre(1);
         $moyenneSemestre2 = $user->getMoyenneSemestre(2);
+         $moyenneGenerale = $this->calculerMoyenneGenerale($moyenneSemestre1, $moyenneSemestre2);
 
         return view('evaluations.releve-notes', compact(
             'user',
             'evaluationsSemestre1',
             'evaluationsSemestre2',
             'moyenneSemestre1',
-            'moyenneSemestre2'
+            'moyenneSemestre2',
+            'moyenneGenerale'
         ));
     }
 

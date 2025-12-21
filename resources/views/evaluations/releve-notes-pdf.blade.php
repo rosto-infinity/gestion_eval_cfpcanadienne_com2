@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <title>Relevé de Notes - {{ $user->matricule }}</title>
@@ -17,37 +18,19 @@
             color: #1f2937;
         }
 
+
         .container {
             width: 100%;
-            padding: 12px;
+            padding: 8px 25px;
         }
 
         /* ============ EN-TÊTE ============ */
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 18px;
-            margin-bottom: 18px;
-            border-radius: 5px;
-            text-align: center;
-        }
 
-        .header h1 {
-            font-size: 20px;
-            margin-bottom: 6px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
 
-        .header p {
-            font-size: 10px;
-            opacity: 0.95;
-            margin: 2px 0;
-            line-height: 1.4;
-        }
 
         /* ============ INFORMATIONS ÉTUDIANT ============ */
         .info-section {
+            width: 95%;
             background: #f8f9fa;
             padding: 12px;
             margin-bottom: 18px;
@@ -99,28 +82,18 @@
 
         /* ============ SECTION TITRE ============ */
         .section-title {
-            background: #2196F3;
-            color: white;
-            padding: 8px 12px;
+            color: #FF0000;
             font-size: 11px;
             font-weight: bold;
-            margin: 12px 0 8px 0;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .section-title.semestre2 {
-            background: #FF9800;
         }
 
         .section-title.general {
-            background: #667eea;
+            color: #000;
         }
 
         /* ============ TABLEAU ============ */
         table {
-            width: 100%;
+            width: 95%;
             border-collapse: collapse;
             margin-bottom: 12px;
             font-size: 9px;
@@ -144,6 +117,7 @@
 
         th:last-child {
             border-right: none;
+           
         }
 
         th.left {
@@ -188,6 +162,7 @@
 
         /* ============ SECTION RÉSUMÉ ============ */
         .recap-section {
+            width: 95%;
             background: white;
             padding: 12px;
             margin: 12px 0;
@@ -233,11 +208,9 @@
 
         /* ============ SECTION STATISTIQUES ============ */
         .stats-section {
+            width: 95%;
             background: white;
-            padding: 12px;
-            margin-bottom: 18px;
             border: 1px solid #e5e7eb;
-            border-radius: 5px;
             page-break-inside: avoid;
         }
 
@@ -250,11 +223,8 @@
         .stats-cell {
             display: table-cell;
             text-align: center;
-            padding: 10px;
             background: linear-gradient(135deg, #f0fdf4 0%, #f8f9fa 100%);
-            border-radius: 4px;
             border: 1px solid #e5e7eb;
-            margin-right: 6px;
         }
 
         .stats-cell:last-child {
@@ -288,45 +258,92 @@
             font-size: 9px;
         }
 
-        /* ============ FOOTER ============ */
-        .footer {
-            margin-top: 18px;
-            padding-top: 10px;
-            border-top: 1px solid #e5e7eb;
-            text-align: center;
-            font-size: 8px;
-            color: #9ca3af;
-            page-break-inside: avoid;
+        .table-content {
+            display: grid;
+            justify-content: center;
+            align-content: center;
         }
 
-        .footer p {
-            margin: 2px 0;
-            line-height: 1.3;
-        }
 
         /* ============ PRINT ============ */
         @media print {
             body {
-                background: white;
+                background: rgb(109, 9, 9);
             }
+
             .container {
-                padding: 8px;
+                padding: 10px 20px;
             }
+
             table {
                 page-break-inside: avoid;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
 
-        <!-- EN-TÊTE -->
-        <div class="header">
-            <h1>📋 RELEVÉ DE NOTES</h1>
-            <p><strong>{{ $user->name }}</strong></p>
-            <p>Matricule: <strong>{{ $user->matricule }}</strong></p>
-        </div>
+
+        <!-- En-tête Officiel -->
+        <table border="0" cellspacing="0" cellpadding="0"
+            style="width: 98%; border-bottom: 2px solid #000; font-family: 'Helvetica', sans-serif; font-size: 10px; margin-bottom: 20px;">
+            <tr>
+               <!-- Colonne de gauche (Français) -->
+                    <td style="width: 33%;  line-height: 1; vertical-align: top; padding: 10px;text-align: center;">
+                        <p style="font-weight: bold; text-decoration: underline; margin: 0 0 5px 0;">Ministère de l’emploi
+                            et de la Formation Professionnelle</p>
+                        <p style="font-size: 8px; color: #666; margin: 0 0 5px 0;">*************</p>
+                        <p style="margin: 0 0 5px 0;">Centre de Formation Professionnelle la Canadienne</p>
+                        <p style="font-size: 8px; color: #666; margin: 0 0 5px 0;">*************</p>
+                        <p style="margin: 0;">B.P.: 837 Bafoussam</p>
+                        <p style="margin: 0 0 5px 0;">Tel: +237 695 82 92 30 / 671 33 78 29</p>
+                        <p style="font-size: 8px; color: #666; margin: 0 0 0 0;">*************</p>
+                    </td>
+
+                <!-- Logo Central -->
+                <td style="width: 30%; text-align: center; vertical-align: middle;">
+                    @php
+                        $path = public_path('android-chrome-512x512.png');
+                        if (file_exists($path)) {
+                            $type = pathinfo($path, PATHINFO_EXTENSION);
+                            $data = file_get_contents($path);
+                            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                        }
+                    @endphp
+
+                    @if (isset($base64))
+                        <img src="{{ $base64 }}" style="height: 80px;">
+                    @else
+                        <div
+                            style="width: 80px; height: 80px; border: 1px solid #ddd; display: inline-block; line-height: 80px;">
+                            LOGO
+                        </div>
+                    @endif
+                </td>
+
+
+                <!-- Bloc Anglais -->
+                <td style="width: 33%; line-height: 1; vertical-align: top; text-align: right; padding: 10px; text-align: center;">
+                        <p style="font-weight: bold; text-decoration: underline; margin: 0 0 5px 0;">Ministry of employment
+                            and Vacational Training</p>
+                        <p style="font-size: 8px; color: #666; margin: 0 0 5px 0;">*************</p>
+                        <p style="margin: 0 0 5px 0;">Canadian Vocational Training center</p>
+                        <p style="font-size: 8px; color: #666; margin: 0 0 5px 0;">*************</p>
+                        <p style="margin: 0;">contact@cfpcanadienne.com</p>
+                        <p style="margin: 0 0 0 0;">www.cfpcanadiennecom</p>
+                        <p style="font-size: 8px; color: #666; margin: 0 0 0 0;">*************</p>
+                    </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: center; padding:-5px 5px 0 0; font-size: 0.9rem; font-style: italic; margin-top: -15px">
+                    Agrée par Arrêté Ministériel N° 000355/MINEFOP/SG/DFOP/SDGSF/CSACD/CBAC
+                </td>
+            </tr>
+        </table>
+
+
 
         <!-- INFORMATIONS ÉTUDIANT -->
         <div class="info-section">
@@ -367,81 +384,82 @@
         </div>
 
         <!-- SEMESTRE 1 -->
-        @if($evaluationsSemestre1->isNotEmpty())
+        @if ($evaluationsSemestre1->isNotEmpty())
             <div class="section-title">SEMESTRE 1</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th class="left">Code</th>
-                        <th class="left">Module</th>
-                        <th class="center">Coef.</th>
-                        <th class="center">Note</th>
-                        <th class="center">Appréciation</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $totalCoefficients1 = 0;
-                        $sommeNotesPonderees1 = 0;
-                    @endphp
-                    @foreach($evaluationsSemestre1 as $evaluation)
-                        @php
-                            $note = $evaluation->note ?? 0;
-                            $coefficient = $evaluation->module->coefficient ?? 1;
-                            $totalCoefficients1 += $coefficient;
-                            $sommeNotesPonderees1 += ($note * $coefficient);
-                            
-                            // Déterminer la couleur de la ligne
-                            if ($note >= 16) {
-                                $rowClass = 'note-excellent';
-                            } elseif ($note >= 14) {
-                                $rowClass = 'note-good';
-                            } elseif ($note >= 10) {
-                                $rowClass = 'note-average';
-                            } else {
-                                $rowClass = 'note-poor';
-                            }
-                            
-                            // Appréciation
-                            if ($note >= 16) {
-                                $appreciation = 'Très Bien';
-                            } elseif ($note >= 14) {
-                                $appreciation = 'Bien';
-                            } elseif ($note >= 12) {
-                                $appreciation = 'Assez Bien';
-                            } elseif ($note >= 10) {
-                                $appreciation = 'Passable';
-                            } else {
-                                $appreciation = 'Insuffisant';
-                            }
-                        @endphp
-                        <tr class="{{ $rowClass }}">
-                            <td>{{ $evaluation->module->code ?? 'N/A' }}</td>
-                            <td>{{ $evaluation->module->intitule ?? 'N/A' }}</td>
-                            <td class="center">{{ $coefficient }}</td>
-                            <td class="center"><strong>{{ number_format($note, 2) }}</strong></td>
-                            <td class="center">{{ $appreciation }}</td>
+            <div class="table-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="left">Code</th>
+                            <th class="left">Module</th>
+                            <th class="center">Coef.</th>
+                            <th class="center">Note</th>
+                            <th class="center">Appréciation</th>
                         </tr>
-                    @endforeach
-                    <tr class="row-total">
-                        <td colspan="3">MOYENNE SEMESTRE 1</td>
-                        <td class="center"><strong>{{ number_format($moyenneSemestre1 ?? 0, 2) }}</strong></td>
-                        <td class="center">
-                            @if($moyenneSemestre1 >= 10)
-                                Admis
-                            @else
-                                Non Admis
-                            @endif
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        @else
-            <div class="empty-message">Aucune évaluation pour le semestre 1</div>
+                    </thead>
+                    <tbody>
+                        @php
+                            $totalCoefficients1 = 0;
+                            $sommeNotesPonderees1 = 0;
+                        @endphp
+                        @foreach ($evaluationsSemestre1 as $evaluation)
+                            @php
+                                $note = $evaluation->note ?? 0;
+                                $coefficient = $evaluation->module->coefficient ?? 1;
+                                $totalCoefficients1 += $coefficient;
+                                $sommeNotesPonderees1 += $note * $coefficient;
+
+                                // Déterminer la couleur de la ligne
+                                if ($note >= 16) {
+                                    $rowClass = 'note-excellent';
+                                } elseif ($note >= 14) {
+                                    $rowClass = 'note-good';
+                                } elseif ($note >= 10) {
+                                    $rowClass = 'note-average';
+                                } else {
+                                    $rowClass = 'note-poor';
+                                }
+
+                                // Appréciation
+                                if ($note >= 16) {
+                                    $appreciation = 'Très Bien';
+                                } elseif ($note >= 14) {
+                                    $appreciation = 'Bien';
+                                } elseif ($note >= 12) {
+                                    $appreciation = 'Assez Bien';
+                                } elseif ($note >= 10) {
+                                    $appreciation = 'Passable';
+                                } else {
+                                    $appreciation = 'Insuffisant';
+                                }
+                            @endphp
+                            <tr class="{{ $rowClass }}">
+                                <td>{{ $evaluation->module->code ?? 'N/A' }}</td>
+                                <td>{{ $evaluation->module->intitule ?? 'N/A' }}</td>
+                                <td class="center">{{ $coefficient }}</td>
+                                <td class="center"><strong>{{ number_format($note, 2) }}</strong></td>
+                                <td class="center">{{ $appreciation }}</td>
+                            </tr>
+                        @endforeach
+                        <tr class="row-total">
+                            <td colspan="3">MOYENNE SEMESTRE 1</td>
+                            <td class="center"><strong>{{ number_format($moyenneSemestre1 ?? 0, 2) }}</strong></td>
+                            <td class="center">
+                                @if ($moyenneSemestre1 >= 10)
+                                    Admis
+                                @else
+                                    Non Admis
+                                @endif
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            @else
+                <div class="empty-message">Aucune évaluation pour le semestre 1</div>
         @endif
 
         <!-- SEMESTRE 2 -->
-        @if($evaluationsSemestre2->isNotEmpty())
+        @if ($evaluationsSemestre2->isNotEmpty())
             <div class="section-title semestre2">SEMESTRE 2</div>
             <table>
                 <thead>
@@ -458,13 +476,13 @@
                         $totalCoefficients2 = 0;
                         $sommeNotesPonderees2 = 0;
                     @endphp
-                    @foreach($evaluationsSemestre2 as $evaluation)
+                    @foreach ($evaluationsSemestre2 as $evaluation)
                         @php
                             $note = $evaluation->note ?? 0;
                             $coefficient = $evaluation->module->coefficient ?? 1;
                             $totalCoefficients2 += $coefficient;
-                            $sommeNotesPonderees2 += ($note * $coefficient);
-                            
+                            $sommeNotesPonderees2 += $note * $coefficient;
+
                             if ($note >= 16) {
                                 $rowClass = 'note-excellent';
                                 $appreciation = 'Très Bien';
@@ -494,7 +512,7 @@
                         <td colspan="3">MOYENNE SEMESTRE 2</td>
                         <td class="center"><strong>{{ number_format($moyenneSemestre2 ?? 0, 2) }}</strong></td>
                         <td class="center">
-                            @if($moyenneSemestre2 >= 10)
+                            @if ($moyenneSemestre2 >= 10)
                                 Admis
                             @else
                                 Non Admis
@@ -506,60 +524,56 @@
         @else
             <div class="empty-message">Aucune évaluation pour le semestre 2</div>
         @endif
+    </div>
+    <!-- RÉSUMÉ GÉNÉRAL -->
+    @if ($evaluationsSemestre1->isNotEmpty() || $evaluationsSemestre2->isNotEmpty())
+        <div class="section-title general">RÉSUMÉ GÉNÉRAL</div>
 
-        <!-- RÉSUMÉ GÉNÉRAL -->
-        @if($evaluationsSemestre1->isNotEmpty() || $evaluationsSemestre2->isNotEmpty())
-            <div class="section-title general">RÉSUMÉ GÉNÉRAL</div>
-            
-            <div class="recap-section">
-                <div class="recap-grid">
-                    <div class="recap-cell">
-                        <div class="recap-label">Moyenne S1</div>
-                        <div class="recap-value">{{ number_format($moyenneSemestre1 ?? 0, 2) }}/20</div>
-                    </div>
-                    <div class="recap-cell">
-                        <div class="recap-label">Moyenne S2</div>
-                        <div class="recap-value">{{ number_format($moyenneSemestre2 ?? 0, 2) }}/20</div>
-                    </div>
-                    <div class="recap-cell">
-                        <div class="recap-label">Moyenne Générale</div>
-                        <div class="recap-value">{{ number_format($moyenneGenerale ?? 0, 2) }}/20</div>
-                    </div>
+        <div class="recap-section">
+            <div class="recap-grid">
+                <div class="recap-cell">
+                    <div class="recap-label">Moyenne S1</div>
+                    <div class="recap-value">{{ number_format($moyenneSemestre1 ?? 0, 2) }}/20</div>
+                </div>
+                <div class="recap-cell">
+                    <div class="recap-label">Moyenne S2</div>
+                    <div class="recap-value">{{ number_format($moyenneSemestre2 ?? 0, 2) }}/20</div>
+                </div>
+                <div class="recap-cell">
+                    <div class="recap-label">Moyenne Générale</div>
+                    <div class="recap-value">{{ number_format($moyenneGenerale ?? 0, 2) }}/20</div>
                 </div>
             </div>
-
-            <!-- STATISTIQUES -->
-            <div class="stats-section">
-                <div class="stats-grid">
-                    <div class="stats-cell">
-                        <div class="stats-label">Total Modules</div>
-                        <div class="stats-value">{{ $stats['totalModules'] ?? 0 }}</div>
-                    </div>
-                    <div class="stats-cell">
-                        <div class="stats-label">Modules Validés</div>
-                        <div class="stats-value">{{ $stats['modulesValides'] ?? 0 }}</div>
-                    </div>
-                    <div class="stats-cell">
-                        <div class="stats-label">Modules Échoués</div>
-                        <div class="stats-value" style="color: #ef4444;">{{ $stats['modulesEchoues'] ?? 0 }}</div>
-                    </div>
-                    <div class="stats-cell">
-                        <div class="stats-label">Résultat</div>
-                        <div class="stats-value" style="color: {{ ($moyenneGenerale ?? 0) >= 10 ? '#10b981' : '#ef4444' }}">
-                            {{ ($moyenneGenerale ?? 0) >= 10 ? 'ADMIS' : 'NON ADMIS' }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        <!-- FOOTER -->
-        <div class="footer">
-            <p><strong>Généré le:</strong> {{ now()->format('d/m/Y à H:i') }}</p>
-            <p>Document officiel - Relevé de notes de l'étudiant {{ $user->matricule }}</p>
-            <p>Centre de Formation Professionnelle la Canadienne - Bafoussam</p>
         </div>
+
+        <!-- STATISTIQUES -->
+        <div class="stats-section">
+            <div class="stats-grid">
+                <div class="stats-cell">
+                    <div class="stats-label">Total Modules</div>
+                    <div class="stats-value">{{ $stats['totalModules'] ?? 0 }}</div>
+                </div>
+                <div class="stats-cell">
+                    <div class="stats-label">Modules Validés</div>
+                    <div class="stats-value">{{ $stats['modulesValides'] ?? 0 }}</div>
+                </div>
+                <div class="stats-cell">
+                    <div class="stats-label">Modules Échoués</div>
+                    <div class="stats-value" style="color: #ef4444;">{{ $stats['modulesEchoues'] ?? 0 }}</div>
+                </div>
+                <div class="stats-cell">
+                    <div class="stats-label">Résultat</div>
+                    <div class="stats-value"
+                        style="color: {{ ($moyenneGenerale ?? 0) >= 10 ? '#10b981' : '#ef4444' }}">
+                        {{ ($moyenneGenerale ?? 0) >= 10 ? 'ADMIS' : 'NON ADMIS' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
 
     </div>
 </body>
+
 </html>
