@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Role;
 use App\Enums\Niveau;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -21,6 +24,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'role',
         'password',
         'matricule',
         'sexe',
@@ -40,10 +44,65 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+             'role' => Role::class,
             'niveau' => Niveau::class,
         ];
     }
+// --- Helpers de rôle (Syntaxe corrigée) ---
 
+    public function isSuperAdmin(): bool 
+    {
+        return $this->role === Role::SUPERADMIN;
+    }
+    
+    public function isAdmin(): bool 
+    {
+        return $this->role?->isAtLeast(Role::ADMIN) ?? false;
+    }
+
+    public function hasAnyRole(array $roles): bool 
+    {
+        return in_array($this->role, $roles, true);
+    }
+
+    // Surcharge de l'autorisation native Laravel
+    public function can($ability, $arguments = []): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+        
+        return $this->role?->hasPermission($ability) || parent::can($ability, $arguments);
+    }
+
+    protected static function booted(): void
+    {
+        // Ici l'usage de fn() est correct car c'est une closure (fonction anonyme)
+        static::creating(function (User $user) {
+            $user->role ??= Role::default();
+        });
+
+        static::updating(function (User $user) {
+            if ($user->isDirty('role')) {
+                
+                 //$operator = auth()->user();
+                $operator = Auth::user();
+                
+                if (!$operator || !$operator->isSuperAdmin()) {
+                    Log::warning("Tentative de modification de rôle non autorisée par l'utilisateur ID: " . ($operator?->id ?? 'invité'));
+                    throw new \Exception('Seul un SuperAdmin peut modifier les rôles.');
+                }
+                
+                // Protection du dernier SuperAdmin
+                if ($user->getOriginal('role') === Role::SUPERADMIN) {
+                    $superAdminCount = self::where('role', Role::SUPERADMIN)->count();
+                    if ($superAdminCount <= 1) {
+                        throw new \Exception('Impossible de modifier le rôle du dernier SuperAdmin.');
+                    }
+                }
+            }
+        });
+    }
     /**
      * Get the user's initials
      */
