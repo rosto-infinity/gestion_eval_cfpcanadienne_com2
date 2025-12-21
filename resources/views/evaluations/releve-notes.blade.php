@@ -75,7 +75,8 @@
                         <!-- Remplacez ceci par votre balise image <img> -->
                         <div
                             style="width: 150px; height: 100px; background-color: #f0f0f0; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-                              <img src="/android-chrome-192x192.png" alt="Logo CFPC" style="max-width: 100%; max-height: 100%;">
+                            <img src="/android-chrome-192x192.png" alt="Logo CFPC"
+                                style="max-width: 100%; max-height: 100%;">
                         </div>
                     </td>
 
@@ -116,11 +117,14 @@
                 </div>
                 <div>
                     <p class="text-xs text-muted-foreground">Spécialité</p>
-                    <p class="font-semibold text-foreground">{{ $user->specialite->intitule }}</p>
+                    <p class="font-semibold text-foreground">
+                        {{ $user->specialite->intitule ?? 'Module non assigné'  }}
+                        
+                    </p>
                 </div>
                 <div>
                     <p class="text-xs text-muted-foreground">Code</p>
-                    <p class="font-semibold text-foreground">{{ $user->specialite->code }}</p>
+                    <p class="font-semibold text-foreground">{{ $user->specialite->code ?? 'Code non assigné'}}</p>
                 </div>
             </div>
 
