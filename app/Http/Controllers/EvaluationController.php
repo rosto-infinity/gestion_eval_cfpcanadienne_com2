@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEvaluationRequest;
-use App\Models\AnneeAcademique;
-use App\Models\Evaluation;
-use App\Models\Module;
 use App\Models\User;
+use App\Models\Module;
+use Illuminate\View\View;
+use App\Models\Evaluation;
+use Illuminate\Http\Request;
+use App\Models\AnneeAcademique;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\StoreEvaluationRequest;
 
 class EvaluationController extends Controller
 {
@@ -85,7 +86,7 @@ class EvaluationController extends Controller
                 'annee' => $user->anneeAcademique?->libelle ?? 'N/A',
                 'annee_id' => $user->annee_academique_id,
             ],
-            'modules' => $modules->map(fn ($m) => [
+            'modules' => $modules->map(fn($m) => [
                 'id' => $m->id,
                 'code' => $m->code,
                 'intitule' => $m->intitule,
@@ -112,7 +113,7 @@ class EvaluationController extends Controller
         }
 
         return response()->json([
-            'modules' => $modules->map(fn ($m) => [
+            'modules' => $modules->map(fn($m) => [
                 'id' => $m->id,
                 'code' => $m->code,
                 'intitule' => $m->intitule,
@@ -165,7 +166,7 @@ class EvaluationController extends Controller
                 ->withInput()
                 ->with('error', '❌ L\'étudiant ou le module n\'existe pas.');
         } catch (\Exception $e) {
-            \Log::error('Erreur création évaluation:', [
+            Log::error('Erreur création évaluation:', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -173,7 +174,7 @@ class EvaluationController extends Controller
 
             return back()
                 ->withInput()
-                ->with('error', '❌ Erreur lors de la création: '.$e->getMessage());
+                ->with('error', '❌ Erreur lors de la création: ' . $e->getMessage());
         }
     }
 
@@ -217,7 +218,7 @@ class EvaluationController extends Controller
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la mise à jour: '.$e->getMessage());
+                ->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
         }
     }
 
@@ -230,7 +231,7 @@ class EvaluationController extends Controller
                 ->route('evaluations.index')
                 ->with('success', 'Évaluation supprimée avec succès.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Erreur lors de la suppression: '.$e->getMessage());
+            return back()->with('error', 'Erreur lors de la suppression: ' . $e->getMessage());
         }
     }
 
@@ -325,12 +326,15 @@ class EvaluationController extends Controller
 
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de l\'enregistrement: '.$e->getMessage());
+                ->with('error', 'Erreur lors de l\'enregistrement: ' . $e->getMessage());
         }
     }
 
     public function releveNotes(User $user): View
     {
+        // Cette ligne vérifie la Policy et renvoie une erreur 403 si non autorisé
+        // $this->authorize('viewReleve', $user);
+
         $user->load(['specialite', 'anneeAcademique']);
 
         $evaluationsSemestre1 = $user->getEvaluationsBySemestre(1);
@@ -350,6 +354,9 @@ class EvaluationController extends Controller
 
     public function releveNotesPdf(User $user)
     {
+        // Protection également pour le PDF
+        // $this->authorize('viewReleve', $user);
+
         $user->load(['specialite', 'anneeAcademique']);
 
         $evaluationsSemestre1 = $user->getEvaluationsBySemestre(1);
@@ -381,7 +388,7 @@ class EvaluationController extends Controller
                 'margin_left' => 10,
             ]);
 
-        $filename = 'releve_notes_'.$user->matricule.'_'.now()->format('Ymd_His').'.pdf';
+        $filename = 'releve_notes_' . $user->matricule . '_' . now()->format('Ymd_His') . '.pdf';
 
         return $pdf->download($filename);
     }

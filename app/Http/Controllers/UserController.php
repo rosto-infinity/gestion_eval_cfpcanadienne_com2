@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Enums\Niveau;
-use App\Models\AnneeAcademique;
-use App\Models\Specialite;
+use App\Enums\Role;
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
+use App\Enums\Niveau;
+use Illuminate\View\View;
+use App\Models\Specialite;
 use Illuminate\Http\Request;
+use App\Models\AnneeAcademique;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\View\View;
 
 class UserController extends Controller
 {
@@ -114,27 +116,30 @@ class UserController extends Controller
 
     public function edit(User $user): View
     {
+          // On récupère les options du rôle via notre Enum (Standard 2025)
+        $roles = Role::cases();
         $user->load(['specialite', 'anneeAcademique']);
 
         $specialites = Specialite::ordered()->get();
         $anneesAcademiques = AnneeAcademique::ordered()->get();
         $niveaux = Niveau::grouped();
 
-        return view('users.edit', compact('user', 'specialites', 'anneesAcademiques', 'niveaux'));
+        return view('users.edit', compact('user', 'specialites', 'anneesAcademiques', 'niveaux', 'roles'));
     }
 
     public function update(Request $request, User $user): RedirectResponse
     {
         $validated = $request->validate([
-            'matricule' => 'required|string|max:20|unique:users,matricule,'.$user->id,
+            'matricule' => 'nullable|string|max:20|unique:users,matricule,'.$user->id,
             'name' => 'required|string|max:255',
+            'role'  => ['nullable', Rule::enum(Role::class)], // Validation native de l'Enum
             'email' => 'required|email|unique:users,email,'.$user->id,
             'password' => ['nullable', 'confirmed', Password::defaults()],
-            'sexe' => 'required|in:M,F,Autre',
-            'niveau' => 'required|in:'.implode(',', Niveau::values()),
+            'sexe' => 'nullable|in:M,F,Autre',
+            'niveau' => 'nullable|in:'.implode(',', Niveau::values()),
             'profile' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'specialite_id' => 'required|exists:specialites,id',
-            'annee_academique_id' => 'required|exists:annees_academiques,id',
+            'specialite_id' => 'nullable|exists:specialites,id',
+            'annee_academique_id' => 'nullable|exists:annees_academiques,id',
         ]);
 
         try {
@@ -154,6 +159,9 @@ class UserController extends Controller
                 unset($validated['password']);
             }
 
+            // 3. Mise à jour via le modèle
+            // Rappel : Le modèle User (booted) vérifiera si l'opérateur a le droit 
+            // de changer le rôle ou s'il tente de supprimer le dernier SuperAdmin.
             $user->update($validated);
 
             return redirect()

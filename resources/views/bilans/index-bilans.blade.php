@@ -180,6 +180,7 @@
                                 </a>
 
                                 <!-- Supprimer -->
+                                @if(auth()->user()->role->isAtLeast(\App\Enums\Role::ADMIN))
                                 <form action="{{ route('bilans.destroy', $bilan) }}" method="POST" class="inline" onsubmit="return confirm('Supprimer ce bilan ?');">
                                     @csrf
                                     @method('DELETE')
@@ -189,7 +190,7 @@
                                         </svg>
                                     </button>
                                 </form>
-
+                                 @endif
                             </div>
                         </td>
 

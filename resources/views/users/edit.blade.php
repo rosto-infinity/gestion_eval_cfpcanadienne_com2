@@ -407,7 +407,49 @@
         </div>
 
     </div>
+<div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-6">Modifier l'utilisateur : {{ $user->name }}</h2>
 
+    <form action="{{ route('users.update', $user) }}" method="POST">
+        @csrf
+        @method('PATCH')
+
+        <!-- Nom -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Nom</label>
+            <input type="text" name="name" value="{{ old('name', $user->name) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500">
+        </div>
+
+        <!-- Email -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" name="email" value="{{ old('email', $user->email) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500">
+        </div>
+
+        <!-- Rôle (La partie critique) -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700">Rôle attribué</label>
+            <select name="role" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500">
+                @foreach($roles as $role)
+                    <option value="{{ $role->value }}" 
+                        {{ old('role', $user->role->value) === $role->value ? 'selected' : '' }}>
+                        {{ $role->label() }} 
+                    </option>
+                @endforeach
+            </select>
+            @error('role')
+                <p class="mt-2 text-sm text-red-600 font-bold">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="flex justify-between items-center border-t pt-4">
+            <a href="{{ route('users.index') }}" class="text-sm text-gray-600 hover:underline">Annuler</a>
+            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">
+                Enregistrer les modifications
+            </button>
+        </div>
+    </form>
+</div>
     <!-- Zone de danger -->
     <div class="mt-8 p-6 bg-destructive/5 border border-destructive/20 rounded-lg">
         <div class="flex items-start gap-4">

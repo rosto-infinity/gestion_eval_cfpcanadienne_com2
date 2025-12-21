@@ -32,6 +32,7 @@
                 </svg>
                 Modifier
             </a>
+             @if(auth()->user()->role->isAtLeast(\App\Enums\Role::ADMIN))
             <form action="{{ route('evaluations.destroy', $evaluation) }}" method="POST" class="inline" 
                   onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette évaluation ?');">
                 @csrf
@@ -44,6 +45,8 @@
                     Supprimer
                 </button>
             </form>
+            @endif
+
         </div>
     </div>
 

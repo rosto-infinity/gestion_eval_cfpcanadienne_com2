@@ -48,6 +48,7 @@
                     </div>
 
                     <!-- Suppression du Compte -->
+                    @if(auth()->user()->role->isAtLeast(\App\Enums\Role::SUPERADMIN))
                     <div class="p-6 rounded-lg shadow-md" style="background-color: var(--card); border: 1px solid var(--destructive)">
                         <div class="flex items-center mb-6 pb-6" style="border-bottom: 1px solid var(--destructive)">
                             <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: var(--destructive)">
@@ -58,10 +59,11 @@
                             <h3 class="text-lg font-semibold ml-3" style="color: var(--destructive)">
                                 Zone Dangereuse
                             </h3>
+                            
                         </div>
-
                         @include('profile.partials.delete-user-form')
                     </div>
+                    @endif
                 </div>
 
                 <!-- COLONNE 2: Informations du Profil -->
@@ -145,8 +147,9 @@
                                 Modifier les Détails
                             </a>
                         </div>
+                        
                     </div>
-
+                   
                     <!-- Statistiques -->
                     <div class="grid grid-cols-2 gap-4">
                         <!-- Compte Actif -->
