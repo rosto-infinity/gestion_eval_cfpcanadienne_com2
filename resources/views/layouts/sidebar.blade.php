@@ -44,11 +44,19 @@
                     <i class='bx bxs-check-circle'></i>
                     <span class="text">Évaluations</span>
                 </a>
+                
+            </li>
+            <li class="{{ request()->routeIs('saisir-par-specialite') ? 'active' : '' }}">
+                <a href="{{ route('saisir-par-specialite') }}" title="Évaluations">
+                    <i class='bx bxs-check-circle'></i>
+                    <span class="text"> Saisie/Spécialité</span>
+                </a>
+
             </li>
             <li class="{{ request()->routeIs('bilans.*') ? 'active' : '' }}">
                 <a href="{{ route('bilans.index') }}" title="Bilans">
                     <i class='bx bxs-bar-chart-alt-2'></i>
-                    <span class="text">Bilans</span>
+                    <span class="text">Bilans & Relevés</span>
                 </a>
             </li>
             <li class="{{ request()->routeIs('bilan.specialite.*') ? 'active' : '' }}">

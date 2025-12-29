@@ -47,7 +47,23 @@ Route::middleware('auth')->group(function (): void {
         // Évaluations (Saisie et gestion)
         Route::get('evaluations/saisir-multiple', [EvaluationController::class, 'saisirMultiple'])->name('evaluations.saisir-multiple');
         Route::post('evaluations/store-multiple', [EvaluationController::class, 'storeMultiple'])->name('evaluations.store-multiple');
-        Route::resource('evaluations', EvaluationController::class);
+     
+        // Saisie par spécialité (NOUVEAU)
+    Route::get('/saisir-par-specialite', [EvaluationController::class, 'saisirParSpecialite'])->name('saisir-par-specialite');
+    Route::post('/saisir-par-specialite', [EvaluationController::class, 'storeParSpecialite'])->name('store-par-specialite');
+       // AJAX endpoints
+    Route::get('/get-user-modules/{user}', [EvaluationController::class, 'getUserModules'])->name('get-user-modules');
+    Route::get('/get-modules-by-semestre/{user}/{semestre}', [EvaluationController::class, 'getModulesBySemestre'])->name('get-modules-by-semestre');
+
+    
+    Route::resource('evaluations', EvaluationController::class);
+
+        // Routes API pour AJAX
+Route::prefix('api/evaluations')->name('api.evaluations.')->group(function () {
+    Route::get('/modules/{specialiteId}/{semestre}', [EvaluationController::class, 'getModulesBySpecialite'])->name('modules-by-specialite');
+    Route::post('/students', [EvaluationController::class, 'getStudentsBySpecialite'])->name('students-by-specialite');
+    Route::post('/statistics', [EvaluationController::class, 'getModuleStatistics'])->name('module-statistics');
+});
 
         // Bilans par spécialité
         Route::prefix('bilan/specialite')->name('bilan.specialite.')->group(function (): void {

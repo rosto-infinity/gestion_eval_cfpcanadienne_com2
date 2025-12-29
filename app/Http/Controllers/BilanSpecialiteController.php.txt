@@ -1,0 +1,306 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers;
+
+use App\Models\AnneeAcademique;
+use App\Models\Specialite;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Support\Collection;
+
+class BilanSpecialiteController extends Controller
+{
+    /**
+     * Affiche le tableau de bilan par spécialité
+     */
+    public function index(Request $request): View
+    {
+         // Utilisation de l'ID de l'année active par défaut
+        $anneeActive = AnneeAcademique::active()->first();
+         // Sécurisation : si pas d'année active et pas d'ID en paramètre, on prend la dernière créée
+        $anneeId = (int) $request->input('annee_id', $anneeActive?->id ?? AnneeAcademique::latest()->first()?->id);
+
+        $bilanParSpecialite = $this->getBilanParSpecialite($anneeId);
+        $statsGlobales = $this->calculateStatsGlobales($bilanParSpecialite);
+        $annees = AnneeAcademique::ordered()->get();
+
+        return view('bilanspecialite.bilan-specialite', compact(
+            'bilanParSpecialite',
+            'statsGlobales',
+            'annees',
+            'anneeActive'
+        ));
+    }
+
+    /**
+     * Affiche le détail d'une spécialité avec tous les étudiants
+     */
+    public function show(Request $request, Specialite $specialite): View
+    {
+        $anneeId = $request->input('annee_id') ?? AnneeAcademique::active()->first()?->id;
+
+        $etudiants = User::with(['evaluations.module', 'bilanCompetence', 'anneeAcademique'])
+            ->where('specialite_id', $specialite->id)
+            ->where('annee_academique_id', $anneeId)
+            ->ordered()
+            ->get()
+            ->map(fn ($etudiant) => (object) [
+                'etudiant' => $etudiant,
+                'moy_semestre1' => $etudiant->getMoyenneSemestre(1) ?? 0,
+                'moy_semestre2' => $etudiant->getMoyenneSemestre(2) ?? 0,
+                'moy_competences' => $etudiant->bilanCompetence?->moy_competences ?? 0,
+                'moyenne_generale' => $etudiant->bilanCompetence?->moyenne_generale ?? 0,
+                'is_admis' => $etudiant->bilanCompetence?->isAdmis() ?? false,
+                'evaluations_s1' => $etudiant->getEvaluationsBySemestre(1),
+                'evaluations_s2' => $etudiant->getEvaluationsBySemestre(2),
+            ])
+            ->sortByDesc('moyenne_generale');
+
+        $stats = [
+            'total' => $etudiants->count(),
+            'admis' => $etudiants->filter(fn ($e) => $e->is_admis)->count(),
+            'moy_generale' => $etudiants->avg('moyenne_generale'),
+            'moy_semestre1' => $etudiants->avg('moy_semestre1'),
+            'moy_semestre2' => $etudiants->avg('moy_semestre2'),
+            'moy_competences' => $etudiants->avg('moy_competences'),
+            'meilleure_moyenne' => $etudiants->max('moyenne_generale'),
+            'moyenne_plus_basse' => $etudiants->min('moyenne_generale'),
+        ];
+
+        $stats['non_admis'] = $stats['total'] - $stats['admis'];
+        $stats['taux_admission'] = $stats['total'] > 0 ? ($stats['admis'] / $stats['total']) * 100 : 0;
+
+        $annees = AnneeAcademique::ordered()->get();
+        $anneeActive = AnneeAcademique::active()->first();
+
+        return view('bilanspecialite.detail-specialite', compact(
+            'specialite',
+            'etudiants',
+            'stats',
+            'annees',
+            'anneeActive'
+        ));
+    }
+
+    /**
+     * Export PDF du bilan par spécialité
+     */
+    public function exportPdf(Request $request)
+    {
+        $anneeId = $request->input('annee_id') ?? AnneeAcademique::active()->first()?->id;
+
+        $bilanParSpecialite = $this->getBilanParSpecialite($anneeId);
+        $statsGlobales = $this->calculateStatsGlobales($bilanParSpecialite);
+        $annee = AnneeAcademique::find($anneeId);
+
+        $pdf = Pdf::loadView('bilanspecialite.bilan-specialite-pdf', compact(
+            'bilanParSpecialite',
+            'statsGlobales',
+            'annee'
+        ))
+            ->setPaper('a4', 'landscape')
+            ->setOptions([
+                'defaultFont' => 'sans-serif',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+            ]);
+
+        $filename = 'bilan_specialite_'.($annee ? $annee->libelle : 'all').'_'.now()->format('Ymd').'.pdf';
+
+        return $pdf->download($filename);
+    }
+
+    /**
+     * Export PDF du détail d'une spécialité
+     * ✅ CORRIGÉ : Ajouter $statsGlobales
+     */
+    public function exportDetailPdf(Request $request, Specialite $specialite)
+    {
+        $anneeId = $request->input('annee_id') ?? AnneeAcademique::active()->first()?->id;
+
+        $etudiants = User::with(['evaluations.module', 'bilanCompetence', 'anneeAcademique'])
+            ->where('specialite_id', $specialite->id)
+            ->where('annee_academique_id', $anneeId)
+            ->ordered()
+            ->get()
+            ->map(fn ($etudiant) => (object) [
+                'etudiant' => $etudiant,
+                'moy_semestre1' => $etudiant->getMoyenneSemestre(1) ?? 0,
+                'moy_semestre2' => $etudiant->getMoyenneSemestre(2) ?? 0,
+                'moy_competences' => $etudiant->bilanCompetence?->moy_competences ?? 0,
+                'moyenne_generale' => $etudiant->bilanCompetence?->moyenne_generale ?? 0,
+                'is_admis' => $etudiant->bilanCompetence?->isAdmis() ?? false,
+                'evaluations_s1' => $etudiant->getEvaluationsBySemestre(1),
+                'evaluations_s2' => $etudiant->getEvaluationsBySemestre(2),
+            ])
+            ->sortByDesc('moyenne_generale');
+
+        $stats = [
+            'total' => $etudiants->count(),
+            'admis' => $etudiants->filter(fn ($e) => $e->is_admis)->count(),
+            'moy_generale' => $etudiants->avg('moyenne_generale'),
+            'moy_semestre1' => $etudiants->avg('moy_semestre1'),
+            'moy_semestre2' => $etudiants->avg('moy_semestre2'),
+            'moy_competences' => $etudiants->avg('moy_competences'),
+            'meilleure_moyenne' => $etudiants->max('moyenne_generale'),
+            'moyenne_plus_basse' => $etudiants->min('moyenne_generale'),
+        ];
+
+        $stats['non_admis'] = $stats['total'] - $stats['admis'];
+        $stats['taux_admission'] = $stats['total'] > 0 ? ($stats['admis'] / $stats['total']) * 100 : 0;
+
+        // ✅ NOUVEAU : Calculer les stats globales pour la spécialité
+        $statsGlobales = [
+            'total_specialites' => 1,
+            'total_etudiants' => $stats['total'],
+            'total_admis' => $stats['admis'],
+            'total_non_admis' => $stats['non_admis'],
+            'taux_admission' => $stats['taux_admission'],
+            'moyenne_generale' => round($stats['moy_generale'], 2),
+            'moy_semestre1' => round($stats['moy_semestre1'], 2),
+            'moy_semestre2' => round($stats['moy_semestre2'], 2),
+            'moy_competences' => round($stats['moy_competences'], 2),
+            'meilleure_moyenne' => round($stats['meilleure_moyenne'], 2),
+            'moyenne_plus_basse' => round($stats['moyenne_plus_basse'], 2),
+        ];
+
+        $annee = AnneeAcademique::find($anneeId);
+
+        $pdf = Pdf::loadView('bilanspecialite.detail-specialite-pdf', compact(
+            'specialite',
+            'etudiants',
+            'stats',
+            'statsGlobales', // ✅ AJOUTÉ
+            'annee'
+        ))
+            ->setPaper('a4', 'landscape')
+            ->setOptions([
+                'defaultFont' => 'sans-serif',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+            ]);
+
+        $filename = 'detail_'.$specialite->code.'_'.($annee ? $annee->libelle : 'all').'_'.now()->format('Ymd').'.pdf';
+
+        return $pdf->download($filename);
+    }
+
+    /**
+     * Comparaison entre spécialités
+     */
+    public function comparaison(Request $request): View
+    {
+        // Récupérer l'année ID et le convertir en int
+        $anneeId = (int) ($request->input('annee_id') ?? AnneeAcademique::active()->first()?->id ?? 0);
+
+        // Vérifier que l'année existe
+        if ($anneeId === 0) {
+            $anneeId = (int) AnneeAcademique::ordered()->first()?->id ?? 0;
+        }
+
+        // Récupérer les spécialités sélectionnées et les convertir en int
+        $specialiteIds = array_map('intval', (array) $request->input('specialites', []));
+
+        // Si aucune spécialité n'est sélectionnée, prendre toutes les spécialités
+        if (empty($specialiteIds)) {
+            $specialiteIds = Specialite::pluck('id')->map(fn ($id) => (int) $id)->toArray();
+        }
+
+        // Récupérer les données de bilan
+        $bilanParSpecialite = $this->getBilanParSpecialite($anneeId, $specialiteIds);
+
+        // Récupérer les années et spécialités pour les filtres
+        $annees = AnneeAcademique::ordered()->get();
+        $specialites = Specialite::ordered()->get();
+
+        return view('bilanspecialite.comparaison-specialites', compact(
+            'bilanParSpecialite',
+            'annees',
+            'specialites',
+            'specialiteIds',
+            'anneeId'
+        ));
+    }
+
+    /**
+     * Récupère les données de bilan par spécialité
+     */
+   private function getBilanParSpecialite(int $anneeId, array $specialiteIds = []): Collection
+    {
+        if (!$anneeId) return collect([]);
+
+        $query = Specialite::query();
+        if (!empty($specialiteIds)) {
+            $query->whereIn('id', $specialiteIds);
+        }
+
+        return $query->with(['users' => function ($q) use ($anneeId) {
+                $q->where('annee_academique_id', $anneeId)->with(['bilanCompetence']);
+            }])
+            ->get()
+            ->map(function ($specialite) {
+                $etudiants = $specialite->users;
+                if ($etudiants->isEmpty()) return null;
+
+                $admis = $etudiants->filter(fn($e) => $e->bilanCompetence?->isAdmis())->count();
+                
+                //  On s'assure que avg() ne retourne pas null pour round()
+                $moyS1 = $etudiants->avg(fn($e) => $e->getMoyenneSemestre(1));
+                $moyS2 = $etudiants->avg(fn($e) => $e->getMoyenneSemestre(2));
+                $moyComp = $etudiants->avg(fn($e) => $e->bilanCompetence?->moy_competences);
+                $moyGen = $etudiants->avg(fn($e) => $e->bilanCompetence?->moyenne_generale);
+
+                return (object) [
+                    'specialite' => $specialite,
+                    'total_etudiants' => $etudiants->count(),
+                    'moy_semestre1' => round((float)($moyS1 ?? 0), 2),
+                    'moy_semestre2' => round((float)($moyS2 ?? 0), 2),
+                    'moy_competences' => round((float)($moyComp ?? 0), 2),
+                    'moyenne_generale' => round((float)($moyGen ?? 0), 2),
+                    'admis' => $admis,
+                    'non_admis' => $etudiants->count() - $admis,
+                    'taux_admission' => round(($admis / $etudiants->count()) * 100, 2),
+                ];
+            })
+            ->filter()
+            ->sortByDesc('moyenne_generale')
+            ->values();
+    }
+
+    /**
+     * Calcule les statistiques globales
+     */
+    private function calculateStatsGlobales(Collection $bilanParSpecialite): array
+    {
+        if ($bilanParSpecialite->isEmpty()) {
+            return [
+                'total_specialites' => 0, 'total_etudiants' => 0, 'total_admis' => 0,
+                'total_non_admis' => 0, 'taux_admission' => 0, 'moyenne_generale' => 0,
+                'moy_semestre1' => 0, 'moy_semestre2' => 0, 'moy_competences' => 0,
+                'meilleure_specialite' => null, 'specialite_plus_faible' => null,
+            ];
+        }
+
+        $totalEtudiants = $bilanParSpecialite->sum('total_etudiants');
+        $totalAdmis = $bilanParSpecialite->sum('admis');
+
+        // ✅ FIX : Utilisation de (float) et ?? 0 pour éviter le TypeError sur round
+        return [
+            'total_specialites' => $bilanParSpecialite->count(),
+            'total_etudiants' => $totalEtudiants,
+            'total_admis' => $totalAdmis,
+            'total_non_admis' => $totalEtudiants - $totalAdmis,
+            'taux_admission' => $totalEtudiants > 0 ? round(($totalAdmis / $totalEtudiants) * 100, 2) : 0,
+            'moyenne_generale' => round((float)($bilanParSpecialite->avg('moyenne_generale') ?? 0), 2),
+            'moy_semestre1' => round((float)($bilanParSpecialite->avg('moy_semestre1') ?? 0), 2),
+            'moy_semestre2' => round((float)($bilanParSpecialite->avg('moy_semestre2') ?? 0), 2),
+            'moy_competences' => round((float)($bilanParSpecialite->avg('moy_competences') ?? 0), 2),
+            'meilleure_specialite' => $bilanParSpecialite->first(),
+            'specialite_plus_faible' => $bilanParSpecialite->last(),
+        ];
+    }
+}

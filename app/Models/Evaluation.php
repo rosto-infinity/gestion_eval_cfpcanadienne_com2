@@ -18,6 +18,7 @@ class Evaluation extends Model
     protected $fillable = [
         'user_id',
         'module_id',
+        'specialite_id',
         'annee_academique_id',
         'semestre',
         'note',
@@ -39,6 +40,11 @@ class Evaluation extends Model
         return $this->belongsTo(Module::class, 'module_id');
     }
 
+    public function specialite(): BelongsTo
+    {
+        return $this->belongsTo(Specialite::class, 'specialite_id');
+    }
+
     public function anneeAcademique(): BelongsTo
     {
         return $this->belongsTo(AnneeAcademique::class, 'annee_academique_id');
@@ -53,6 +59,11 @@ class Evaluation extends Model
     public function scopeByUser(Builder $query, int $userId): Builder
     {
         return $query->where('user_id', $userId);
+    }
+
+    public function scopeBySpecialite(Builder $query, int $specialiteId): Builder
+    {
+        return $query->where('specialite_id', $specialiteId);
     }
 
     public function scopeByAnneeAcademique(Builder $query, int $anneeId): Builder

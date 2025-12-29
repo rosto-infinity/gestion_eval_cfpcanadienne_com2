@@ -163,7 +163,10 @@
                         <!-- Actions -->
                         <td class="px-4 py-3 whitespace-nowrap text-right">
                             <div class="flex items-center justify-end gap-2">
-                                
+                                <a href="{{ route('evaluations.releve-notes', $bilan->user) }}"
+                             class="inline-flex items-center px-1 pt-1 border-b- text-sm font-medium">
+                             Mon Relevé
+                         </a> 
                                 <!-- Voir -->
                                 <a href="{{ route('bilans.show', $bilan) }}" class="p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Voir">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

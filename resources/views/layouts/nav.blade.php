@@ -38,9 +38,14 @@
                              class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('evaluations.*') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
                              Évaluations
                          </a>
+                         <a href="{{ route('saisir-par-specialite') }}"
+                             class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('saisir-par-specialite') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
+                            📊 Saisie par Spécialité
+                         </a>
+                        
                          <a href="{{ route('bilans.index') }}"
                              class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('bilans.*') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
-                             Bilans
+                             Bilans & Relevés
                          </a>
                      @endif
 
