@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Module;
-use Illuminate\View\View;
-use App\Models\Evaluation;
-use App\Models\Specialite;
-use App\Services\PdfService;
-use Illuminate\Http\Request;
-use App\Models\AnneeAcademique;
-use Illuminate\Http\JsonResponse;
-use App\Services\EvaluationService;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreEvaluationRequest;
+use App\Models\AnneeAcademique;
+use App\Models\Evaluation;
+use App\Models\Module;
+use App\Models\Specialite;
+use App\Models\User;
+use App\Services\EvaluationService;
+use App\Services\PdfService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 
 class EvaluationController extends Controller
 {
- public function __construct(
+    public function __construct(
         private EvaluationService $evaluationService,
         private PdfService $pdfService
     ) {}
@@ -61,11 +61,11 @@ class EvaluationController extends Controller
         $specialiteId = $request->query('specialite_id');
         $moduleId = $request->query('module_id');
         $semestre = $request->query('semestre', 1);
-        
+
         $specialites = Specialite::ordered()->get();
         $annees = AnneeAcademique::ordered()->get();
         $anneeActive = AnneeAcademique::active()->first();
-        
+
         $modules = collect();
         $students = collect();
         $specialite = null;
@@ -128,7 +128,7 @@ class EvaluationController extends Controller
                 $result['updated']
             );
 
-            if (!empty($result['errors'])) {
+            if (! empty($result['errors'])) {
                 $message .= sprintf(', %d erreur(s)', count($result['errors']));
             }
 
@@ -152,7 +152,7 @@ class EvaluationController extends Controller
 
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de l\'enregistrement: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de l\'enregistrement: '.$e->getMessage());
         }
     }
 
@@ -166,7 +166,7 @@ class EvaluationController extends Controller
 
             return response()->json([
                 'success' => true,
-                'modules' => $modules->map(fn($m) => [
+                'modules' => $modules->map(fn ($m) => [
                     'id' => $m->id,
                     'code' => $m->code,
                     'intitule' => $m->intitule,
@@ -204,7 +204,7 @@ class EvaluationController extends Controller
 
             return response()->json([
                 'success' => true,
-                'students' => $students->map(fn($s) => [
+                'students' => $students->map(fn ($s) => [
                     'id' => $s->user->id,
                     'matricule' => $s->user->matricule,
                     'nom' => $s->user->nom,
@@ -251,6 +251,7 @@ class EvaluationController extends Controller
             ], 500);
         }
     }
+
     public function create(Request $request): View
     {
         $userId = $request->query('user_id');
@@ -285,7 +286,7 @@ class EvaluationController extends Controller
                 'annee' => $user->anneeAcademique?->libelle ?? 'N/A',
                 'annee_id' => $user->annee_academique_id,
             ],
-            'modules' => $modules->map(fn($m) => [
+            'modules' => $modules->map(fn ($m) => [
                 'id' => $m->id,
                 'code' => $m->code,
                 'intitule' => $m->intitule,
@@ -308,7 +309,7 @@ class EvaluationController extends Controller
         }
 
         return response()->json([
-            'modules' => $modules->map(fn($m) => [
+            'modules' => $modules->map(fn ($m) => [
                 'id' => $m->id,
                 'code' => $m->code,
                 'intitule' => $m->intitule,
@@ -334,7 +335,7 @@ class EvaluationController extends Controller
         } catch (\InvalidArgumentException $e) {
             return back()
                 ->withInput()
-                ->with('error', '❌ ' . $e->getMessage());
+                ->with('error', '❌ '.$e->getMessage());
         } catch (\Exception $e) {
             Log::error('Erreur création évaluation:', [
                 'message' => $e->getMessage(),
@@ -344,13 +345,14 @@ class EvaluationController extends Controller
 
             return back()
                 ->withInput()
-                ->with('error', '❌ Erreur lors de la création: ' . $e->getMessage());
+                ->with('error', '❌ Erreur lors de la création: '.$e->getMessage());
         }
     }
 
     public function show(Evaluation $evaluation): View
     {
         $evaluation->load(['user.specialite', 'module', 'anneeAcademique']);
+
         return view('evaluations.show-evaluations', compact('evaluation'));
     }
 
@@ -384,7 +386,7 @@ class EvaluationController extends Controller
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la mise à jour: '.$e->getMessage());
         }
     }
 
@@ -397,7 +399,7 @@ class EvaluationController extends Controller
                 ->route('evaluations.index')
                 ->with('success', 'Évaluation supprimée avec succès.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Erreur lors de la suppression: ' . $e->getMessage());
+            return back()->with('error', 'Erreur lors de la suppression: '.$e->getMessage());
         }
     }
 
@@ -442,7 +444,7 @@ class EvaluationController extends Controller
 
         try {
             $user = User::findOrFail($validated['user_id']);
-            
+
             $this->evaluationService->createOrUpdateMultiple(
                 $user,
                 $validated['evaluations'],
@@ -462,7 +464,7 @@ class EvaluationController extends Controller
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de l\'enregistrement: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de l\'enregistrement: '.$e->getMessage());
         }
     }
 

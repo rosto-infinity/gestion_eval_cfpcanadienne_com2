@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\User;
 use App\Enums\Role;
+use App\Models\User;
 
 class UserPolicy
 {
@@ -15,7 +17,7 @@ class UserPolicy
         // Règle : On peut voir le relevé si :
         // 1. On est le propriétaire du relevé ($authUser->id === $targetUser->id)
         // 2. OU on a un rôle de niveau MANAGER ou plus
-        return $authUser->id === $targetUser->id 
+        return $authUser->id === $targetUser->id
             || $authUser->role->isAtLeast(Role::MANAGER);
     }
 }

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Enums\Role;
-use App\Models\User;
 use App\Enums\Niveau;
-use Illuminate\View\View;
-use App\Models\Specialite;
-use Illuminate\Http\Request;
+use App\Enums\Role;
 use App\Models\AnneeAcademique;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Specialite;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\View\View;
 
 class UserController extends Controller
 {
@@ -116,7 +116,7 @@ class UserController extends Controller
 
     public function edit(User $user): View
     {
-          // On récupère les options du rôle via notre Enum (Standard 2025)
+        // On récupère les options du rôle via notre Enum (Standard 2025)
         $roles = Role::cases();
         $user->load(['specialite', 'anneeAcademique']);
 
@@ -132,7 +132,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'matricule' => 'nullable|string|max:20|unique:users,matricule,'.$user->id,
             'name' => 'required|string|max:255',
-            'role'  => ['nullable', Rule::enum(Role::class)], // Validation native de l'Enum
+            'role' => ['nullable', Rule::enum(Role::class)], // Validation native de l'Enum
             'email' => 'required|email|unique:users,email,'.$user->id,
             'password' => ['nullable', 'confirmed', Password::defaults()],
             'sexe' => 'nullable|in:M,F,Autre',
@@ -160,7 +160,7 @@ class UserController extends Controller
             }
 
             // 3. Mise à jour via le modèle
-            // Rappel : Le modèle User (booted) vérifiera si l'opérateur a le droit 
+            // Rappel : Le modèle User (booted) vérifiera si l'opérateur a le droit
             // de changer le rôle ou s'il tente de supprimer le dernier SuperAdmin.
             $user->update($validated);
 

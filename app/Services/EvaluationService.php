@@ -39,7 +39,7 @@ class EvaluationService
     {
         $module = Module::findOrFail($data['module_id']);
 
-        if (!$this->validateModuleForSpecialite($module, $data['specialite_id'])) {
+        if (! $this->validateModuleForSpecialite($module, $data['specialite_id'])) {
             throw new \InvalidArgumentException('Ce module n\'appartient pas à cette spécialité.');
         }
 
@@ -66,10 +66,11 @@ class EvaluationService
         array $notes
     ): array {
         DB::beginTransaction();
+
         try {
             $module = Module::findOrFail($moduleId);
-            
-            if (!$this->validateModuleForSpecialite($module, $specialiteId)) {
+
+            if (! $this->validateModuleForSpecialite($module, $specialiteId)) {
                 throw new \InvalidArgumentException('Ce module n\'appartient pas à cette spécialité.');
             }
 
@@ -80,9 +81,10 @@ class EvaluationService
             foreach ($notes as $userId => $noteValue) {
                 try {
                     $user = User::findOrFail($userId);
-                    
+
                     if ($user->specialite_id !== $specialiteId) {
                         $errors[$userId] = 'L\'étudiant n\'appartient pas à cette spécialité';
+
                         continue;
                     }
 
@@ -110,7 +112,7 @@ class EvaluationService
             }
 
             DB::commit();
-            
+
             return [
                 'created' => count($created),
                 'updated' => count($updated),
@@ -118,6 +120,7 @@ class EvaluationService
             ];
         } catch (\Exception $e) {
             DB::rollBack();
+
             throw $e;
         }
     }
@@ -238,7 +241,7 @@ class EvaluationService
             'modulesEchoues' => $modulesEchoues,
         ];
     }
-    
+
     /**
      * Vérifie si le module appartient à la spécialité de l'étudiant
      */
@@ -291,6 +294,7 @@ class EvaluationService
         $count = 0;
 
         DB::beginTransaction();
+
         try {
             // Vérifier que tous les modules appartiennent à la spécialité
             $moduleIds = collect($evaluations)->pluck('module_id');
@@ -320,9 +324,11 @@ class EvaluationService
             }
 
             DB::commit();
+
             return $count;
         } catch (\Exception $e) {
             DB::rollBack();
+
             throw $e;
         }
     }

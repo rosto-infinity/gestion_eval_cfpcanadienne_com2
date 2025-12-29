@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class SuperAdminSeeder extends Seeder
 {
@@ -15,10 +16,11 @@ class SuperAdminSeeder extends Seeder
      */
     public function run(): void
     {
-       $email = env('SUPERADMIN_EMAIL');
-        
-        if (!$email) {
+        $email = env('SUPERADMIN_EMAIL');
+
+        if (! $email) {
             $this->command->error('SUPERADMIN_EMAIL non défini.');
+
             return;
         }
 

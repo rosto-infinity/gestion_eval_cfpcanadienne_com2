@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
-use Closure;
 use App\Enums\Role;
+use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,15 +20,20 @@ class RoleMiddleware
     {
         $user = $request->user();
 
-        if (!$user) abort(401);
-        if ($user->isSuperAdmin()) return $next($request);
+        if (! $user) {
+            abort(401);
+        }
+        if ($user->isSuperAdmin()) {
+            return $next($request);
+        }
 
-        if (!empty($roles)) {
-            $roleEnums = array_filter(array_map(fn($r) => Role::fromString($r), $roles));
-            if (!$user->hasAnyRole($roleEnums)) {
-                abort(403, "Accès refusé.");
+        if (! empty($roles)) {
+            $roleEnums = array_filter(array_map(fn ($r) => Role::fromString($r), $roles));
+            if (! $user->hasAnyRole($roleEnums)) {
+                abort(403, 'Accès refusé.');
             }
         }
+
         return $next($request);
     }
 }

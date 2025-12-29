@@ -69,7 +69,7 @@ class BilanCompetenceController extends Controller
 
         try {
             $user = User::findOrFail($validated['user_id']);
-            
+
             $bilan = $this->bilanService->createBilan(
                 $user,
                 (float) $validated['moy_competences'],
@@ -86,7 +86,7 @@ class BilanCompetenceController extends Controller
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la création: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la création: '.$e->getMessage());
         }
     }
 
@@ -103,6 +103,7 @@ class BilanCompetenceController extends Controller
     public function edit(BilanCompetence $bilan): View
     {
         $bilan->load(['user.specialite', 'anneeAcademique']);
+
         return view('bilans.edit-bilans', compact('bilan'));
     }
 
@@ -126,7 +127,7 @@ class BilanCompetenceController extends Controller
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
+                ->with('error', 'Erreur lors de la mise à jour: '.$e->getMessage());
         }
     }
 
@@ -139,7 +140,7 @@ class BilanCompetenceController extends Controller
                 ->route('bilans.index')
                 ->with('success', 'Bilan de compétences supprimé avec succès.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Erreur lors de la suppression: ' . $e->getMessage());
+            return back()->with('error', 'Erreur lors de la suppression: '.$e->getMessage());
         }
     }
 
@@ -150,7 +151,7 @@ class BilanCompetenceController extends Controller
 
             return back()->with('success', 'Bilan recalculé avec succès.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Erreur lors du recalcul: ' . $e->getMessage());
+            return back()->with('error', 'Erreur lors du recalcul: '.$e->getMessage());
         }
     }
 
@@ -171,7 +172,7 @@ class BilanCompetenceController extends Controller
 
             return back()->with('success', "{$count} bilans générés avec succès.");
         } catch (\Exception $e) {
-            return back()->with('error', 'Erreur lors de la génération: ' . $e->getMessage());
+            return back()->with('error', 'Erreur lors de la génération: '.$e->getMessage());
         }
     }
 

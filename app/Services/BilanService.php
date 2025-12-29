@@ -58,6 +58,7 @@ class BilanService
     public function generateBilansEnMasse(int $anneeAcademiqueId, float $moyCompetencesDefaut, ?int $specialiteId = null): int
     {
         DB::beginTransaction();
+
         try {
             $query = User::where('annee_academique_id', $anneeAcademiqueId)
                 ->whereDoesntHave('bilanCompetence', function ($q) use ($anneeAcademiqueId): void {
@@ -77,9 +78,11 @@ class BilanService
             }
 
             DB::commit();
+
             return $count;
         } catch (\Exception $e) {
             DB::rollBack();
+
             throw $e;
         }
     }

@@ -6,8 +6,8 @@ namespace App\Http\Controllers;
 
 use App\Models\AnneeAcademique;
 use App\Models\Specialite;
-use App\Services\SpecialiteStatsService;
 use App\Services\PdfService;
+use App\Services\SpecialiteStatsService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 

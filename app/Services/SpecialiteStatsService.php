@@ -15,23 +15,21 @@ class SpecialiteStatsService
      */
     public function getBilanParSpecialite(int $anneeId, array $specialiteIds = []): Collection
     {
-        if (!$anneeId) {
+        if (! $anneeId) {
             return collect([]);
         }
 
         $query = Specialite::query();
-        
-        if (!empty($specialiteIds)) {
+
+        if (! empty($specialiteIds)) {
             $query->whereIn('id', $specialiteIds);
         }
 
-        return $query->with(['users' => function ($q) use ($anneeId) {
-                $q->where('annee_academique_id', $anneeId)->with(['bilanCompetence']);
-            }])
+        return $query->with(['users' => function ($q) use ($anneeId): void {
+            $q->where('annee_academique_id', $anneeId)->with(['bilanCompetence']);
+        }])
             ->get()
-            ->map(function ($specialite) {
-                return $this->calculateSpecialiteStats($specialite);
-            })
+            ->map(fn ($specialite) => $this->calculateSpecialiteStats($specialite))
             ->filter()
             ->sortByDesc('moyenne_generale')
             ->values();
@@ -43,27 +41,27 @@ class SpecialiteStatsService
     public function calculateSpecialiteStats(Specialite $specialite): ?object
     {
         $etudiants = $specialite->users;
-        
+
         if ($etudiants->isEmpty()) {
             return null;
         }
 
-        $admis = $etudiants->filter(fn($e) => $e->bilanCompetence?->isAdmis())->count();
-        
-        $moyS1 = $etudiants->avg(fn($e) => $e->getMoyenneSemestre(1));
-        $moyS2 = $etudiants->avg(fn($e) => $e->getMoyenneSemestre(2));
-        $moyComp = $etudiants->avg(fn($e) => $e->bilanCompetence?->moy_competences);
-        $moyGen = $etudiants->avg(fn($e) => $e->bilanCompetence?->moyenne_generale);
+        $admis = $etudiants->filter(fn ($e) => $e->bilanCompetence?->isAdmis())->count();
+
+        $moyS1 = $etudiants->avg(fn ($e) => $e->getMoyenneSemestre(1));
+        $moyS2 = $etudiants->avg(fn ($e) => $e->getMoyenneSemestre(2));
+        $moyComp = $etudiants->avg(fn ($e) => $e->bilanCompetence?->moy_competences);
+        $moyGen = $etudiants->avg(fn ($e) => $e->bilanCompetence?->moyenne_generale);
 
         $totalEtudiants = $etudiants->count();
 
         return (object) [
             'specialite' => $specialite,
             'total_etudiants' => $totalEtudiants,
-            'moy_semestre1' => round((float)($moyS1 ?? 0), 2),
-            'moy_semestre2' => round((float)($moyS2 ?? 0), 2),
-            'moy_competences' => round((float)($moyComp ?? 0), 2),
-            'moyenne_generale' => round((float)($moyGen ?? 0), 2),
+            'moy_semestre1' => round((float) ($moyS1 ?? 0), 2),
+            'moy_semestre2' => round((float) ($moyS2 ?? 0), 2),
+            'moy_competences' => round((float) ($moyComp ?? 0), 2),
+            'moyenne_generale' => round((float) ($moyGen ?? 0), 2),
             'admis' => $admis,
             'non_admis' => $totalEtudiants - $admis,
             'taux_admission' => $totalEtudiants > 0 ? round(($admis / $totalEtudiants) * 100, 2) : 0,
@@ -100,10 +98,10 @@ class SpecialiteStatsService
             'total_admis' => $totalAdmis,
             'total_non_admis' => $totalEtudiants - $totalAdmis,
             'taux_admission' => $totalEtudiants > 0 ? round(($totalAdmis / $totalEtudiants) * 100, 2) : 0,
-            'moyenne_generale' => round((float)($bilanParSpecialite->avg('moyenne_generale') ?? 0), 2),
-            'moy_semestre1' => round((float)($bilanParSpecialite->avg('moy_semestre1') ?? 0), 2),
-            'moy_semestre2' => round((float)($bilanParSpecialite->avg('moy_semestre2') ?? 0), 2),
-            'moy_competences' => round((float)($bilanParSpecialite->avg('moy_competences') ?? 0), 2),
+            'moyenne_generale' => round((float) ($bilanParSpecialite->avg('moyenne_generale') ?? 0), 2),
+            'moy_semestre1' => round((float) ($bilanParSpecialite->avg('moy_semestre1') ?? 0), 2),
+            'moy_semestre2' => round((float) ($bilanParSpecialite->avg('moy_semestre2') ?? 0), 2),
+            'moy_competences' => round((float) ($bilanParSpecialite->avg('moy_competences') ?? 0), 2),
             'meilleure_specialite' => $bilanParSpecialite->first(),
             'specialite_plus_faible' => $bilanParSpecialite->last(),
         ];

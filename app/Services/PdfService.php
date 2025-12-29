@@ -63,14 +63,14 @@ class PdfService
     public function generateTimestampedFilename(string $prefix, string $identifier = ''): string
     {
         $parts = [$prefix];
-        
-        if (!empty($identifier)) {
+
+        if (! empty($identifier)) {
             $parts[] = $identifier;
         }
-        
+
         $parts[] = now()->format('Ymd_His');
-        
-        return implode('_', $parts) . '.pdf';
+
+        return implode('_', $parts).'.pdf';
     }
 
     /**
@@ -150,7 +150,7 @@ class PdfService
     {
         $anneeLabel = $data['annee'] ? $data['annee']->libelle : 'all';
         $filename = $this->generateTimestampedFilename(
-            'detail_' . $data['specialite']->code,
+            'detail_'.$data['specialite']->code,
             $anneeLabel
         );
 
