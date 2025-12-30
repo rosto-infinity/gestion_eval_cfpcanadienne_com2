@@ -241,7 +241,7 @@
 </div>
 @endsection
 
-@push('scripts')
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const moyCompetencesInput = document.getElementById('moy_competences');
@@ -289,4 +289,4 @@ document.addEventListener('DOMContentLoaded', function() {
     moyCompetencesInput.dispatchEvent(new Event('input'));
 });
 </script>
-@endpush
+

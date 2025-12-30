@@ -12,7 +12,7 @@ use App\Http\Controllers\SpecialiteController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => view('welcome'));
+Route::get('/', fn () => view('welcome'))->name('welcome');
 
 Route::get('/dashboard', fn () => view('dashboard'))
     ->middleware(['auth', 'verified'])
@@ -74,6 +74,7 @@ Route::middleware('auth')->group(function (): void {
         Route::get('bilans/tableau-recapitulatif', [BilanCompetenceController::class, 'tableauRecapitulatif'])->name('bilans.tableau-recapitulatif');
         Route::post('bilans/generer-tous', [BilanCompetenceController::class, 'genererTous'])->name('bilans.generer-tous');
         Route::post('bilans/{bilan}/recalculer', [BilanCompetenceController::class, 'recalculer'])->name('bilans.recalculer');
+        Route::get('bilans/tableau-recapitulatif/export-pdf', [BilanCompetenceController::class, 'exportPdfTableau'])->name('bilans.tableau-recapitulatif.pdf');
         Route::resource('bilans', BilanCompetenceController::class);
     });
 

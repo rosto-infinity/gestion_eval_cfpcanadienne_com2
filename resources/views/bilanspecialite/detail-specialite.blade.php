@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('title', 'Détail de la spécialité - ' . $specialite->code)
@@ -68,93 +69,8 @@
     </div>
 </div>
 
-<!-- Statistiques de la spécialité -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-    <!-- Total Étudiants -->
-    <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
-        <div class="p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Total Étudiants</p>
-                    <p class="text-3xl font-bold text-foreground mt-2">{{ $stats['total'] }}</p>
-                </div>
-                <div class="bg-primary/10 rounded-full p-3">
-                    <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Admis -->
-    <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
-        <div class="p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Admis</p>
-                    <p class="text-3xl font-bold text-foreground mt-2">{{ $stats['admis'] }}</p>
-                </div>
-                <div class="bg-primary/10 rounded-full p-3">
-                    <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Non Admis -->
-    <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
-        <div class="p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Non Admis</p>
-                    <p class="text-3xl font-bold text-foreground mt-2">{{ $stats['non_admis'] }}</p>
-                </div>
-                <div class="bg-primary/10 rounded-full p-3">
-                    <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Taux d'Admission -->
-    <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
-        <div class="p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Taux d'Admission</p>
-                    <p class="text-3xl font-bold text-foreground mt-2">{{ number_format($stats['taux_admission'], 1) }}%</p>
-                </div>
-                <div class="bg-primary/10 rounded-full p-3">
-                    <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Moyenne Générale -->
-    <div class="card bg-primary/5 border border-primary/20 rounded-lg shadow-sm overflow-hidden">
-        <div class="p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold text-primary uppercase tracking-wide">Moy. Générale</p>
-                    <p class="text-3xl font-bold text-primary mt-2">{{ number_format($stats['moy_generale'], 2) }}/20</p>
-                </div>
-                <div class="bg-primary/20 rounded-full p-3">
-                    <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Tableau principal -->
 <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
@@ -302,6 +218,113 @@
     </div>
 </div>
 
+<!-- Statistiques de la spécialité -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6 pt-10">
+    <!-- Total Étudiants -->
+    <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
+        <div class="p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Total Étudiants</p>
+                    <p class="text-3xl font-bold text-foreground mt-2">{{ $stats['total'] }}</p>
+                </div>
+                <div class="bg-primary/10 rounded-full p-3">
+                    <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admis -->
+    <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
+        <div class="p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Admis</p>
+                    <p class="text-3xl font-bold text-foreground mt-2">{{ $stats['admis'] }}</p>
+                </div>
+                <div class="bg-primary/10 rounded-full p-3">
+                    <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Non Admis -->
+    <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
+        <div class="p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Non Admis</p>
+                    <p class="text-3xl font-bold text-foreground mt-2">{{ $stats['non_admis'] }}</p>
+                </div>
+                <div class="bg-primary/10 rounded-full p-3">
+                    <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Taux d'Admission -->
+    <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
+        <div class="p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Taux d'Admission</p>
+                    <p class="text-3xl font-bold text-foreground mt-2">{{ number_format($stats['taux_admission'], 1) }}%</p>
+                </div>
+                <div class="bg-primary/10 rounded-full p-3">
+                    <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Moyenne Générale -->
+    <div class="card bg-primary/5 border border-primary/20 rounded-lg shadow-sm overflow-hidden">
+        <div class="p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-primary uppercase tracking-wide">Moy. Générale</p>
+                    <p class="text-3xl font-bold text-primary mt-2">{{ number_format($stats['moy_generale'], 2) }}/20</p>
+                </div>
+                <div class="bg-primary/20 rounded-full p-3">
+                    <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- SECTION GRAPHIQUES AJOUTÉE -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 no-print pt-10">
+    <!-- Graphique Admission -->
+    <div class="card bg-card border border-border rounded-lg shadow-sm p-6">
+        <h3 class="text-lg font-bold text-foreground mb-4">Réussite vs Échec</h3>
+        <div class="relative h-64">
+            <canvas id="chart-admission"></canvas>
+        </div>
+    </div>
+
+    <!-- Graphique Comparatif Moyennes -->
+    <div class="card bg-card border border-border rounded-lg shadow-sm p-6">
+        <h3 class="text-lg font-bold text-foreground mb-4">Comparaison des Moyennes</h3>
+        <div class="relative h-64">
+            <canvas id="chart-moyennes"></canvas>
+        </div>
+    </div>
+</div>
 <!-- Légende et informations -->
 <div class="card mt-6 bg-primary/5 border border-primary/20 rounded-lg shadow-sm no-print overflow-hidden">
     <div class="p-6">
@@ -342,11 +365,122 @@
 
 @endsection
 
-@push('scripts')
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
- 
+    document.addEventListener('DOMContentLoaded', function() {
+        // Récupérer les couleurs depuis vos variables CSS pour respecter le thème
+        const rootStyles = getComputedStyle(document.documentElement);
+        
+        // Fallback si les variables ne sont pas chargées (par ex en développement)
+        const getVar = (name, fallback) => {
+            const val = rootStyles.getPropertyValue(name).trim();
+            return val || fallback;
+        };
+
+        const colorPrimary = getVar('--color-primary', 'hsl(0 90% 62%)');
+        const colorForeground = getVar('--color-foreground', 'hsl(223.8 0% 98%)');
+        const colorMuted = getVar('--color-muted', 'hsl(223.8 0% 14.94%)');
+        const colorDestructive = getVar('--color-destructive', 'hsl(358.8 100% 70%)');
+        const colorBackground = getVar('--color-background', 'hsl(223.8 0% 3.94%)');
+        const colorBorder = getVar('--color-border', 'hsl(223.8 0% 15.51%)');
+
+        // Chart 1: Réussite vs Échec (Doughnut)
+        const ctxAdmission = document.getElementById('chart-admission');
+        if (ctxAdmission) {
+            new Chart(ctxAdmission, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Admis', 'Non Admis'],
+                    datasets: [{
+                        data: [{{ $stats['admis'] }}, {{ $stats['non_admis'] }}],
+                        backgroundColor: [
+                            colorPrimary,      // Rouge pour Admis
+                            colorMuted          // Gris pour Non Admis
+                        ],
+                        borderColor: colorBackground,
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: colorForeground,
+                                font: { family: "'Instrument Sans', sans-serif" },
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            bodyColor: colorForeground,
+                            backgroundColor: colorBorder,
+                            borderColor: colorPrimary,
+                            borderWidth: 1
+                        }
+                    }
+                }
+            });
+        }
+
+        // Chart 2: Comparaison des Moyennes (Bar)
+        const ctxMoyennes = document.getElementById('chart-moyennes');
+        if (ctxMoyennes) {
+            new Chart(ctxMoyennes, {
+                type: 'bar',
+                data: {
+                    labels: ['Moy. S1', 'Moy. S2', 'Compétences (70%)', 'Moy. Générale'],
+                    datasets: [{
+                        label: 'Moyennes',
+                        data: [
+                            {{ number_format($stats['moy_semestre1'], 2) }},
+                            {{ number_format($stats['moy_semestre2'], 2) }},
+                            {{ number_format($stats['moy_competences'], 2) }},
+                            {{ number_format($stats['moy_generale'], 2) }}
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)', // Couleur neutre 1
+                            'rgba(54, 162, 235, 0.5)', // Couleur neutre 2
+                            'rgba(255, 206, 86, 0.5)', // Couleur neutre 3
+                            colorPrimary                // Votre Rouge Principal pour la Moyenne Générale
+                        ],
+                        borderColor: colorBorder,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 20,
+                            grid: { color: colorBorder },
+                            ticks: { color: colorForeground }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: colorForeground }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            bodyColor: colorForeground,
+                            backgroundColor: colorBorder,
+                            borderColor: colorPrimary,
+                            borderWidth: 1
+                        }
+                    }
+                }
+            });
+        }
+    });
 </script>
 <style>
     @media print {
@@ -378,4 +512,4 @@
         }
     }
 </style>
-@endpush
+

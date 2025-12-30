@@ -13,7 +13,7 @@ class PdfService
      * Configuration par défaut pour les PDFs
      */
     private array $defaultOptions = [
-        'defaultFont' => 'DejaVu Sans',
+        'defaultFont' => 'DejaVu Sans', // Assurez-vous que cette police est installée sinon utiliser 'Helvetica'
         'isHtml5ParserEnabled' => true,
         'isRemoteEnabled' => true,
         'margin_top' => 10,
@@ -23,7 +23,7 @@ class PdfService
     ];
 
     /**
-     * Génère un PDF en portrait
+     * Génère un PDF en portrait (A4 standard)
      */
     public function generatePortraitPdf(string $view, array $data, string $filename): Response
     {
@@ -31,15 +31,17 @@ class PdfService
     }
 
     /**
-     * Génère un PDF en paysage
+     * Génère un PDF en paysage (A4 -> utilisé pour le tableau)
      */
     public function generateLandscapePdf(string $view, array $data, string $filename): Response
     {
+        // Cette méthode force l'orientation paysage qui correspond à votre demande
         return $this->generatePdf($view, $data, $filename, 'landscape');
     }
 
     /**
-     * Génère un PDF avec configuration personnalisée
+     * Méthode générique de génération
+     * Définit le format A4 et l'orientation via ->setPaper()
      */
     public function generatePdf(
         string $view,
@@ -51,6 +53,7 @@ class PdfService
         $options = array_merge($this->defaultOptions, $customOptions);
 
         $pdf = Pdf::loadView($view, $data)
+            // Définit explicitement le format A4 et l'orientation
             ->setPaper('a4', $orientation)
             ->setOptions($options);
 
@@ -64,7 +67,7 @@ class PdfService
     {
         $parts = [$prefix];
 
-        if (! empty($identifier)) {
+        if (!empty($identifier)) {
             $parts[] = $identifier;
         }
 
@@ -74,7 +77,7 @@ class PdfService
     }
 
     /**
-     * Génère un PDF de relevé de notes
+     * PDF Relevé de Notes
      */
     public function generateReleveNotesPdf(array $data): Response
     {
@@ -91,7 +94,7 @@ class PdfService
     }
 
     /**
-     * Génère un PDF de bilan de compétences
+     * PDF Bilan individuel
      */
     public function generateBilanPdf(array $data): Response
     {
@@ -108,7 +111,8 @@ class PdfService
     }
 
     /**
-     * Génère un PDF de tableau récapitulatif
+     * PDF Tableau Récapitulatif
+     * Utilise generateLandscapePdf pour forcer le format A4 Paysage
      */
     public function generateTableauRecapitulatifPdf(array $data): Response
     {
@@ -118,6 +122,7 @@ class PdfService
             $anneeLabel
         );
 
+        // Ici, nous appelons explicitement la méthode Paysage
         return $this->generateLandscapePdf(
             'bilans.tableau-recapitulatif-pdf',
             $data,
@@ -126,7 +131,7 @@ class PdfService
     }
 
     /**
-     * Génère un PDF de bilan par spécialité
+     * PDF Bilan par spécialité
      */
     public function generateBilanSpecialitePdf(array $data): Response
     {
@@ -136,6 +141,7 @@ class PdfService
             $anneeLabel
         );
 
+        // Utilisé le paysage pour les tableaux globaux aussi
         return $this->generateLandscapePdf(
             'bilanspecialite.bilan-specialite-pdf',
             $data,
@@ -144,7 +150,7 @@ class PdfService
     }
 
     /**
-     * Génère un PDF de détail de spécialité
+     * PDF Détail de spécialité
      */
     public function generateDetailSpecialitePdf(array $data): Response
     {

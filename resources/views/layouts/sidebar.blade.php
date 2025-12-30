@@ -10,6 +10,12 @@
                 <span class="text">Dashboard</span>
             </a>
         </li>
+        <li class="{{ request()->routeIs('welcome') ? 'active' : '' }}">
+            <a href="{{ route('welcome') }}" title="Tableau de bord">
+                <i class='bx bxs-home'></i>
+                <span class="text">Accueil</span>
+            </a>
+        </li>
 
         @if(auth()->user()->isAdmin())
             <li class="{{ request()->routeIs('annees.*') ? 'active' : '' }}">

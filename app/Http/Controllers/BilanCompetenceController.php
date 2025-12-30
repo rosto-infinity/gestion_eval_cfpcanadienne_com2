@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\View\View;
+use App\Models\Specialite;
+use App\Services\PdfService;
+use Illuminate\Http\Request;
+use App\Services\BilanService;
 use App\Models\AnneeAcademique;
 use App\Models\BilanCompetence;
-use App\Models\Specialite;
-use App\Models\User;
-use App\Services\BilanService;
-use App\Services\PdfService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
+use App\Http\Requests\StoreBilanRequest;
 
 class BilanCompetenceController extends Controller
 {
@@ -59,36 +60,35 @@ class BilanCompetenceController extends Controller
         return view('bilans.create-bilans', compact('user', 'users'));
     }
 
-    public function store(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'moy_competences' => 'required|numeric|min:0|max:20',
-            'observations' => 'nullable|string|max:1000',
-        ]);
+    public function store(StoreBilanRequest $request): RedirectResponse
+{
+    $validated = $request->validated();
 
-        try {
-            $user = User::findOrFail($validated['user_id']);
+    try {
+        $user = User::findOrFail($validated['user_id']);
 
-            $bilan = $this->bilanService->createBilan(
-                $user,
-                (float) $validated['moy_competences'],
-                $validated['observations'] ?? null
-            );
+        $bilan = $this->bilanService->createBilan(
+            $user,
+            (float) $validated['moy_competences'],
+            $validated['observations'] ?? null
+        );
 
-            return redirect()
-                ->route('bilans.show', $bilan)
-                ->with('success', 'Bilan de compétences créé avec succès.');
-        } catch (\InvalidArgumentException $e) {
-            return back()
-                ->withInput()
-                ->with('error', $e->getMessage());
-        } catch (\Exception $e) {
-            return back()
-                ->withInput()
-                ->with('error', 'Erreur lors de la création: '.$e->getMessage());
-        }
+        return redirect()
+            ->route('bilans.show', $bilan)
+            ->with('success', 'Bilan de compétences créé avec succès.');
+            
+    } catch (\InvalidArgumentException $e) {
+        // Si le Service lance une exception (ex: année académique manquante), on la capture ici
+        return back()
+            ->withInput()
+            ->with('error', $e->getMessage());
+            
+    } catch (\Exception $e) {
+        return back()
+            ->withInput()
+            ->with('error', 'Erreur inattendue lors de la création: ' . $e->getMessage());
     }
+}
 
     public function show(BilanCompetence $bilan): View
     {

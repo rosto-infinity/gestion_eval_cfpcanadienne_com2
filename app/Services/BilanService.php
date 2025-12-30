@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Models\BilanCompetence;
+use Log;
 use App\Models\User;
+use App\Models\BilanCompetence;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -26,8 +27,14 @@ class BilanService
      */
     public function createBilan(User $user, float $moyCompetences, ?string $observations = null): BilanCompetence
     {
-        if ($this->bilanExists($user->id, $user->annee_academique_id)) {
-            throw new \InvalidArgumentException('Un bilan existe déjà pour cet étudiant.');
+        // CORRECTION 1: Vérifier si l'étudiant a une année académique avant de continuer
+        if (is_null($user->annee_academique_id)) {
+            throw new \InvalidArgumentException("Erreur : L'étudiant n'est associé à aucune année académique active. Veuillez vérifier son profil.");
+        }
+
+        // CORRECTION 2: Vérifier si un bilan existe déjà (Message demandé)
+        if ($this->bilanExists($user->id, (int) $user->annee_academique_id)) {
+            throw new \InvalidArgumentException("Un bilan de compétences existe déjà pour cet étudiant pour l'année en cours. Veuillez modifier le bilan existant.");
         }
 
         $bilan = new BilanCompetence([
@@ -73,8 +80,15 @@ class BilanService
             $count = 0;
 
             foreach ($users as $user) {
-                $this->createBilan($user, $moyCompetencesDefaut);
-                $count++;
+                // Note: createBilan peut lever une exception, mais ici on filtre déjà 'whereDoesntHave'
+                // Cependant, c'est une bonne pratique de laisser try/catch ici aussi si nécessaire
+                try {
+                    $this->createBilan($user, $moyCompetencesDefaut);
+                    $count++;
+                } catch (\InvalidArgumentException $e) {
+                    // On ignore les erreurs de doublon ou d'année manquante dans le script de masse
+                    Log::warning('Erreur génération masse pour user ' . $user->id . ': ' . $e->getMessage());
+                }
             }
 
             DB::commit();
