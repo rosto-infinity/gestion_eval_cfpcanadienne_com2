@@ -35,7 +35,7 @@ class SpecialiteStatsService
             ->values();
     }
 
-    /**
+       /**
      * Calcule les statistiques pour une spécialité
      */
     public function calculateSpecialiteStats(Specialite $specialite): ?object
@@ -52,6 +52,10 @@ class SpecialiteStatsService
         $moyS2 = $etudiants->avg(fn ($e) => $e->getMoyenneSemestre(2));
         $moyComp = $etudiants->avg(fn ($e) => $e->bilanCompetence?->moy_competences);
         $moyGen = $etudiants->avg(fn ($e) => $e->bilanCompetence?->moyenne_generale);
+        
+        // CORRECTION : Ajout du calcul du Max et Min pour le tableau comparatif
+        $meilleureMoyenne = $etudiants->max(fn ($e) => $e->bilanCompetence?->moyenne_generale);
+        $moyennePlusBasse = $etudiants->min(fn ($e) => $e->bilanCompetence?->moyenne_generale);
 
         $totalEtudiants = $etudiants->count();
 
@@ -65,6 +69,9 @@ class SpecialiteStatsService
             'admis' => $admis,
             'non_admis' => $totalEtudiants - $admis,
             'taux_admission' => $totalEtudiants > 0 ? round(($admis / $totalEtudiants) * 100, 2) : 0,
+            // Ajout des clés manquantes demandées par la vue
+            'meilleure_moyenne' => round((float) ($meilleureMoyenne ?? 0), 2),
+            'moyenne_plus_basse' => round((float) ($moyennePlusBasse ?? 0), 2),
         ];
     }
 
@@ -107,11 +114,12 @@ class SpecialiteStatsService
         ];
     }
 
-    /**
+      /**
      * Récupère les étudiants d'une spécialité avec leurs statistiques
      */
     public function getEtudiantsWithStats(Specialite $specialite, int $anneeId): Collection
     {
+        // Ajouter ->with('bilanCompetence') ici est crucial
         return User::with(['evaluations.module', 'bilanCompetence', 'anneeAcademique'])
             ->where('specialite_id', $specialite->id)
             ->where('annee_academique_id', $anneeId)
@@ -121,18 +129,22 @@ class SpecialiteStatsService
             ->sortByDesc('moyenne_generale');
     }
 
-    /**
+     /**
      * Mappe les statistiques d'un étudiant
      */
     private function mapEtudiantStats(User $etudiant): object
     {
+        $bilan = $etudiant->bilanCompetence;
+
         return (object) [
             'etudiant' => $etudiant,
-            'moy_semestre1' => $etudiant->getMoyenneSemestre(1) ?? 0,
-            'moy_semestre2' => $etudiant->getMoyenneSemestre(2) ?? 0,
-            'moy_competences' => $etudiant->bilanCompetence?->moy_competences ?? 0,
-            'moyenne_generale' => $etudiant->bilanCompetence?->moyenne_generale ?? 0,
-            'is_admis' => $etudiant->bilanCompetence?->isAdmis() ?? false,
+            'moy_semestre1' => (float) ($etudiant->getMoyenneSemestre(1) ?? 0),
+            'moy_semestre2' => (float) ($etudiant->getMoyenneSemestre(2) ?? 0),
+            // Cast en float explicite pour éviter les erreurs d'affichage
+            'moy_competences' => (float) ($bilan->moy_competences ?? 0),
+            'moyenne_generale' => (float) ($bilan->moyenne_generale ?? 0),
+            // Vérification sécurisée : si la moyenne existe et est >= 10, c'est vrai.
+            'is_admis' => isset($bilan->moyenne_generale) && $bilan->moyenne_generale >= 10,
             'evaluations_s1' => $etudiant->getEvaluationsBySemestre(1),
             'evaluations_s2' => $etudiant->getEvaluationsBySemestre(2),
         ];
@@ -146,7 +158,7 @@ class SpecialiteStatsService
         $stats = [
             'total' => $etudiants->count(),
             'admis' => $etudiants->filter(fn ($e) => $e->is_admis)->count(),
-            'moy_generale' => $etudiants->avg('moyenne_generale'),
+            'moyenne_generale' => $etudiants->avg('moyenne_generale'),
             'moy_semestre1' => $etudiants->avg('moy_semestre1'),
             'moy_semestre2' => $etudiants->avg('moy_semestre2'),
             'moy_competences' => $etudiants->avg('moy_competences'),

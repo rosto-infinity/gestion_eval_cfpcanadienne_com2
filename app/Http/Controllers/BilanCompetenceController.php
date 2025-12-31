@@ -93,10 +93,8 @@ class BilanCompetenceController extends Controller
     public function show(BilanCompetence $bilan): View
     {
         $bilan->load(['user.specialite', 'anneeAcademique']);
-
         $evaluationsSemestre1 = $bilan->user->getEvaluationsBySemestre(1);
         $evaluationsSemestre2 = $bilan->user->getEvaluationsBySemestre(2);
-
         return view('bilans.show-bilans', compact('bilan', 'evaluationsSemestre1', 'evaluationsSemestre2'));
     }
 

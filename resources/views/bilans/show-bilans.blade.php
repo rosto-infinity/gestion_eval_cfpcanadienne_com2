@@ -56,7 +56,7 @@
                         <div>
                             <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Statut</p>
                             <p class="text-sm font-medium mt-1">
-                                @if($bilan->moy_generale >= 10)
+                                @if($bilan->moyenne_generale >= 10)
                                 <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-500/10 text-green-600">✓ Admis</span>
                                 @else
                                 <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-destructive/10 text-destructive">✗ Ajourné</span>
@@ -109,12 +109,12 @@
             <div class="flex items-start justify-between">
                 <div>
                     <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Moyenne Générale</p>
-                    <p class="text-2xl font-bold {{ $bilan->moy_generale >= 10 ? 'text-green-600' : 'text-destructive' }} mt-2">
-                        {{ number_format($bilan->moy_generale, 2) }}/20
+                    <p class="text-2xl font-bold {{ $bilan->moyenne_generale >= 10 ? 'text-green-600' : 'text-destructive' }} mt-2">
+                        {{ number_format($bilan->moyenne_generale, 2) }}/20
                     </p>
                 </div>
-                <div class="p-2 {{ $bilan->moy_generale >= 10 ? 'bg-green-500/10' : 'bg-destructive/10' }} rounded">
-                    <svg class="w-5 h-5 {{ $bilan->moy_generale >= 10 ? 'text-green-600' : 'text-destructive' }}" fill="currentColor" viewBox="0 0 20 20">
+                <div class="p-2 {{ $bilan->moyenne_generale >= 10 ? 'bg-green-500/10' : 'bg-destructive/10' }} rounded">
+                    <svg class="w-5 h-5 {{ $bilan->moyenne_generale >= 10 ? 'text-green-600' : 'text-destructive' }}" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                     </svg>
                 </div>
@@ -181,8 +181,8 @@
             <!-- Résultat final -->
             <div class="flex items-center justify-between p-3 bg-foreground/5 rounded border border-foreground/10 mt-3">
                 <span class="text-sm font-semibold text-foreground uppercase">Total</span>
-                <span class="text-lg font-bold {{ $bilan->moy_generale >= 10 ? 'text-green-600' : 'text-destructive' }}">
-                    {{ number_format($bilan->moy_generale, 2) }}/20
+                <span class="text-lg font-bold {{ $bilan->moyenne_generale >= 10 ? 'text-green-600' : 'text-destructive' }}">
+                    {{ number_format($bilan->moyenne_generale, 2) }}/20
                 </span>
             </div>
 
