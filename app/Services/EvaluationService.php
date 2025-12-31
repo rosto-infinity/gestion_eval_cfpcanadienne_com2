@@ -250,41 +250,7 @@ class EvaluationService
         return $user->specialite_id === $module->specialite_id;
     }
 
-    /**
-     * Vérifie si une évaluation existe déjà
-     */
-    // public function evaluationExists(int $userId, int $moduleId, int $semestre, int $anneeAcademiqueId): bool
-    // {
-    //     return Evaluation::where('user_id', $userId)
-    //         ->where('module_id', $moduleId)
-    //         ->where('semestre', $semestre)
-    //         ->where('annee_academique_id', $anneeAcademiqueId)
-    //         ->exists();
-    // }
-
-    /**
-     * Crée une évaluation avec validation
-     */
-    // public function createEvaluation(array $data): Evaluation
-    // {
-    //     $user = User::findOrFail($data['user_id']);
-    //     $module = Module::findOrFail($data['module_id']);
-
-    //     if (!$this->validateModuleForUser($user, $module)) {
-    //         throw new \InvalidArgumentException('Ce module n\'appartient pas à la spécialité de l\'étudiant.');
-    //     }
-
-    //     if ($this->evaluationExists(
-    //         $data['user_id'],
-    //         $data['module_id'],
-    //         $data['semestre'],
-    //         $data['annee_academique_id']
-    //     )) {
-    //         throw new \InvalidArgumentException('Cette évaluation existe déjà pour cet étudiant.');
-    //     }
-
-    //     return Evaluation::create($data);
-    // }
+   
 
     /**
      * Crée ou met à jour plusieurs évaluations

@@ -288,6 +288,10 @@
                                 <option value="premiere" {{ old('niveau') === 'premiere' ? 'selected' : '' }}>Première</option>
                                 <option value="probatoire" {{ old('niveau') === 'probatoire' ? 'selected' : '' }}>Probatoire</option>
                                 <option value="terminale" {{ old('niveau') === 'terminale' ? 'selected' : '' }}>Terminale</option>
+                                <option value="bacc" {{ old('niveau') === 'bacc' ? 'selected' : '' }}>Baccalauréat</option>
+                                <option value="licence" {{ old('niveau') === 'licence' ? 'selected' : '' }}>Licence</option>
+                                <option value="cep" {{ old('niveau') === 'cep' ? 'selected' : '' }}>CEP</option>
+                               
                             </select>
                             @error('niveau')
                                 <p class="mt-2 text-sm text-destructive font-medium flex items-center gap-1">

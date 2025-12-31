@@ -13,7 +13,8 @@
 
         <!-- Messages Flash -->
         @if (session('success'))
-            <div class="mb-6 p-4 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg flex items-start gap-3">
+            <div
+                class="mb-6 p-4 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg flex items-start gap-3">
                 <svg class="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -27,7 +28,8 @@
         @endif
 
         @if (session('error'))
-            <div class="mb-6 p-4 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-3">
+            <div
+                class="mb-6 p-4 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-3">
                 <svg class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -122,6 +124,25 @@
                         </div>
                     </div>
                 @endif
+                @if ($user && $modules->isNotEmpty())
+<!-- ✅ Section Debug - Ajoutez ceci après les infos étudiant -->
+<div class="mt-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-xs">
+    <p><strong class="text-blue-800 dark:text-blue-200">🔍 Informations de débogage :</strong></p>
+    <p>• Spécialité étudiant : <span class="font-bold">{{ $user->specialite_id }} ({{ $user->specialite?->intitule ?? 'N/A' }})</span></p>
+    <p>• Modules chargés : <span class="font-bold">{{ $modules->count() }}</span></p>
+    <p>• Modules par spécialité : <span class="font-bold">{{ $modules->where('specialite_id', $user->specialite_id)->count() }}/{{ $modules->count() }}</span></p>
+    @if($modules->where('specialite_id', '!=', $user->specialite_id)->isNotEmpty())
+        <p class="text-red-600 dark:text-red-400 mt-1">
+            ⚠️ <strong>Attention :</strong> {{ $modules->where('specialite_id', '!=', $user->specialite_id)->count() }} module(s) n'appartiennent pas à cette spécialité !
+        </p>
+        <ul class="mt-1 ml-4 text-red-700 dark:text-red-300">
+            @foreach($modules->where('specialite_id', '!=', $user->specialite_id) as $invalidModule)
+                <li>• {{ $invalidModule->code }}: {{ $invalidModule->intitule }} (Spécialité: {{ $invalidModule->specialite_id }})</li>
+            @endforeach
+        </ul>
+    @endif
+</div>
+@endif
 
                 <!-- Header -->
                 <div class="p-4 border-b border-border bg-muted/20">
@@ -178,7 +199,8 @@
                                     @enderror
                                 </div>
                                 <p class="text-sm font-medium text-foreground truncate">{{ $module->intitule }}</p>
-                                <p class="text-xs text-muted-foreground">Coef: {{ number_format($module->coefficient, 2) }}</p>
+                                <p class="text-xs text-muted-foreground">Coef: {{ number_format($module->coefficient, 2) }}
+                                </p>
                             </div>
 
                             <!-- Input -->
@@ -186,19 +208,11 @@
                                 <input type="hidden" name="evaluations[{{ $loop->index }}][module_id]"
                                     value="{{ $module->id }}">
                                 <div class="relative">
-                                    <input 
-                                        type="number" 
-                                        name="evaluations[{{ $loop->index }}][note]"
-                                        value="{{ $oldValue ?? '' }}"
-                                        min="0" 
-                                        max="20" 
-                                        step="0.01"
+                                    <input type="number" name="evaluations[{{ $loop->index }}][note]"
+                                        value="{{ $oldValue ?? '' }}" min="0" max="20" step="0.01"
                                         class="w-full px-3 py-2 border rounded-md text-center text-sm font-bold bg-background focus:outline-none focus:ring-1 focus:ring-primary transition-colors module-note-input @error('evaluations.' . $loop->index . '.note') border-destructive ring-1 ring-destructive/50 @else border-border @enderror"
-                                        placeholder="0" 
-                                        onchange="validateNote(this)"
-                                        oninput="validateNote(this)"
-                                        data-module-id="{{ $module->id }}"
-                                        data-loop-index="{{ $loop->index }}">
+                                        placeholder="0" onchange="validateNote(this)" oninput="validateNote(this)"
+                                        data-module-id="{{ $module->id }}" data-loop-index="{{ $loop->index }}">
                                     <span
                                         class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">/20</span>
                                 </div>
@@ -229,8 +243,7 @@
                             class="px-4 py-2 text-sm font-medium text-foreground bg-muted hover:bg-muted/80 rounded-md transition-colors">
                             Annuler
                         </a>
-                        <button 
-                            type="submit"
+                        <button type="submit"
                             class="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-md transition-colors">
                             Enregistrer les notes
                         </button>
@@ -243,7 +256,8 @@
                 <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div class="bg-card border border-border rounded-lg p-3">
                         <p class="text-xs text-muted-foreground mb-1">Progression</p>
-                        <p class="text-lg font-bold text-foreground">{{ $evaluations->count() }}/{{ $modules->count() }}</p>
+                        <p class="text-lg font-bold text-foreground">{{ $evaluations->count() }}/{{ $modules->count() }}
+                        </p>
                         <div class="mt-2 w-full h-1.5 bg-muted rounded-full overflow-hidden">
                             <div class="h-full bg-primary rounded-full"
                                 style="width: {{ ($evaluations->count() / $modules->count()) * 100 }}%"></div>
@@ -262,7 +276,6 @@
                     </div>
                 </div>
             @endif
-
         @elseif($user && $modules->isEmpty())
             <div
                 class="bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 text-center">
@@ -313,102 +326,102 @@
 @endpush
 
 @push('scripts')
-<script>
-    /**
-     * ✅ Valide et formate la note
-     */
-    function validateNote(input) {
-        let value = input.value.trim();
+    <script>
+        /**
+         * ✅ Valide et formate la note
+         */
+        function validateNote(input) {
+            let value = input.value.trim();
 
-        // ✅ Accepter virgule et point
-        value = value.replace(',', '.');
+            // ✅ Accepter virgule et point
+            value = value.replace(',', '.');
 
-        // ✅ Vérifier si c'est vide
-        if (value === '') {
-            input.value = '';
-            input.classList.remove('border-destructive', 'ring-1', 'ring-destructive/50');
-            input.classList.add('border-border');
-            updateNoteCount();
-            return;
-        }
-
-        // ✅ Convertir en nombre
-        let note = parseFloat(value);
-
-        // ✅ Vérifier si c'est un nombre valide
-        if (isNaN(note)) {
-            input.value = '';
-            input.classList.add('border-destructive', 'ring-1', 'ring-destructive/50');
-            input.classList.remove('border-border');
-            console.warn('❌ Valeur invalide:', value);
-            updateNoteCount();
-            return;
-        }
-
-        // ✅ Limiter entre 0 et 20
-        let hasError = false;
-        if (note < 0) {
-            note = 0;
-            hasError = true;
-        } else if (note > 20) {
-            note = 20;
-            hasError = true;
-        }
-
-        // ✅ Limiter à 2 décimales
-        note = Math.round(note * 100) / 100;
-
-        // ✅ Afficher la valeur formatée
-        input.value = note;
-
-        // ✅ Appliquer le style
-        if (hasError) {
-            input.classList.add('border-destructive', 'ring-1', 'ring-destructive/50');
-            input.classList.remove('border-border');
-        } else {
-            input.classList.remove('border-destructive', 'ring-1', 'ring-destructive/50');
-            input.classList.add('border-border');
-        }
-
-        console.log(`✅ Note validée: ${note}`);
-        updateNoteCount();
-    }
-
-    /**
-     * ✅ Met à jour le compteur de notes
-     */
-    function updateNoteCount() {
-        const inputs = document.querySelectorAll('.module-note-input');
-        const noteCount = document.getElementById('noteCount');
-        
-        let filledCount = 0;
-        inputs.forEach(input => {
-            if (input.value.trim() !== '') {
-                filledCount++;
+            // ✅ Vérifier si c'est vide
+            if (value === '') {
+                input.value = '';
+                input.classList.remove('border-destructive', 'ring-1', 'ring-destructive/50');
+                input.classList.add('border-border');
+                updateNoteCount();
+                return;
             }
+
+            // ✅ Convertir en nombre
+            let note = parseFloat(value);
+
+            // ✅ Vérifier si c'est un nombre valide
+            if (isNaN(note)) {
+                input.value = '';
+                input.classList.add('border-destructive', 'ring-1', 'ring-destructive/50');
+                input.classList.remove('border-border');
+                console.warn('❌ Valeur invalide:', value);
+                updateNoteCount();
+                return;
+            }
+
+            // ✅ Limiter entre 0 et 20
+            let hasError = false;
+            if (note < 0) {
+                note = 0;
+                hasError = true;
+            } else if (note > 20) {
+                note = 20;
+                hasError = true;
+            }
+
+            // ✅ Limiter à 2 décimales
+            note = Math.round(note * 100) / 100;
+
+            // ✅ Afficher la valeur formatée
+            input.value = note;
+
+            // ✅ Appliquer le style
+            if (hasError) {
+                input.classList.add('border-destructive', 'ring-1', 'ring-destructive/50');
+                input.classList.remove('border-border');
+            } else {
+                input.classList.remove('border-destructive', 'ring-1', 'ring-destructive/50');
+                input.classList.add('border-border');
+            }
+
+            console.log(`✅ Note validée: ${note}`);
+            updateNoteCount();
+        }
+
+        /**
+         * ✅ Met à jour le compteur de notes
+         */
+        function updateNoteCount() {
+            const inputs = document.querySelectorAll('.module-note-input');
+            const noteCount = document.getElementById('noteCount');
+
+            let filledCount = 0;
+            inputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    filledCount++;
+                }
+            });
+
+            noteCount.textContent = filledCount;
+        }
+
+        /**
+         * ✅ Initialiser les écouteurs
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            const noteInputs = document.querySelectorAll('.module-note-input');
+            const form = document.getElementById('evaluationsForm');
+
+            noteInputs.forEach(input => {
+                // ✅ Valider en temps réel
+                input.addEventListener('input', () => validateNote(input));
+                input.addEventListener('blur', () => validateNote(input));
+
+                // ✅ Valider au chargement
+                validateNote(input);
+            });
+
+            console.log(`✅ ${noteInputs.length} champ(s) note initialisé(s)`);
+            updateNoteCount();
         });
-        
-        noteCount.textContent = filledCount;
-    }
-
-    /**
-     * ✅ Initialiser les écouteurs
-     */
-    document.addEventListener('DOMContentLoaded', function() {
-        const noteInputs = document.querySelectorAll('.module-note-input');
-        const form = document.getElementById('evaluationsForm');
-
-        noteInputs.forEach(input => {
-            // ✅ Valider en temps réel
-            input.addEventListener('input', () => validateNote(input));
-            input.addEventListener('blur', () => validateNote(input));
-            
-            // ✅ Valider au chargement
-            validateNote(input);
-        });
-
-        console.log(`✅ ${noteInputs.length} champ(s) note initialisé(s)`);
-        updateNoteCount();
-    });
-</script>
+    </script>
 @endpush

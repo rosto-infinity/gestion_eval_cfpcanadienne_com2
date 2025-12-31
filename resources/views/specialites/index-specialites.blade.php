@@ -10,6 +10,29 @@
             <h1 class="text-3xl font-bold text-gray-900">Spécialités</h1>
             <p class="mt-2 text-sm text-gray-700">Gestion des spécialités académiques</p>
         </div>
+         <!-- Afficher les erreurs de validation -->
+                @if ($errors->any())
+                    <div class="p-4 bg-red-50 dark:bg-red-950/20 border-b border-red-200 dark:border-red-800">
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-red-900 dark:text-red-100 mb-2">Erreurs de validation</h4>
+                                <ul class="text-sm text-red-800 dark:text-red-200 space-y-1">
+                                    @foreach ($errors->all() as $error)
+                                        <li class="flex items-center gap-2">
+                                            <span class="inline-block w-1.5 h-1.5 bg-red-600 rounded-full"></span>
+                                            {{ $error }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                @endif
         <div class="mt-4 sm:mt-0">
             <a href="{{ route('specialites.create') }}" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring focus:ring-red-300 disabled:opacity-25 transition">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

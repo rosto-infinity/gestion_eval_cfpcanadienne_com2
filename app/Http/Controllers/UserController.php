@@ -122,7 +122,9 @@ class UserController extends Controller
 
         $specialites = Specialite::ordered()->get();
         $anneesAcademiques = AnneeAcademique::ordered()->get();
-        $niveaux = Niveau::grouped();
+       // CORRECTION : Récupérer les cases de l'Enum Niveau
+        $niveaux = \App\Enums\Niveau::cases(); 
+
 
         return view('users.edit', compact('user', 'specialites', 'anneesAcademiques', 'niveaux', 'roles'));
     }

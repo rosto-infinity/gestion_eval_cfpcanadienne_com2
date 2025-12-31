@@ -443,12 +443,13 @@ class EvaluationController extends Controller
         ]);
 
         try {
-            $user = User::findOrFail($validated['user_id']);
+            $user = User::with(['specialite', 'anneeAcademique'])->findOrFail($validated['user_id']);
 
-            $this->evaluationService->createOrUpdateMultiple(
+            // CORRECTION : On ajoute (int) devant $validated['semestre'] pour garantir le type
+            $count = $this->evaluationService->createOrUpdateMultiple(
                 $user,
                 $validated['evaluations'],
-                $validated['semestre']
+                (int) $validated['semestre'] 
             );
 
             return redirect()
@@ -458,13 +459,25 @@ class EvaluationController extends Controller
                 ])
                 ->with('success', 'Évaluations enregistrées avec succès.');
         } catch (\InvalidArgumentException $e) {
+            \Log::warning('Validation échouée', [
+                'error' => $e->getMessage()
+            ]);
+            
             return back()
                 ->withInput()
-                ->with('error', $e->getMessage());
+                ->with('error', '⚠️ '.$e->getMessage());
+            
         } catch (\Exception $e) {
+            \Log::error('Erreur critique lors de l\'enregistrement', [
+                'error_message' => $e->getMessage(),
+                'error_file' => $e->getFile(),
+                'error_line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de l\'enregistrement: '.$e->getMessage());
+                ->with('error', '❌ Erreur critique lors de l\'enregistrement: '.$e->getMessage());
         }
     }
 

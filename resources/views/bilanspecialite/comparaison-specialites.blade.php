@@ -1,9 +1,9 @@
 @extends('layouts.app')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 @section('title', 'Comparaison des Spécialités')
 
 @section('content')
-    <div class="min-h-screen" style="background-color: var(--background)">
+    <div class="min-h-screen" >
         <!-- En-tête avec navigation -->
         <div class="mb-8 flex justify-between items-center no-print">
             <div>
@@ -20,7 +20,7 @@
 
                     <div>
                         <h1 class="text-3xl font-bold" style="color: var(--foreground)">
-                            📊 Comparaison des Spécialités
+                             Comparaison des Spécialités
                         </h1>
                         <p class="mt-2 text-sm" style="color: var(--muted-foreground)">
                             Analyse comparative des performances académiques
@@ -330,12 +330,9 @@
         @endif
     </div>
 
-@endsection
 
-
-
-
-<script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
     // On vérifie qu'il y a des données avant d'exécuter JS
     @if ($bilanParSpecialite->isNotEmpty())
         const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
@@ -620,7 +617,14 @@
             });
         }
     @endif
-</script>
+    </script>
+
+@endsection
+
+
+
+
+
 
 <style>
     /* Animations fluides */
@@ -679,4 +683,3 @@
         }
     }
 </style>
-

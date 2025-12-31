@@ -253,11 +253,8 @@
     </div>
 </div>
 
-@endsection
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
     const specialites = @json($bilanParSpecialite->pluck('specialite.code'));
     const moyennesGenerales = @json($bilanParSpecialite->pluck('moyenne_generale'));
     const tauxAdmission = @json($bilanParSpecialite->pluck('taux_admission'));
@@ -375,6 +372,10 @@
         }
     });
 </script>
+
+@endsection
+
+
 
 <style>
     @media print {
