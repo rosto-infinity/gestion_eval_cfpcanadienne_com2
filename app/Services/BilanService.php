@@ -102,7 +102,7 @@ class BilanService
     }
 
     /**
-     * Calcule les statistiques des bilans
+     * -Calcule les statistiques des bilans
      */
     public function calculateStatsGlobales(Collection $bilans): array
     {
@@ -126,7 +126,7 @@ class BilanService
     }
 
     /**
-     * Récupère les bilans avec filtres
+     * -Récupère les bilans avec filtres
      */
     public function getBilansWithFilters(?int $anneeId = null, ?int $specialiteId = null): Collection
     {
