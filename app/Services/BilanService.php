@@ -32,7 +32,7 @@ class BilanService
             throw new \InvalidArgumentException("Erreur : L'étudiant n'est associé à aucune année académique active. Veuillez vérifier son profil.");
         }
 
-        // CORRECTION 2: Vérifier si un bilan existe déjà (Message demandé)
+        // CORRECTION 2: -Vérifier si un bilan existe déjà (Message demandé)
         if ($this->bilanExists($user->id, (int) $user->annee_academique_id)) {
             throw new \InvalidArgumentException("Un bilan de compétences existe déjà pour cet étudiant pour l'année en cours. Veuillez modifier le bilan existant.");
         }
