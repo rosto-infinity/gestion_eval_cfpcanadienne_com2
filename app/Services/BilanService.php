@@ -27,7 +27,7 @@ class BilanService
      */
     public function createBilan(User $user, float $moyCompetences, ?string $observations = null): BilanCompetence
     {
-        // CORRECTION 1: Vérifier si l'étudiant a une année académique avant de continuer
+        // CORRECTION 1: -Vérifier si l'étudiant a une année académique avant de continuer
         if (is_null($user->annee_academique_id)) {
             throw new \InvalidArgumentException("Erreur : L'étudiant n'est associé à aucune année académique active. Veuillez vérifier son profil.");
         }
