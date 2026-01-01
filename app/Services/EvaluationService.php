@@ -262,7 +262,7 @@ class EvaluationService
         DB::beginTransaction();
 
         try {
-            // Vérifier que tous les modules appartiennent à la spécialité
+            // -Vérifier que tous les modules appartiennent à la spécialité
             $moduleIds = collect($evaluations)->pluck('module_id');
             $invalidModules = Module::whereIn('id', $moduleIds)
                 ->where('specialite_id', '!=', $user->specialite_id)
