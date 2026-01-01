@@ -243,7 +243,7 @@ class EvaluationService
     }
 
     /**
-     * Vérifie si le module appartient à la spécialité de l'étudiant
+     * -Vérifie si le module appartient à la spécialité de l'étudiant
      */
     public function validateModuleForUser(User $user, Module $module): bool
     {
