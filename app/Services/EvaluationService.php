@@ -216,7 +216,7 @@ class EvaluationService
     }
 
     /**
-     * Calcule les statistiques des évaluations
+     * -Calcule les statistiques des évaluations
      */
     public function calculateStatistiques(Collection $evaluationsSemestre1, Collection $evaluationsSemestre2): array
     {
