@@ -60,7 +60,7 @@ class BilanService
     }
 
     /**
-     * Génère des bilans en masse
+     * -Génère des bilans en masse
      */
     public function generateBilansEnMasse(int $anneeAcademiqueId, float $moyCompetencesDefaut, ?int $specialiteId = null): int
     {
