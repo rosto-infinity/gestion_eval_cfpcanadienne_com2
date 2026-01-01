@@ -23,7 +23,7 @@ class BilanService
     }
 
     /**
-     * -Crée un bilan de compétences
+     * --Crée un bilan de compétences
      */
     public function createBilan(User $user, float $moyCompetences, ?string $observations = null): BilanCompetence
     {
