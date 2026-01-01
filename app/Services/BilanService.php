@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class BilanService
 {
     /**
-     * Vérifie si un bilan existe déjà pour un étudiant
+     * -Vérifie si un bilan existe déjà pour un étudiant
      */
     public function bilanExists(int $userId, int $anneeAcademiqueId): bool
     {
@@ -23,7 +23,7 @@ class BilanService
     }
 
     /**
-     * Crée un bilan de compétences
+     * -Crée un bilan de compétences
      */
     public function createBilan(User $user, float $moyCompetences, ?string $observations = null): BilanCompetence
     {
