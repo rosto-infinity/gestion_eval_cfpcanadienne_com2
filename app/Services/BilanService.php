@@ -49,7 +49,7 @@ class BilanService
     }
 
     /**
-     * Met à jour un bilan de compétences
+     * -Met à jour un bilan de compétences
      */
     public function updateBilan(BilanCompetence $bilan, float $moyCompetences, ?string $observations = null): BilanCompetence
     {
