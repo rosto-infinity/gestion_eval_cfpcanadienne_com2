@@ -51,7 +51,8 @@ class BilanSpecialiteController extends Controller
             $q->where('annee_academique_id', $anneeId)
               ->select('evaluations.*') 
               ->join('modules', 'evaluations.module_id', '=', 'modules.id')
-              ->orderBy('modules.code'); 
+              ->orderBy('modules.code')
+              ->with('module'); // S'assurer que la relation module est chargée
         }])
         ->whereHas('user', function ($q) use ($specialite, $anneeId) {
             $q->where('specialite_id', $specialite->id);
@@ -108,30 +109,48 @@ class BilanSpecialiteController extends Controller
     {
         $anneeId = $request->input('annee_id') ?? AnneeAcademique::active()->first()?->id;
 
-        $etudiants = $this->statsService->getEtudiantsWithStats($specialite, $anneeId);
-        $stats = $this->statsService->calculateDetailedStats($etudiants);
+        if (!$anneeId) {
+            $anneeId = AnneeAcademique::ordered()->first()?->id;
+        }
 
-        $statsGlobales = [
-            'total_specialites' => 1,
-            'total_etudiants' => $stats['total'],
-            'total_admis' => $stats['admis'],
-            'total_non_admis' => $stats['non_admis'],
-            'taux_admission' => $stats['taux_admission'],
-            'moyenne_generale' => round($stats['moyenne_generale'], 2),
-            'moy_semestre1' => round($stats['moy_semestre1'], 2),
-            'moy_semestre2' => round($stats['moy_semestre2'], 2),
-            'moy_competences' => round($stats['moy_competences'], 2),
-            'meilleure_moyenne' => round($stats['meilleure_moyenne'], 2),
-            'moyenne_plus_basse' => round($stats['moyenne_plus_basse'], 2),
+        // Utiliser la MÊME logique que la méthode show() pour la cohérence
+        $bilans = BilanCompetence::with(['user.specialite', 'anneeAcademique', 'user.evaluations' => function ($q) use ($anneeId) {
+            $q->where('annee_academique_id', $anneeId)
+              ->select('evaluations.*') 
+              ->join('modules', 'evaluations.module_id', '=', 'modules.id')
+              ->orderBy('modules.code')
+              ->with('module'); // S'assurer que la relation module est chargée
+        }])
+        ->whereHas('user', function ($q) use ($specialite, $anneeId) {
+            $q->where('specialite_id', $specialite->id);
+            if ($anneeId) {
+                $q->where('annee_academique_id', $anneeId);
+            }
+        })
+        ->orderByDesc('moyenne_generale')
+        ->get();
+
+        // Calcul des stats (optimisé)
+        $stats = [
+            'total' => $bilans->count(),
+            'admis' => $bilans->filter(fn ($b) => $b->moyenne_generale >= 10)->count(),
+            'moyenne_generale' => $bilans->avg('moyenne_generale'),
+            'moy_competences' => $bilans->avg('moy_competences'),
+            'moy_semestre1' => $bilans->avg('moy_eval_semestre1'),
+            'moy_semestre2' => $bilans->avg('moy_eval_semestre2'),
+            'meilleure_moyenne' => $bilans->max('moyenne_generale'),
+            'moyenne_plus_basse' => $bilans->min('moyenne_generale'),
         ];
+
+        $stats['non_admis'] = $stats['total'] - $stats['admis'];
+        $stats['taux_admission'] = $stats['total'] > 0 ? ($stats['admis'] / $stats['total']) * 100 : 0;
 
         $annee = AnneeAcademique::find($anneeId);
 
         return $this->pdfService->generateDetailSpecialitePdf([
             'specialite' => $specialite,
-            'etudiants' => $etudiants,
+            'bilans' => $bilans, // Utiliser $bilans comme la version web
             'stats' => $stats,
-            'statsGlobales' => $statsGlobales,
             'annee' => $annee,
         ]);
     }

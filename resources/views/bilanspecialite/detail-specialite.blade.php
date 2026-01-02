@@ -167,8 +167,8 @@
                             // Les évaluations viennent du contrôleur, déjà triées par M1..M10
                             $evaluations = $user->evaluations;
 
-                            $evalS1 = $evaluations->filter(fn ($e) => $e->module->code <= 'M5')->keyBy('module.code');
-                            $evalS2 = $evaluations->filter(fn ($e) => $e->module->code >= 'M6')->keyBy('module.code');
+                            $evalS1 = $evaluations->filter(fn ($e) => in_array($e->module->code, ['M1', 'M2', 'M3', 'M4', 'M5']))->keyBy('module.code');
+                            $evalS2 = $evaluations->filter(fn ($e) => in_array($e->module->code, ['M6', 'M7', 'M8', 'M9', 'M10']))->keyBy('module.code');
 
                             $isAdmis = isset($bilan->moyenne_generale) && $bilan->moyenne_generale >= 10;
                         @endphp

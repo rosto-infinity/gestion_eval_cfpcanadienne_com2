@@ -24,7 +24,7 @@
     <!-- Statistiques globales -->
     <div class="mb-8">
         <h3 class="text-lg font-bold text-foreground mb-4 text-center">RÉSUMÉ DES STATISTIQUES GLOBALES</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
             <!-- Spécialités -->
             <div class="border border-border rounded-lg p-4 bg-primary/5">
                 <p class="text-sm font-semibold text-primary uppercase tracking-wide mb-1">Spécialités</p>
@@ -46,7 +46,17 @@
             <!-- Moyenne Générale -->
             <div class="border border-border rounded-lg p-4 bg-primary/10">
                 <p class="text-sm font-semibold text-primary uppercase tracking-wide mb-1">Moy. Générale</p>
-                <p class="text-2xl font-bold text-primary">{{ number_format($statsGlobales['moyenne_generale'], 2) }}/20</p>
+                <p class="text-2xl font-bold text-primary">
+                    {{ $statsGlobales['moyenne_generale'] ? number_format($statsGlobales['moyenne_generale'], 2) : '-' }}/20
+                </p>
+            </div>
+            
+            <!-- Moyenne Compétences -->
+            <div class="border border-border rounded-lg p-4 bg-primary/5">
+                <p class="text-sm font-semibold text-primary uppercase tracking-wide mb-1">Moy. Compétences</p>
+                <p class="text-2xl font-bold text-primary">
+                    {{ $statsGlobales['moy_competences'] ? number_format($statsGlobales['moy_competences'], 2) : '-' }}/20
+                </p>
             </div>
         </div>
     </div>
@@ -68,8 +78,14 @@
                             <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-primary/5">Étudiants</th>
                             <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-primary/5">Moy. S1</th>
                             <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-primary/5">Moy. S2</th>
-                            <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-primary/5">Moy. Comp.</th>
-                            <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-primary/10">Moy. Gén.</th>
+                            <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-primary/5">
+                                <div>Compétences</div>
+                                <div class="text-xs font-normal">(70%)</div>
+                            </th>
+                            <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-primary/10">
+                                <div>Moy. Gén.</div>
+                                <div class="text-xs font-normal">(100%)</div>
+                            </th>
                             <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-muted/50">Admis</th>
                             <th class="px-4 py-3 text-center text-sm font-bold text-foreground border-r border-border bg-muted/50">Non Admis</th>
                             <th class="px-4 py-3 text-center text-sm font-bold text-foreground bg-muted/30">Taux Adm.</th>
@@ -84,16 +100,16 @@
                                 </td>
                                 <td class="px-4 py-3 text-center bg-primary/5 font-semibold text-foreground">{{ $bilan->total_etudiants }}</td>
                                 <td class="px-4 py-3 text-center bg-primary/5 font-semibold text-foreground">
-                                    {{ number_format($bilan->moy_semestre1, 2) }}
+                                    {{ $bilan->moy_semestre1 ? number_format($bilan->moy_semestre1, 2) : '-' }}
                                 </td>
                                 <td class="px-4 py-3 text-center bg-primary/5 font-semibold text-foreground">
-                                    {{ number_format($bilan->moy_semestre2, 2) }}
+                                    {{ $bilan->moy_semestre2 ? number_format($bilan->moy_semestre2, 2) : '-' }}
                                 </td>
                                 <td class="px-4 py-3 text-center bg-primary/5 font-semibold text-foreground">
-                                    {{ number_format($bilan->moy_competences, 2) }}
+                                    {{ $bilan->moy_competences ? number_format($bilan->moy_competences, 2) : '-' }}
                                 </td>
                                 <td class="px-4 py-3 text-center bg-primary/10 font-bold text-lg text-primary">
-                                    {{ number_format($bilan->moyenne_generale, 2) }}
+                                    {{ $bilan->moyenne_generale ? number_format($bilan->moyenne_generale, 2) : '-' }}
                                 </td>
                                 <td class="px-4 py-3 text-center bg-muted/50 font-bold text-foreground">{{ $bilan->admis }}</td>
                                 <td class="px-4 py-3 text-center bg-muted/50 font-bold text-muted-foreground">{{ $bilan->non_admis }}</td>
@@ -109,11 +125,17 @@
                         <tr>
                             <td class="px-4 py-3 font-bold text-right text-foreground" colspan="1">TOTAL</td>
                             <td class="px-4 py-3 text-center font-bold bg-primary/5 text-foreground">{{ $statsGlobales['total_etudiants'] }}</td>
-                            <td class="px-4 py-3 text-center bg-primary/5"></td>
-                            <td class="px-4 py-3 text-center bg-primary/5"></td>
-                            <td class="px-4 py-3 text-center bg-primary/5"></td>
+                            <td class="px-4 py-3 text-center font-bold bg-primary/5 text-foreground">
+                                {{ $statsGlobales['moy_semestre1'] ? number_format($statsGlobales['moy_semestre1'], 2) : '-' }}
+                            </td>
+                            <td class="px-4 py-3 text-center font-bold bg-primary/5 text-foreground">
+                                {{ $statsGlobales['moy_semestre2'] ? number_format($statsGlobales['moy_semestre2'], 2) : '-' }}
+                            </td>
+                            <td class="px-4 py-3 text-center font-bold bg-primary/5 text-foreground">
+                                {{ $statsGlobales['moy_competences'] ? number_format($statsGlobales['moy_competences'], 2) : '-' }}
+                            </td>
                             <td class="px-4 py-3 text-center bg-primary/10 font-bold text-primary">
-                                {{ number_format($statsGlobales['moyenne_generale'], 2) }}/20
+                                {{ $statsGlobales['moyenne_generale'] ? number_format($statsGlobales['moyenne_generale'], 2) : '-' }}/20
                             </td>
                             <td class="px-4 py-3 text-center bg-muted/50 font-bold text-foreground">
                                 {{ $statsGlobales['total_admis'] }}
@@ -315,7 +337,7 @@
     .grid { display: grid; }
     .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
     .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
     
     .overflow-x-auto { overflow-x: auto; }
     
@@ -340,7 +362,7 @@
     
     @media (min-width: 768px) {
         .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .md\:grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
     }
 </style>
 @endsection

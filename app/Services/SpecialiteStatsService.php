@@ -136,15 +136,25 @@ class SpecialiteStatsService
     {
         $bilan = $etudiant->bilanCompetence;
 
+        // DÉBOGAGE : S'assurer que le bilan existe
+        if (!$bilan) {
+            // Créer un bilan vide si inexistant
+            $moyCompetences = 0;
+            $moyenneGenerale = 0;
+        } else {
+            $moyCompetences = $bilan->moy_competences ?? 0;
+            $moyenneGenerale = $bilan->moyenne_generale ?? 0;
+        }
+
         return (object) [
             'etudiant' => $etudiant,
             'moy_semestre1' => (float) ($etudiant->getMoyenneSemestre(1) ?? 0),
             'moy_semestre2' => (float) ($etudiant->getMoyenneSemestre(2) ?? 0),
             // Cast en float explicite pour éviter les erreurs d'affichage
-            'moy_competences' => (float) ($bilan->moy_competences ?? 0),
-            'moyenne_generale' => (float) ($bilan->moyenne_generale ?? 0),
+            'moy_competences' => (float) $moyCompetences,
+            'moyenne_generale' => (float) $moyenneGenerale,
             // Vérification sécurisée : si la moyenne existe et est >= 10, c'est vrai.
-            'is_admis' => isset($bilan->moyenne_generale) && $bilan->moyenne_generale >= 10,
+            'is_admis' => isset($moyenneGenerale) && $moyenneGenerale >= 10,
             'evaluations_s1' => $etudiant->getEvaluationsBySemestre(1),
             'evaluations_s2' => $etudiant->getEvaluationsBySemestre(2),
         ];

@@ -174,16 +174,21 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($etudiants as $index => $data)
+                @forelse($bilans as $index => $bilan)
                 @php
-                    $etudiant = $data->etudiant;
-                    $evalS1 = $data->evaluations_s1->keyBy('module.code');
-                    $evalS2 = $data->evaluations_s2->keyBy('module.code');
+                    $user = $bilan->user;
+                    // Les évaluations viennent du contrôleur, déjà triées par M1..M10
+                    $evaluations = $user->evaluations;
+
+                    $evalS1 = $evaluations->filter(fn ($e) => in_array($e->module->code, ['M1', 'M2', 'M3', 'M4', 'M5']))->keyBy('module.code');
+                    $evalS2 = $evaluations->filter(fn ($e) => in_array($e->module->code, ['M6', 'M7', 'M8', 'M9', 'M10']))->keyBy('module.code');
+
+                    $isAdmis = isset($bilan->moyenne_generale) && $bilan->moyenne_generale >= 10;
                 @endphp
                 <tr>
                     <td class="col-num">{{ $index + 1 }}</td>
-                    <td class="col-name">{{ strtoupper($etudiant->name) }}</td>
-                    <td class="col-matricule">{{ $etudiant->matricule }}</td>
+                    <td class="col-name">{{ strtoupper($user->name) }}</td>
+                    <td class="col-matricule">{{ $user->matricule }}</td>
 
                     <!-- Semestre 1 -->
                     @for($i = 1; $i <= 5; $i++)
@@ -201,7 +206,7 @@
                         <td class="{{ $class }}">{{ $note ? number_format($note, 0) : '-' }}</td>
                     @endfor
 
-                    <td>{{ $data->moy_semestre1 > 0 ? number_format($data->moy_semestre1, 2) : '-' }}</td>
+                    <td>{{ $bilan->moy_eval_semestre1 > 0 ? number_format($bilan->moy_eval_semestre1, 2) : '-' }}</td>
 
                     <!-- Semestre 2 -->
                     @for($i = 6; $i <= 10; $i++)
@@ -219,11 +224,11 @@
                         <td class="{{ $class }}">{{ $note ? number_format($note, 0) : '-' }}</td>
                     @endfor
 
-                    <td>{{ $data->moy_semestre2 > 0 ? number_format($data->moy_semestre2, 2) : '-' }}</td>
-                    <td>{{ $data->moy_competences > 0 ? number_format($data->moy_competences, 2) : '-' }}</td>
+                    <td>{{ $bilan->moy_eval_semestre2 > 0 ? number_format($bilan->moy_eval_semestre2, 2) : '-' }}</td>
+                    <td>{{ $bilan->moy_competences > 0 ? number_format($bilan->moy_competences, 2) : '-' }}</td>
 
                     @php
-                        $moyGen = $data->moyenne_generale;
+                        $moyGen = $bilan->moyenne_generale;
                         $moyGenStr = $moyGen > 0 ? number_format($moyGen, 2) : '-';
                         $isEchec = $moyGen > 0 && $moyGen < 10;
                     @endphp
