@@ -24,7 +24,7 @@
             margin: 10mm;
         }
 
-        /* ———————— En-tête ———————— */
+        /*- ———————— En-tête ———————— */
         .header {
             padding-top: 20px;
             text-align: center;
