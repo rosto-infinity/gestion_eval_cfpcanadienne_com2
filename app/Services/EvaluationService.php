@@ -283,6 +283,7 @@ class EvaluationService
                         'annee_academique_id' => $user->annee_academique_id,
                     ],
                     [
+                        'specialite_id' => $user->specialite_id,
                         'note' => $evalData['note'],
                     ]
                 );

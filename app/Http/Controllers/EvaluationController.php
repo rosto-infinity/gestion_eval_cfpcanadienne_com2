@@ -408,28 +408,28 @@ class EvaluationController extends Controller
         $userId = $request->query('user_id');
         $semestre = $request->query('semestre', 1);
 
-        $user = null;
+        $selectedUser = null;
         $modules = collect();
         $evaluations = collect();
 
         if ($userId) {
-            $user = User::with(['specialite', 'anneeAcademique'])->findOrFail($userId);
+            $selectedUser = User::with(['specialite', 'anneeAcademique'])->findOrFail($userId);
 
-            if ($user->specialite_id) {
-                $modulesQuery = Module::where('specialite_id', $user->specialite_id);
+            if ($selectedUser->specialite_id) {
+                $modulesQuery = Module::where('specialite_id', $selectedUser->specialite_id);
                 $modules = $semestre == 1
                     ? $modulesQuery->semestre1()->ordered()->get()
                     : $modulesQuery->semestre2()->ordered()->get();
             }
 
-            if ($user->annee_academique_id) {
-                $evaluations = $this->evaluationService->getEvaluationsBySemestre($user, (int) $semestre);
+            if ($selectedUser->annee_academique_id) {
+                $evaluations = $this->evaluationService->getEvaluationsBySemestre($selectedUser, (int) $semestre);
             }
         }
 
         $users = User::with(['specialite', 'anneeAcademique'])->ordered()->get();
 
-        return view('evaluations.saisir-multiple', compact('user', 'modules', 'evaluations', 'users', 'semestre'));
+        return view('evaluations.saisir-multiple', compact('selectedUser', 'modules', 'evaluations', 'users', 'semestre'));
     }
 
     public function storeMultiple(Request $request): RedirectResponse

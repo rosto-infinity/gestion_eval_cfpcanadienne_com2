@@ -74,22 +74,22 @@
             </form>
         </div>
 
-        @if ($user && $modules->isNotEmpty())
+        @if ($selectedUser && $modules->isNotEmpty())
 
             <!-- Infos Étudiant -->
             <div class="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="font-bold text-foreground">{{ $user->getFullName() }}</h2>
+                        <h2 class="font-bold text-foreground">{{ $selectedUser->getFullName() }}</h2>
                         <p class="text-xs text-muted-foreground mt-0.5">
-                            {{ $user->matricule }} • {{ $user->specialite?->intitule ?? 'N/A' }}
+                            {{ $selectedUser->matricule }} • {{ $selectedUser->specialite?->intitule ?? 'N/A' }}
                         </p>
                     </div>
                     <div class="text-right">
                         <span class="inline-block px-3 py-1 bg-primary text-primary-foreground rounded text-xs font-bold">
                             S{{ $semestre }}
                         </span>
-                        <p class="text-xs text-muted-foreground mt-1">{{ $user->anneeAcademique?->libelle ?? 'N/A' }}</p>
+                        <p class="text-xs text-muted-foreground mt-1">{{ $selectedUser->anneeAcademique?->libelle ?? 'N/A' }}</p>
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@
             <form action="{{ route('evaluations.store-multiple') }}" method="POST"
                 class="bg-card border border-border rounded-lg overflow-hidden" id="evaluationsForm">
                 @csrf
-                <input type="hidden" name="user_id" value="{{ $user->id }}">
+                <input type="hidden" name="user_id" value="{{ $selectedUser->id }}">
                 <input type="hidden" name="semestre" value="{{ $semestre }}">
 
                 <!-- Afficher les erreurs de validation -->
@@ -124,19 +124,19 @@
                         </div>
                     </div>
                 @endif
-                @if ($user && $modules->isNotEmpty())
+                @if ($selectedUser && $modules->isNotEmpty())
 <!-- ✅ Section Debug - Ajoutez ceci après les infos étudiant -->
 <div class="mt-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-xs">
     <p><strong class="text-blue-800 dark:text-blue-200">🔍 Informations de débogage :</strong></p>
-    <p>• Spécialité étudiant : <span class="font-bold">{{ $user->specialite_id }} ({{ $user->specialite?->intitule ?? 'N/A' }})</span></p>
+    <p>• Spécialité étudiant : <span class="font-bold">{{ $selectedUser->specialite_id }} ({{ $selectedUser->specialite?->intitule ?? 'N/A' }})</span></p>
     <p>• Modules chargés : <span class="font-bold">{{ $modules->count() }}</span></p>
-    <p>• Modules par spécialité : <span class="font-bold">{{ $modules->where('specialite_id', $user->specialite_id)->count() }}/{{ $modules->count() }}</span></p>
-    @if($modules->where('specialite_id', '!=', $user->specialite_id)->isNotEmpty())
+    <p>• Modules par spécialité : <span class="font-bold">{{ $modules->where('specialite_id', $selectedUser->specialite_id)->count() }}/{{ $modules->count() }}</span></p>
+    @if($modules->where('specialite_id', '!=', $selectedUser->specialite_id)->isNotEmpty())
         <p class="text-red-600 dark:text-red-400 mt-1">
-            ⚠️ <strong>Attention :</strong> {{ $modules->where('specialite_id', '!=', $user->specialite_id)->count() }} module(s) n'appartiennent pas à cette spécialité !
+            ⚠️ <strong>Attention :</strong> {{ $modules->where('specialite_id', '!=', $selectedUser->specialite_id)->count() }} module(s) n'appartiennent pas à cette spécialité !
         </p>
         <ul class="mt-1 ml-4 text-red-700 dark:text-red-300">
-            @foreach($modules->where('specialite_id', '!=', $user->specialite_id) as $invalidModule)
+            @foreach($modules->where('specialite_id', '!=', $selectedUser->specialite_id) as $invalidModule)
                 <li>• {{ $invalidModule->code }}: {{ $invalidModule->intitule }} (Spécialité: {{ $invalidModule->specialite_id }})</li>
             @endforeach
         </ul>
@@ -150,7 +150,7 @@
                         <div>
                             <h3 class="font-bold text-foreground text-sm">Modules - Semestre {{ $semestre }}</h3>
                             <p class="text-xs text-muted-foreground mt-0.5">{{ $modules->count() }} module(s) de
-                                {{ $user->specialite?->intitule ?? 'cette spécialité' }}</p>
+                                {{ $selectedUser->specialite?->intitule ?? 'cette spécialité' }}</p>
                         </div>
                         @if ($evaluations->isNotEmpty())
                             <span class="text-xs font-bold text-green-600">✓
