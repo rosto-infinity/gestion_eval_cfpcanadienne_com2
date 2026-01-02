@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Enums\Niveau;
 use App\Enums\Role;
-use App\Models\AnneeAcademique;
-use App\Models\Specialite;
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
+use App\Enums\Niveau;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\View\View;
+use App\Models\Specialite;
+use App\Models\AnneeAcademique;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -59,44 +62,40 @@ class UserController extends Controller
         return view('users.create', compact('specialites', 'anneesAcademiques', 'niveaux'));
     }
 
-    public function store(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'matricule' => 'nullable|string|max:20|unique:users,matricule',
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => ['required', 'confirmed', Password::defaults()],
-            'sexe' => 'nullable|in:M,F,Autre',
-            'niveau' => 'nullable|in:'.implode(',', Niveau::values()),
-            'profile' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'specialite_id' => 'nullable|exists:specialites,id',
-            'annee_academique_id' => 'nullable|exists:annees_academiques,id',
-        ]);
+   /**
+ * Stocke un nouvel utilisateur
+ */
+public function store(StoreUserRequest $request): RedirectResponse
+{
+    try {
+        $validated = $request->validated();
 
-        try {
-            // Upload de la photo de profil
-            if ($request->hasFile('profile')) {
-                $validated['profile'] = $request->file('profile')->store('profiles', 'public');
-            }
-
-            $validated['password'] = Hash::make($validated['password']);
-
-            User::create($validated);
-
-            return redirect()
-                ->route('users.index')
-                ->with('success', 'Étudiant créé avec succès.');
-        } catch (\Exception $e) {
-            // Supprimer le fichier uploadé en cas d'erreur
-            if (isset($validated['profile'])) {
-                Storage::disk('public')->delete($validated['profile']);
-            }
-
-            return back()
-                ->withInput()
-                ->with('error', 'Erreur lors de la création: '.$e->getMessage());
+        // 📸 Traitement de l'image
+        if ($request->hasFile('profile')) {
+            $validated['profile'] = $this->handleProfileImage($request->file('profile'));
         }
+
+        // 🔐 Hash du mot de passe
+        $validated['password'] = Hash::make($validated['password']);
+
+        // 💾 Création de l'utilisateur
+        User::create($validated);
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'Étudiant créé avec succès.');
+
+    } catch (\Exception $e) {
+        Log::error('Erreur UserController@store: ' . $e->getMessage());
+        
+        return back()
+            ->withInput()
+            ->with('error', 'Erreur lors de la création: ' . $e->getMessage());
     }
+}
+
+
+
 
     public function show(User $user): View
     {
@@ -129,52 +128,44 @@ class UserController extends Controller
         return view('users.edit', compact('user', 'specialites', 'anneesAcademiques', 'niveaux', 'roles'));
     }
 
-    public function update(Request $request, User $user): RedirectResponse
-    {
-        $validated = $request->validate([
-            'matricule' => 'nullable|string|max:20|unique:users,matricule,'.$user->id,
-            'name' => 'required|string|max:255',
-            'role' => ['nullable', Rule::enum(Role::class)], // Validation native de l'Enum
-            'email' => 'required|email|unique:users,email,'.$user->id,
-            'password' => ['nullable', 'confirmed', Password::defaults()],
-            'sexe' => 'nullable|in:M,F,Autre',
-            'niveau' => 'nullable|in:'.implode(',', Niveau::values()),
-            'profile' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'specialite_id' => 'nullable|exists:specialites,id',
-            'annee_academique_id' => 'nullable|exists:annees_academiques,id',
-        ]);
+  /**
+ * Met à jour un utilisateur
+ */
+public function update(UpdateUserRequest $request, User $user): RedirectResponse
+{
+    try {
+        $validated = $request->validated();
 
-        try {
-            // --Upload de la nouvelle photo
-            if ($request->hasFile('profile')) {
-                // -Supprimer l'ancienne photo
-                if ($user->profile) {
-                    Storage::disk('public')->delete($user->profile);
-                }
-                $validated['profile'] = $request->file('profile')->store('profiles', 'public');
+        // 📸 Traitement de la nouvelle image
+        if ($request->hasFile('profile')) {
+            if ($user->profile && Storage::disk('public')->exists($user->profile)) {
+                Storage::disk('public')->delete($user->profile);
             }
-
-            // ---Mettre à jour le mot de passe si fourni
-            if ($request->filled('password')) {
-                $validated['password'] = Hash::make($validated['password']);
-            } else {
-                unset($validated['password']);
-            }
-
-            // 3. Mise à jour via le modèle
-            // Rappel : Le modèle User (booted) vérifiera si l'opérateur a le droit
-            // de changer le rôle ou s'il tente de supprimer le dernier SuperAdmin.
-            $user->update($validated);
-
-            return redirect()
-                ->route('users.show', $user)
-                ->with('success', 'Étudiant mis à jour avec succès.');
-        } catch (\Exception $e) {
-            return back()
-                ->withInput()
-                ->with('error', 'Erreur lors de la mise à jour: '.$e->getMessage());
+            $validated['profile'] = $this->handleProfileImage($request->file('profile'));
         }
+
+        // 🔐 Mettre à jour le mot de passe si fourni
+        if ($request->filled('password')) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+
+        // 💾 Mise à jour
+        $user->update($validated);
+
+        return redirect()
+            ->route('users.show', $user)
+            ->with('success', 'Étudiant mis à jour avec succès.');
+
+    } catch (\Exception $e) {
+        Log::error('Erreur UserController@update: ' . $e->getMessage());
+        
+        return back()
+            ->withInput()
+            ->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
     }
+}
 
     public function destroy(User $user): RedirectResponse
     {
@@ -201,6 +192,54 @@ class UserController extends Controller
                 ->with('success', 'Étudiant supprimé avec succès.');
         } catch (\Exception $e) {
             return back()->with('error', 'Erreur lors de la suppression: '.$e->getMessage());
+        }
+    }
+     /**
+     * 📸 Traite et optimise l'image de profil
+     * 
+     * Handles processing and storage of uploaded profile images for users.
+     * - Redimensionne l'image à 500x500 pixels
+     * - Compresse l'image en JPG avec qualité 85%
+     * - Organise les fichiers par date (Y/m)
+     * - Génère un nom de fichier unique et sécurisé
+     *
+     * @param \Illuminate\Http\UploadedFile $file Le fichier uploadé
+     * @return string Chemin du fichier stocké (ex: profiles/2025/01/profile_nom_1735862400.jpg)
+     * @throws \Exception Si le traitement de l'image échoue
+     */
+    private function handleProfileImage($file): string
+    {
+        try {
+            // 🎯 Générer un nom unique et sécurisé
+            $filename = 'profile_' . $file->getClientOriginalName();
+            $filename = Str::slug(pathinfo($filename, PATHINFO_FILENAME)) 
+                . '_' . time() 
+                . '.' . $file->getClientOriginalExtension();
+
+            // 📁 Créer le dossier s'il n'existe pas (organisation par date)
+            $path = 'profiles/' . date('Y/m');
+            if (!Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->makeDirectory($path, 0755, true);
+            }
+
+            // 🖼️ Optimiser l'image avec Intervention Image
+            $image = Image::make($file->getRealPath());
+
+            // Redimensionner à 500x500 (portrait)
+            $image->fit(500, 500, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+            // Compresser et sauvegarder
+            $fullPath = $path . '/' . $filename;
+            $image->encode('jpg', 85)->save(Storage::disk('public')->path($fullPath));
+
+            return $fullPath;
+
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors du traitement de l\'image: ' . $e->getMessage());
+            throw new \Exception('Erreur lors du traitement de l\'image: ' . $e->getMessage());
         }
     }
 }

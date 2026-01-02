@@ -19,7 +19,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::middleware('auth')->group(function (): void {
+// Routes pour les ressources protégées par authentification
+Route::middleware(['auth', 'verified'])->group(function () {
 
     // ============================================================
     // 🛡️ ZONE ADMIN & SUPERADMIN (Gestion structurelle)

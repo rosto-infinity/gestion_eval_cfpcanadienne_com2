@@ -160,10 +160,12 @@
                             <th class="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Photo</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Matricule</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nom et Prénom</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Contact</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Sexe</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Niveau</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Spécialité</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Année</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Statut</th>
                             <th class="px-6 py-3 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wide">Actions</th>
                         </tr>
                     </thead>
@@ -201,6 +203,28 @@
                                     <div class="text-xs text-muted-foreground truncate">{{ $user->email }}</div>
                                 </td>
 
+                                <!-- Contact -->
+                                <td class="px-6 py-4">
+                                    <div class="text-xs text-muted-foreground">
+                                        @if($user->telephone)
+                                            <div class="flex items-center gap-1">
+                                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                                                </svg>
+                                                {{ $user->telephone }}
+                                            </div>
+                                        @endif
+                                        @if($user->telephone_urgence)
+                                            <div class="flex items-center gap-1 text-orange-600">
+                                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                                </svg>
+                                                {{ $user->telephone_urgence }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                </td>
+
                                 <!-- Sexe -->
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold {{ $user->sexe === 'M' ? 'bg-blue-100 text-blue-700' : ($user->sexe === 'F' ? 'bg-pink-100 text-pink-700' : 'bg-gray-100 text-gray-700') }}">
@@ -236,6 +260,24 @@
                                     @else
                                         <span class="text-xs text-muted-foreground">-</span>
                                     @endif
+                                </td>
+
+                                <!-- Statut -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold {{ $user->statut === 'actif' ? 'bg-green-100 text-green-700' : ($user->statut === 'inactif' ? 'bg-gray-100 text-gray-700' : ($user->statut === 'suspendu' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700')) }}">
+                                        @switch($user->statut)
+                                            @case('actif')
+                                                ✅ Actif
+                                            @case('inactif')
+                                                ⏸️ Inactif
+                                            @case('suspendu')
+                                                ⛔ Suspendu
+                                            @case('archive')
+                                                📦 Archivé
+                                            @default
+                                                ❓ Inconnu
+                                        @endswitch
+                                    </span>
                                 </td>
 
                                 <!-- Actions -->

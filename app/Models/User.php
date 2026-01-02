@@ -15,6 +15,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable
@@ -32,6 +33,20 @@ class User extends Authenticatable
         'niveau',
         'specialite_id',
         'annee_academique_id',
+        'date_naissance',
+        'lieu_naissance',
+        'nationalite',
+        
+        // Contact
+        'telephone',
+        'telephone_urgence',
+        'adresse',
+        
+        // Documents
+        'piece_identite',
+        
+        // Statut
+        'statut',
     ];
 
     protected $hidden = [
@@ -75,11 +90,23 @@ class User extends Authenticatable
         return $this->role?->hasPermission($ability) || parent::can($ability, $arguments);
     }
 
+    /**
+     * Perform actions after the model is booted.
+     */
     protected static function booted(): void
     {
-        // Ici l'usage de fn() est correct car c'est une closure (fonction anonyme)
-        static::creating(function (User $user): void {
-            $user->role ??= Role::default();
+        // Assigner le rôle USER par défaut lors de la création
+        static::created(function (self $user) {
+            if (empty($user->role)) {
+                $user->role = Role::USER->value;
+                $user->saveQuietly();
+            }
+            
+            // Générer automatiquement le matricule si non fourni
+            if (empty($user->matricule)) {
+                $user->matricule = self::generateMatricule($user->name);
+                $user->saveQuietly();
+            }
         });
 
         static::updating(function (User $user): void {
@@ -228,5 +255,67 @@ class User extends Authenticatable
         }
 
         return round($evaluations->avg('note'), 2);
+    }
+
+    /**
+     * Générer un matricule automatiquement à partir du nom et de l'année active
+     */
+    public static function generateMatricule(?string $userName = null): string
+    {
+        $year = date('Y');
+        
+        // Obtenir les deux derniers chiffres de l'année active (ex: 2025-2026 → 26)
+        $lastTwoDigits = substr($year, -2);
+        
+        // Générer 3 lettres aléatoires du nom
+        $nameLetters = 'XXX'; // Valeur par défaut
+        if ($userName) {
+            // Nettoyer le nom et convertir en majuscules
+            $cleanName = preg_replace('/[^a-zA-Z]/', '', strtoupper($userName));
+            
+            if (strlen($cleanName) >= 4) {
+                // Prendre 4lettres aléatoires du nom
+                $nameLetters = substr(str_shuffle($cleanName), 0, 4);
+            } elseif (strlen($cleanName) > 0) {
+                // Compléter avec des lettres aléatoires si le nom est trop court
+                $remaining = 4 - strlen($cleanName);
+                $randomLetters = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $remaining);
+                $nameLetters = $cleanName . $randomLetters;
+            }
+        }
+        
+        // Compter le nombre d'utilisateurs pour cette année
+        $count = self::where('annee_academique_id', function($query) use ($year) {
+                $query->select('id')
+                    ->from('annees_academiques')
+                    ->whereYear('date_debut', $year);
+            })
+            ->whereNotNull('matricule')
+            ->where('matricule', 'like', "CFPC-{$lastTwoDigits}%")
+            ->count();
+        
+        $sequence = str_pad((string) ($count + 2), 3, '0', STR_PAD_LEFT);
+        
+        return "CFPC-{$lastTwoDigits}{$nameLetters}{$sequence}";
+    }
+
+    /**
+     * Obtenir l'URL de la photo de profil
+     */
+    public function getProfileUrlAttribute(): ?string
+    {
+        if (!$this->profile) {
+            return null;
+        }
+        
+        return Storage::url($this->profile);
+    }
+
+    /**
+     * Obtenir la photo de profil par défaut si aucune n'est définie
+     */
+    public function getProfilePhotoUrlAttribute(): string
+    {
+        return $this->profile_url ?? "https://ui-avatars.com/api/?name=" . urlencode($this->name) . "&color=7F9CF5&background=EBF4FF";
     }
 }

@@ -3,7 +3,7 @@
 @section('title', 'Détails de l\'étudiant')
 
 @section('content')
-<div class=" mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <!-- En-tête avec navigation -->
     <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -53,7 +53,7 @@
                              alt="{{ $user->name }}">
                     @else
                         <div class="h-40 w-40 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center text-3xl font-bold text-primary border-2 border-primary/20 shadow-md">
-                            {{ $user->initials() }}
+                            {{ $user->initials() ?? 'U' }}
                         </div>
                     @endif
                 </div>
@@ -68,7 +68,12 @@
                                 {{ $user->sexe === 'M' ? 'Masculin' : 'Féminin' }}
                             </span>
                             <span class="inline-flex items-center gap-1 px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">
-                                📚 {{ $user->niveau->label() }}
+                                📚 
+                                @if (is_object($user->niveau))
+                                    {{ $user->niveau->label() }}
+                                @else
+                                    {{ $user->niveau ?? 'N/A' }}
+                                @endif
                             </span>
                             @if($user->bilanCompetence)
                                 <span class="inline-flex items-center gap-1 px-3 py-1 {{ $user->bilanCompetence->isAdmis() ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }} rounded-full text-sm font-medium">
@@ -92,22 +97,149 @@
                         <div>
                             <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Spécialité</p>
                             <p class="text-sm font-semibold text-foreground">
-                                {{ $user->specialite->intitule ?? '-' }}
+                                {{ $user->specialite?->intitule ?? '-' }}
                             </p>
                         </div>
                         <div>
                             <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Année académique</p>
-                            <p class="text-sm font-semibold text-foreground">{{ $user->anneeAcademique->libelle ?? '-' }}</p>
+                            <p class="text-sm font-semibold text-foreground">{{ $user->anneeAcademique?->libelle ?? '-' }}</p>
                         </div>
                         <div>
                             <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Inscription</p>
-                            <p class="text-sm font-semibold text-foreground">{{ $user->created_at->format('d/m/Y') }}</p>
+                            <p class="text-sm font-semibold text-foreground">
+                                @if (is_string($user->created_at))
+                                    {{ \Carbon\Carbon::parse($user->created_at)->format('d/m/Y') }}
+                                @else
+                                    {{ $user->created_at->format('d/m/Y') }}
+                                @endif
+                            </p>
                         </div>
                         <div>
                             <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Dernière mise à jour</p>
-                            <p class="text-sm font-semibold text-foreground">{{ $user->updated_at->format('d/m/Y') }}</p>
+                            <p class="text-sm font-semibold text-foreground">
+                                @if (is_string($user->updated_at))
+                                    {{ \Carbon\Carbon::parse($user->updated_at)->format('d/m/Y') }}
+                                @else
+                                    {{ $user->updated_at->format('d/m/Y') }}
+                                @endif
+                            </p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informations Complémentaires -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        
+        <!-- Informations Civiles -->
+        <div class="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-border bg-muted/30">
+                <h2 class="text-lg font-bold text-foreground flex items-center gap-2">
+                    <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                    </svg>
+                    Informations Civiles
+                </h2>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex justify-between items-center py-2 border-b border-border">
+                    <span class="text-sm font-semibold text-muted-foreground">Date de naissance</span>
+                    <span class="text-sm font-medium text-foreground">
+                        @if ($user->date_naissance)
+                            @if (is_string($user->date_naissance))
+                                {{ \Carbon\Carbon::parse($user->date_naissance)->format('d/m/Y') }}
+                            @else
+                                {{ $user->date_naissance->format('d/m/Y') }}
+                            @endif
+                        @else
+                            -
+                        @endif
+                    </span>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-border">
+                    <span class="text-sm font-semibold text-muted-foreground">Lieu de naissance</span>
+                    <span class="text-sm font-medium text-foreground">{{ $user->lieu_naissance ?? '-' }}</span>
+                </div>
+                <div class="flex justify-between items-center py-2">
+                    <span class="text-sm font-semibold text-muted-foreground">Nationalité</span>
+                    <span class="text-sm font-medium text-foreground">{{ $user->nationalite ?? '-' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-border bg-muted/30">
+                <h2 class="text-lg font-bold text-foreground flex items-center gap-2">
+                    <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                    </svg>
+                    Contact
+                </h2>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex justify-between items-center py-2 border-b border-border">
+                    <span class="text-sm font-semibold text-muted-foreground">Téléphone</span>
+                    <span class="text-sm font-medium text-foreground">{{ $user->telephone ?? '-' }}</span>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-border">
+                    <span class="text-sm font-semibold text-muted-foreground">Téléphone d'urgence</span>
+                    <span class="text-sm font-medium text-orange-600">{{ $user->telephone_urgence ?? '-' }}</span>
+                </div>
+                <div class="py-2">
+                    <span class="text-sm font-semibold text-muted-foreground">Adresse</span>
+                    <p class="text-sm font-medium text-foreground mt-1">{{ $user->adresse ?? '-' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents et Statut -->
+        <div class="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-border bg-muted/30">
+                <h2 class="text-lg font-bold text-foreground flex items-center gap-2">
+                    <svg class="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/>
+                    </svg>
+                    Documents et Statut
+                </h2>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex justify-between items-center py-2 border-b border-border">
+                    <span class="text-sm font-semibold text-muted-foreground">Pièce d'identité</span>
+                    <span class="text-sm font-medium text-foreground">{{ $user->piece_identite ?? '-' }}</span>
+                </div>
+                <div class="flex justify-between items-center py-2">
+                    <span class="text-sm font-semibold text-muted-foreground">Statut</span>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold {{ $user->statut === 'actif' ? 'bg-green-100 text-green-700' : ($user->statut === 'inactif' ? 'bg-gray-100 text-gray-700' : ($user->statut === 'suspendu' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700')) }}">
+                        @switch($user->statut)
+                            @case('actif')
+                                ✅ Actif
+                            @break
+                            @case('inactif')
+                                ⏸️ Inactif
+                            @break
+                            @case('suspendu')
+                                ⛔ Suspendu
+                            @break
+                            @case('archive')
+                                📦 Archivé
+                            @break
+                            @default
+                                ❓ Inconnu
+                        @endswitch
+                    </span>
+                </div>
+                <div class="flex justify-between items-center py-2">
+                    <span class="text-sm font-semibold text-muted-foreground">Photo de profil</span>
+                    @if($user->profile)
+                        <a href="{{ Storage::url($user->profile) }}" target="_blank" class="text-primary hover:underline text-sm">
+                            Voir la photo
+                        </a>
+                    @else
+                        <span class="text-sm text-muted-foreground">Aucune photo</span>
+                    @endif
                 </div>
             </div>
         </div>
@@ -332,7 +464,11 @@
                                         </span>
                                     </td>
                                     <td class="px-4 py-3 text-sm text-muted-foreground">
-                                        {{ $eval->created_at->format('d/m/Y H:i') }}
+                                        @if (is_string($eval->created_at))
+                                            {{ \Carbon\Carbon::parse($eval->created_at)->format('d/m/Y H:i') }}
+                                        @else
+                                            {{ $eval->created_at->format('d/m/Y H:i') }}
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
