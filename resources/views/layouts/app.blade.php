@@ -33,26 +33,94 @@
 
 </head>
 
-<body class="font-sans antialiased" x-data="{ 'darkMode': true }"
-     x-init="darkMode = JSON.parse(localStorage.getItem   ('darkMode'));
-  $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
-    :class="{ 'dark text-bodydark bg-boxdark-2': darkMode === true }">
+<body class="font-sans antialiased" x-data="{ 
+    darkMode: JSON.parse(localStorage.getItem('darkMode') || 'true'),
+    mobileMenuOpen: false 
+}"
+x-init="
+    $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)));
+    $watch('mobileMenuOpen', value => {
+        if (value) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    });
+"
+:class="{ 'dark': darkMode === true }">
 
-     @include('layouts.style')
-    @include('layouts.sidebar')
+    <!-- Mobile Menu Overlay -->
+    <div x-show="mobileMenuOpen" 
+         x-transition:enter="transition-opacity ease-in-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition-opacity ease-in-out duration-300"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+         @click="mobileMenuOpen = false">
+    </div>
+
+    <!-- Mobile Sidebar -->
+    <div x-show="mobileMenuOpen"
+         x-transition:enter="transition-transform ease-in-out duration-300"
+         x-transition:enter-start="-translate-x-full"
+         x-transition:enter-end="translate-x-0"
+         x-transition:leave="transition-transform ease-in-out duration-300"
+         x-transition:leave-start="translate-x-0"
+         x-transition:leave-end="-translate-x-full"
+         class="fixed inset-y-0 left-0 w-80 bg-white dark:bg-gray-800 shadow-xl z-50 lg:hidden overflow-y-auto">
+        
+        <!-- Mobile Sidebar Content -->
+        <div class="flex flex-col h-full">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+                <a href="#" class="brand flex items-center">
+                    <img src="/android-chrome-192x192.png" alt="logo-app-cfpc" style="height:30px;">
+                </a>
+                <button @click="mobileMenuOpen = false" 
+                        class="p-2 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <nav class="flex-1 p-4">
+                @include('layouts.sidebar_mobile')
+            </nav>
+        </div>
+    </div>
+
+    @include('layouts.style')
+    
+    <!-- Desktop Sidebar -->
+    <div class="hidden lg:block">
+        @include('layouts.sidebar')
+    </div>
     <!-- CONTENT -->
     <section id="content">
         <!-- NAVBAR -->
         <nav class="bg-red-300 -mt-7 flex justify-between items-center">
-            <span class="flex gap-2">
-                <i class='bx bx-dock-left cursor-pointer text-2xl text-red-500'></i>
-                <span>Barre Lattérale</span>
-            </span>
+            <div class="flex items-center gap-2">
+                <!-- Mobile Menu Toggle -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" 
+                        class="lg:hidden p-2 rounded-md text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                
+                <!-- Desktop Sidebar Toggle -->
+                <i class='bx bx-dock-left cursor-pointer text-2xl text-red-500 hidden lg:block'></i>
+                <span class="hidden lg:block">Barre Lattérale</span>
+            </div>
 
             <div class="flex justify-around gap-5 items-center">
 
                 <!-- Dark Mode Toggler -->
-                {{-- <label :class="darkMode ? 'bg-primary' : 'bg-gray-600'"
+                <label :class="darkMode ? 'bg-primary' : 'bg-gray-600'"
                     class="relative m-0 block h-7.5 w-14 rounded-full">
                     <input type="checkbox" :value="darkMode" @change="darkMode = !darkMode"
                         class="absolute top-0 z-50 m-0 h-7.5 w-14 cursor-pointer opacity-0" />
@@ -78,7 +146,7 @@
                             </svg>
                         </span>
                     </span>
-                </label> --}}
+                </label>
                 <!-- Dark Mode Toggler -->
                 <a href="#" class="notification">
                     <i class='bx bxs-bell'></i>
@@ -125,7 +193,7 @@
         <!-- NAVBAR -->
 
         <!-- MAIN -->
-        <main class="">
+        <main class="" style="background-color: #eee">
             @yield('content')
         </main>
         <!-- MAIN -->
@@ -133,56 +201,64 @@
     <!-- CONTENT -->
 
     <script>
-        const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
+        // Desktop sidebar toggle functionality
+        const sidebar = document.querySelector('#sidebar');
+        const sidebarToggle = document.querySelector('.bx-dock-left');
+        const content = document.querySelector('#content');
 
-        allSideMenu.forEach(item => {
-            const li = item.parentElement;
-            item.addEventListener('click', function() {
-                allSideMenu.forEach(i => {
-                    i.parentElement.classList.remove('active');
-                })
-                li.classList.add('active');
-            })
-        });
+        if (sidebarToggle && sidebar) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('hide');
+            });
+        }
 
-        // TOGGLE SIDEBAR
-        const menuBar = document.querySelector('#content nav .bx.bx-dock-left');
-        const sidebar = document.getElementById('sidebar');
-
-        menuBar.addEventListener('click', function() {
-            sidebar.classList.toggle('hide');
-        })
-
-        const searchButton = document.querySelector('#content nav form .form-input button');
-        const searchButtonIcon = document.querySelector('#content nav form .form-input button .bx');
+        // Search functionality
         const searchForm = document.querySelector('#content nav form');
+        const searchButton = document.querySelector('#content nav form button');
+        const searchButtonIcon = document.querySelector('#content nav form button .bx');
 
-        searchButton.addEventListener('click', function(e) {
-            if (window.innerWidth < 576) {
-                e.preventDefault();
-                searchForm.classList.toggle('show');
-                if (searchForm.classList.contains('show')) {
-                    searchButtonIcon.classList.replace('bx-search', 'bx-x');
-                } else {
+        if (searchButton) {
+            searchButton.addEventListener('click', function(e) {
+                if (window.innerWidth < 576) {
+                    e.preventDefault();
+                    searchForm.classList.toggle('show');
+                    if (searchForm.classList.contains('show')) {
+                        searchButtonIcon.classList.replace('bx-search', 'bx-x');
+                    } else {
+                        searchButtonIcon.classList.replace('bx-x', 'bx-search');
+                    }
+                }
+            });
+        }
+
+        // Handle responsive behavior
+        function handleResponsive() {
+            if (window.innerWidth < 768) {
+                // Mobile: hide desktop sidebar
+                if (sidebar) {
+                    sidebar.classList.add('hide');
+                }
+            } else {
+                // Desktop: show sidebar by default
+                if (sidebar) {
+                    sidebar.classList.remove('hide');
+                }
+            }
+            
+            if (window.innerWidth > 576) {
+                // Reset search form on larger screens
+                if (searchForm && searchButtonIcon) {
+                    searchForm.classList.remove('show');
                     searchButtonIcon.classList.replace('bx-x', 'bx-search');
                 }
             }
-        })
-
-        if (window.innerWidth < 768) {
-            sidebar.classList.add('hide');
-        } else if (window.innerWidth > 576) {
-            searchButtonIcon.classList.replace('bx-x', 'bx-search');
-            searchForm.classList.remove('show');
         }
 
-        window.addEventListener('resize', function() {
-            if (this.innerWidth > 576) {
-                searchButtonIcon.classList.replace('bx-x', 'bx-search');
-                searchForm.classList.remove('show');
-            }
-        })
- 
+        // Initial check
+        handleResponsive();
+        
+        // Listen for resize
+        window.addEventListener('resize', handleResponsive);
     </script>
 </body>
 

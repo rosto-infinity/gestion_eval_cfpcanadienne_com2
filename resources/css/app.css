@@ -237,3 +237,17 @@ html.no-transition * {
         @apply bg-background text-foreground;
     }
 }
+
+/* Dark mode specific styles */
+.dark .bg-red-300 {
+    background-color: hsl(0, 84%, 25%);
+}
+
+.dark .text-red-500 {
+    color: hsl(0, 84%, 65%);
+}
+
+/* Alpine.js x-show transitions */
+[x-cloak] {
+    display: none !important;
+}
