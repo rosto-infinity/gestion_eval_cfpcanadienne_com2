@@ -26,8 +26,10 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    {{-- <link rel="stylesheet" href="/resources/css/style.css"> --}}
+   
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/css/style.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
 
@@ -36,7 +38,7 @@
   $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
     :class="{ 'dark text-bodydark bg-boxdark-2': darkMode === true }">
 
-
+     @include('layouts.style')
     @include('layouts.sidebar')
     <!-- CONTENT -->
     <section id="content">
