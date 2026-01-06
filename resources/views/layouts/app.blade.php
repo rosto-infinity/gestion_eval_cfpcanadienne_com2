@@ -57,7 +57,7 @@ x-init="
          x-transition:leave="transition-opacity ease-in-out duration-300"
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0"
-         class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+         class="fixed inset-0 bg-black/70 z-40 lg:hidden"
          @click="mobileMenuOpen = false">
     </div>
 
@@ -106,10 +106,10 @@ x-init="
             <div class="flex items-center gap-2">
                 <!-- Mobile Menu Toggle -->
                 <button @click="mobileMenuOpen = !mobileMenuOpen" 
-                        class="lg:hidden p-2 rounded-md text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900 transition-colors">
+                        class="flex gap-2 lg:hidden p-2 rounded-md text-red-500 hover:text-red-700 hover:bg-red-100 hover:border-red-600 dark:hover:bg-red-900 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
+                    </svg> <span>Menu</span>
                 </button>
                 
                 <!-- Desktop Sidebar Toggle -->
@@ -120,7 +120,7 @@ x-init="
             <div class="flex justify-around gap-5 items-center">
 
                 <!-- Dark Mode Toggler -->
-                <label :class="darkMode ? 'bg-primary' : 'bg-gray-600'"
+                {{-- <label :class="darkMode ? 'bg-primary' : 'bg-gray-600'"
                     class="relative m-0 block h-7.5 w-14 rounded-full">
                     <input type="checkbox" :value="darkMode" @change="darkMode = !darkMode"
                         class="absolute top-0 z-50 m-0 h-7.5 w-14 cursor-pointer opacity-0" />
@@ -146,7 +146,7 @@ x-init="
                             </svg>
                         </span>
                     </span>
-                </label>
+                </label> --}}
                 <!-- Dark Mode Toggler -->
                 <a href="#" class="notification">
                     <i class='bx bxs-bell'></i>

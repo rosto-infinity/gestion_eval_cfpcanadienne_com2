@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreBilanRequest extends FormRequest
 {
@@ -28,7 +28,7 @@ class StoreBilanRequest extends FormRequest
                 'exists:users,id',
                 // Règle personnalisée pour vérifier que l'étudiant n'a pas déjà de bilan pour l'année active
                 // (Ceci est une couche de sécurité, la logique métier principale reste dans le Service)
-                function ($attribute, $value, $fail) {
+                function ($attribute, $value, $fail): void {
                     $user = \App\Models\User::find($value);
                     if ($user && $user->annee_academique_id) {
                         $exists = \App\Models\BilanCompetence::where('user_id', $value)
@@ -38,7 +38,7 @@ class StoreBilanRequest extends FormRequest
                             $fail('Cet étudiant possède déjà un bilan de compétences pour l\'année en cours.');
                         }
                     }
-                }
+                },
             ],
             'moy_competences' => 'required|numeric|min:0|max:20',
             'observations' => 'nullable|string|max:1000',
@@ -60,6 +60,4 @@ class StoreBilanRequest extends FormRequest
             'observations.max' => 'Les observations ne doivent pas dépasser 1000 caractères.',
         ];
     }
-    
-
 }

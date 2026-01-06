@@ -11,13 +11,13 @@ class UpdateSpecialiteRequest extends FormRequest
 {
     public function authorize(): bool
     {
-         return true;
+        return true;
     }
 
     public function rules(): array
     {
         $specialite = $this->route('specialite');
-        
+
         return [
             'code' => [
                 'required',

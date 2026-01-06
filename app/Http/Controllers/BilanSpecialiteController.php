@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-use App\Models\Specialite;
-use App\Services\PdfService;
-use Illuminate\Http\Request;
 use App\Models\AnneeAcademique;
 use App\Models\BilanCompetence;
+use App\Models\Specialite;
+use App\Services\PdfService;
 use App\Services\SpecialiteStatsService;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class BilanSpecialiteController extends Controller
 {
@@ -36,32 +36,32 @@ class BilanSpecialiteController extends Controller
         ));
     }
 
-        public function show(Request $request, Specialite $specialite): View
+    public function show(Request $request, Specialite $specialite): View
     {
         $anneeId = $request->input('annee_id') ?? AnneeAcademique::active()->first()?->id;
 
-        if (!$anneeId) {
+        if (! $anneeId) {
             $anneeId = AnneeAcademique::ordered()->first()?->id;
         }
 
         // 1. Récupérer les bilans avec les relations
         // 2. CORRECTION : On fait un JOIN explicite sur 'modules' pour le trier par code (M1...M10)
         //    et on fait un SELECT('evaluations.*') pour ne récupérer que les colonnes d'évaluations.
-        $bilans = BilanCompetence::with(['user.specialite', 'anneeAcademique', 'user.evaluations' => function ($q) use ($anneeId) {
+        $bilans = BilanCompetence::with(['user.specialite', 'anneeAcademique', 'user.evaluations' => function ($q) use ($anneeId): void {
             $q->where('annee_academique_id', $anneeId)
-              ->select('evaluations.*') 
-              ->join('modules', 'evaluations.module_id', '=', 'modules.id')
-              ->orderBy('modules.code')
-              ->with('module'); // S'assurer que la relation module est chargée
+                ->select('evaluations.*')
+                ->join('modules', 'evaluations.module_id', '=', 'modules.id')
+                ->orderBy('modules.code')
+                ->with('module'); // S'assurer que la relation module est chargée
         }])
-        ->whereHas('user', function ($q) use ($specialite, $anneeId) {
-            $q->where('specialite_id', $specialite->id);
-            if ($anneeId) {
-                $q->where('annee_academique_id', $anneeId);
-            }
-        })
-        ->orderByDesc('moyenne_generale')
-        ->get();
+            ->whereHas('user', function ($q) use ($specialite, $anneeId): void {
+                $q->where('specialite_id', $specialite->id);
+                if ($anneeId) {
+                    $q->where('annee_academique_id', $anneeId);
+                }
+            })
+            ->orderByDesc('moyenne_generale')
+            ->get();
 
         // 2. Calcul des stats (optimisé)
         $stats = [
@@ -109,26 +109,26 @@ class BilanSpecialiteController extends Controller
     {
         $anneeId = $request->input('annee_id') ?? AnneeAcademique::active()->first()?->id;
 
-        if (!$anneeId) {
+        if (! $anneeId) {
             $anneeId = AnneeAcademique::ordered()->first()?->id;
         }
 
         // Utiliser la MÊME logique que la méthode show() pour la cohérence
-        $bilans = BilanCompetence::with(['user.specialite', 'anneeAcademique', 'user.evaluations' => function ($q) use ($anneeId) {
+        $bilans = BilanCompetence::with(['user.specialite', 'anneeAcademique', 'user.evaluations' => function ($q) use ($anneeId): void {
             $q->where('annee_academique_id', $anneeId)
-              ->select('evaluations.*') 
-              ->join('modules', 'evaluations.module_id', '=', 'modules.id')
-              ->orderBy('modules.code')
-              ->with('module'); // S'assurer que la relation module est chargée
+                ->select('evaluations.*')
+                ->join('modules', 'evaluations.module_id', '=', 'modules.id')
+                ->orderBy('modules.code')
+                ->with('module'); // S'assurer que la relation module est chargée
         }])
-        ->whereHas('user', function ($q) use ($specialite, $anneeId) {
-            $q->where('specialite_id', $specialite->id);
-            if ($anneeId) {
-                $q->where('annee_academique_id', $anneeId);
-            }
-        })
-        ->orderByDesc('moyenne_generale')
-        ->get();
+            ->whereHas('user', function ($q) use ($specialite, $anneeId): void {
+                $q->where('specialite_id', $specialite->id);
+                if ($anneeId) {
+                    $q->where('annee_academique_id', $anneeId);
+                }
+            })
+            ->orderByDesc('moyenne_generale')
+            ->get();
 
         // Calcul des stats (optimisé)
         $stats = [

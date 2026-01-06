@@ -741,4 +741,85 @@
     body.dark #content main .table-data .order table tbody tr:hover {
         background: var(--grey);
     }
+
+    /* ==================== */
+    /* INFINITE SCROLL ANIMATION */
+    /* ==================== */
+    .parent {
+        position: relative;
+        overflow: hidden;
+        height: 144px; /* 3 * 48px (h-16 + space-y-3) */
+    }
+
+    .parent > div {
+        animation: scrollUp 8s linear infinite;
+    }
+
+    .enfant1 {
+        animation-delay: 0s;
+    }
+
+    .enfant2 {
+        animation-delay: 2.67s;
+    }
+
+    .enfant3 {
+        animation-delay: 5.33s;
+    }
+
+    @keyframes scrollUp {
+        0% {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        10% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        33.33% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        43.33% {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+    }
+
+    /* Alternative smooth infinite scroll */
+    .parent.smooth-scroll {
+        animation: none;
+    }
+
+    .parent.smooth-scroll > div {
+        position: absolute;
+        width: 100%;
+    }
+
+    .parent.smooth-scroll .enfant1 {
+        animation: smoothScrollUp 12s linear infinite;
+    }
+
+    .parent.smooth-scroll .enfant2 {
+        animation: smoothScrollUp 12s linear infinite;
+        animation-delay: 4s;
+    }
+
+    .parent.smooth-scroll .enfant3 {
+        animation: smoothScrollUp 12s linear infinite;
+        animation-delay: 8s;
+    }
+
+    @keyframes smoothScrollUp {
+        0% {
+            transform: translateY(144px); /* Start from bottom */
+        }
+        100% {
+            transform: translateY(-48px); /* Move to top and disappear */
+        }
+    }
 </style>

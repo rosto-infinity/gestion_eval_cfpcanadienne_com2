@@ -35,7 +35,7 @@ class SpecialiteStatsService
             ->values();
     }
 
-       /**
+    /**
      * Calcule les statistiques pour une spécialité
      */
     public function calculateSpecialiteStats(Specialite $specialite): ?object
@@ -52,7 +52,7 @@ class SpecialiteStatsService
         $moyS2 = $etudiants->avg(fn ($e) => $e->getMoyenneSemestre(2));
         $moyComp = $etudiants->avg(fn ($e) => $e->bilanCompetence?->moy_competences);
         $moyGen = $etudiants->avg(fn ($e) => $e->bilanCompetence?->moyenne_generale);
-        
+
         // CORRECTION : Ajout du calcul du Max et Min pour le tableau comparatif
         $meilleureMoyenne = $etudiants->max(fn ($e) => $e->bilanCompetence?->moyenne_generale);
         $moyennePlusBasse = $etudiants->min(fn ($e) => $e->bilanCompetence?->moyenne_generale);
@@ -114,7 +114,7 @@ class SpecialiteStatsService
         ];
     }
 
-      /**
+    /**
      * Récupère les étudiants d'une spécialité avec leurs statistiques
      */
     public function getEtudiantsWithStats(Specialite $specialite, int $anneeId): Collection
@@ -129,7 +129,7 @@ class SpecialiteStatsService
             ->sortByDesc('moyenne_generale');
     }
 
-     /**
+    /**
      * Mappe les statistiques d'un étudiant
      */
     private function mapEtudiantStats(User $etudiant): object
@@ -137,7 +137,7 @@ class SpecialiteStatsService
         $bilan = $etudiant->bilanCompetence;
 
         // DÉBOGAGE : S'assurer que le bilan existe
-        if (!$bilan) {
+        if (! $bilan) {
             // Créer un bilan vide si inexistant
             $moyCompetences = 0;
             $moyenneGenerale = 0;

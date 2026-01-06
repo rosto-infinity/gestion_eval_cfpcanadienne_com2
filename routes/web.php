@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ModuleController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\EvaluationController;
-use App\Http\Controllers\SpecialiteController;
 use App\Http\Controllers\AnneeAcademiqueController;
 use App\Http\Controllers\BilanCompetenceController;
 use App\Http\Controllers\BilanSpecialiteController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SpecialiteController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => view('welcome'))->name('welcome');
 
@@ -20,7 +20,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 // Routes pour les ressources protégées par authentification
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function (): void {
 
     // ============================================================
     // 🛡️ ZONE ADMIN & SUPERADMIN (Gestion structurelle)

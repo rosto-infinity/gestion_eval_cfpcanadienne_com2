@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Log;
-use App\Models\User;
 use App\Models\BilanCompetence;
+use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Log;
 
 class BilanService
 {
@@ -87,7 +87,7 @@ class BilanService
                     $count++;
                 } catch (\InvalidArgumentException $e) {
                     // On ignore les erreurs de doublon ou d'année manquante dans le script de masse
-                    Log::warning('Erreur génération masse pour user ' . $user->id . ': ' . $e->getMessage());
+                    Log::warning('Erreur génération masse pour user '.$user->id.': '.$e->getMessage());
                 }
             }
 

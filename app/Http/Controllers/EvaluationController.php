@@ -449,7 +449,7 @@ class EvaluationController extends Controller
             $count = $this->evaluationService->createOrUpdateMultiple(
                 $user,
                 $validated['evaluations'],
-                (int) $validated['semestre'] 
+                (int) $validated['semestre']
             );
 
             return redirect()
@@ -460,21 +460,21 @@ class EvaluationController extends Controller
                 ->with('success', 'Évaluations enregistrées avec succès.');
         } catch (\InvalidArgumentException $e) {
             \Log::warning('Validation échouée', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            
+
             return back()
                 ->withInput()
                 ->with('error', '⚠️ '.$e->getMessage());
-            
+
         } catch (\Exception $e) {
             \Log::error('Erreur critique lors de l\'enregistrement', [
                 'error_message' => $e->getMessage(),
                 'error_file' => $e->getFile(),
                 'error_line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
-        
+
             return back()
                 ->withInput()
                 ->with('error', '❌ Erreur critique lors de l\'enregistrement: '.$e->getMessage());

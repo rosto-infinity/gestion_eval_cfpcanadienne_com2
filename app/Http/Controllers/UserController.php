@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Enums\Role;
-use App\Models\User;
 use App\Enums\Niveau;
-use Illuminate\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
+use App\Enums\Role;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use Illuminate\Validation\Rules\Password;
-use App\Models\Specialite;
 use App\Models\AnneeAcademique;
-use Illuminate\Validation\Rule;
+use App\Models\Specialite;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class UserController extends Controller
 {
@@ -62,40 +60,37 @@ class UserController extends Controller
         return view('users.create', compact('specialites', 'anneesAcademiques', 'niveaux'));
     }
 
-   /**
- * Stocke un nouvel utilisateur
- */
-public function store(StoreUserRequest $request): RedirectResponse
-{
-    try {
-        $validated = $request->validated();
+    /**
+     * Stocke un nouvel utilisateur
+     */
+    public function store(StoreUserRequest $request): RedirectResponse
+    {
+        try {
+            $validated = $request->validated();
 
-        // 📸 Traitement de l'image
-        if ($request->hasFile('profile')) {
-            $validated['profile'] = $this->handleProfileImage($request->file('profile'));
+            // 📸 Traitement de l'image
+            if ($request->hasFile('profile')) {
+                $validated['profile'] = $this->handleProfileImage($request->file('profile'));
+            }
+
+            // 🔐 Hash du mot de passe
+            $validated['password'] = Hash::make($validated['password']);
+
+            // 💾 Création de l'utilisateur
+            User::create($validated);
+
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'Étudiant créé avec succès.');
+
+        } catch (\Exception $e) {
+            Log::error('Erreur UserController@store: '.$e->getMessage());
+
+            return back()
+                ->withInput()
+                ->with('error', 'Erreur lors de la création: '.$e->getMessage());
         }
-
-        // 🔐 Hash du mot de passe
-        $validated['password'] = Hash::make($validated['password']);
-
-        // 💾 Création de l'utilisateur
-        User::create($validated);
-
-        return redirect()
-            ->route('users.index')
-            ->with('success', 'Étudiant créé avec succès.');
-
-    } catch (\Exception $e) {
-        Log::error('Erreur UserController@store: ' . $e->getMessage());
-        
-        return back()
-            ->withInput()
-            ->with('error', 'Erreur lors de la création: ' . $e->getMessage());
     }
-}
-
-
-
 
     public function show(User $user): View
     {
@@ -121,51 +116,50 @@ public function store(StoreUserRequest $request): RedirectResponse
 
         $specialites = Specialite::ordered()->get();
         $anneesAcademiques = AnneeAcademique::ordered()->get();
-       // CORRECTION : Récupérer les cases de l'Enum Niveau
-        $niveaux = \App\Enums\Niveau::cases(); 
-
+        // CORRECTION : Récupérer les cases de l'Enum Niveau
+        $niveaux = \App\Enums\Niveau::cases();
 
         return view('users.edit', compact('user', 'specialites', 'anneesAcademiques', 'niveaux', 'roles'));
     }
 
-  /**
- * Met à jour un utilisateur
- */
-public function update(UpdateUserRequest $request, User $user): RedirectResponse
-{
-    try {
-        $validated = $request->validated();
+    /**
+     * Met à jour un utilisateur
+     */
+    public function update(UpdateUserRequest $request, User $user): RedirectResponse
+    {
+        try {
+            $validated = $request->validated();
 
-        // 📸 Traitement de la nouvelle image
-        if ($request->hasFile('profile')) {
-            if ($user->profile && Storage::disk('public')->exists($user->profile)) {
-                Storage::disk('public')->delete($user->profile);
+            // 📸 Traitement de la nouvelle image
+            if ($request->hasFile('profile')) {
+                if ($user->profile && Storage::disk('public')->exists($user->profile)) {
+                    Storage::disk('public')->delete($user->profile);
+                }
+                $validated['profile'] = $this->handleProfileImage($request->file('profile'));
             }
-            $validated['profile'] = $this->handleProfileImage($request->file('profile'));
+
+            // 🔐 Mettre à jour le mot de passe si fourni
+            if ($request->filled('password')) {
+                $validated['password'] = Hash::make($validated['password']);
+            } else {
+                unset($validated['password']);
+            }
+
+            // 💾 Mise à jour
+            $user->update($validated);
+
+            return redirect()
+                ->route('users.show', $user)
+                ->with('success', 'Étudiant mis à jour avec succès.');
+
+        } catch (\Exception $e) {
+            Log::error('Erreur UserController@update: '.$e->getMessage());
+
+            return back()
+                ->withInput()
+                ->with('error', 'Erreur lors de la mise à jour: '.$e->getMessage());
         }
-
-        // 🔐 Mettre à jour le mot de passe si fourni
-        if ($request->filled('password')) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
-        }
-
-        // 💾 Mise à jour
-        $user->update($validated);
-
-        return redirect()
-            ->route('users.show', $user)
-            ->with('success', 'Étudiant mis à jour avec succès.');
-
-    } catch (\Exception $e) {
-        Log::error('Erreur UserController@update: ' . $e->getMessage());
-        
-        return back()
-            ->withInput()
-            ->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
     }
-}
 
     public function destroy(User $user): RedirectResponse
     {
@@ -194,31 +188,33 @@ public function update(UpdateUserRequest $request, User $user): RedirectResponse
             return back()->with('error', 'Erreur lors de la suppression: '.$e->getMessage());
         }
     }
-     /**
+
+    /**
      * 📸 Traite et optimise l'image de profil
-     * 
+     *
      * Handles processing and storage of uploaded profile images for users.
      * - Redimensionne l'image à 500x500 pixels
      * - Compresse l'image en JPG avec qualité 85%
      * - Organise les fichiers par date (Y/m)
      * - Génère un nom de fichier unique et sécurisé
      *
-     * @param \Illuminate\Http\UploadedFile $file Le fichier uploadé
+     * @param  \Illuminate\Http\UploadedFile  $file  Le fichier uploadé
      * @return string Chemin du fichier stocké (ex: profiles/2025/01/profile_nom_1735862400.jpg)
+     *
      * @throws \Exception Si le traitement de l'image échoue
      */
     private function handleProfileImage($file): string
     {
         try {
             // 🎯 Générer un nom unique et sécurisé
-            $filename = 'profile_' . $file->getClientOriginalName();
-            $filename = Str::slug(pathinfo($filename, PATHINFO_FILENAME)) 
-                . '_' . time() 
-                . '.' . $file->getClientOriginalExtension();
+            $filename = 'profile_'.$file->getClientOriginalName();
+            $filename = Str::slug(pathinfo($filename, PATHINFO_FILENAME))
+                .'_'.time()
+                .'.'.$file->getClientOriginalExtension();
 
             // 📁 Créer le dossier s'il n'existe pas (organisation par date)
-            $path = 'profiles/' . date('Y/m');
-            if (!Storage::disk('public')->exists($path)) {
+            $path = 'profiles/'.date('Y/m');
+            if (! Storage::disk('public')->exists($path)) {
                 Storage::disk('public')->makeDirectory($path, 0755, true);
             }
 
@@ -226,20 +222,21 @@ public function update(UpdateUserRequest $request, User $user): RedirectResponse
             $image = Image::make($file->getRealPath());
 
             // Redimensionner à 500x500 (portrait)
-            $image->fit(500, 500, function ($constraint) {
+            $image->fit(500, 500, function ($constraint): void {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
 
             // Compresser et sauvegarder
-            $fullPath = $path . '/' . $filename;
+            $fullPath = $path.'/'.$filename;
             $image->encode('jpg', 85)->save(Storage::disk('public')->path($fullPath));
 
             return $fullPath;
 
         } catch (\Exception $e) {
-            \Log::error('Erreur lors du traitement de l\'image: ' . $e->getMessage());
-            throw new \Exception('Erreur lors du traitement de l\'image: ' . $e->getMessage());
+            \Log::error('Erreur lors du traitement de l\'image: '.$e->getMessage());
+
+            throw new \Exception('Erreur lors du traitement de l\'image: '.$e->getMessage());
         }
     }
 }

@@ -250,8 +250,6 @@ class EvaluationService
         return $user->specialite_id === $module->specialite_id;
     }
 
-   
-
     /**
      * -Crée ou met à jour plusieurs évaluations
      */

@@ -66,7 +66,7 @@ class PdfService
         $parts = [$prefix];
 
         // ✅ Gère les valeurs null et vides
-        if (!empty($identifier)) {
+        if (! empty($identifier)) {
             $parts[] = $identifier;
         }
 
@@ -82,7 +82,7 @@ class PdfService
     public function generateReleveNotesPdf(array $data): Response
     {
         $matricule = $data['user']->matricule ?? 'user_'.$data['user']->id;
-        
+
         $filename = $this->generateTimestampedFilename(
             'releve_notes',
             $matricule
@@ -102,7 +102,7 @@ class PdfService
     public function generateBilanPdf(array $data): Response
     {
         $matricule = $data['bilan']->user->matricule ?? 'user_'.$data['bilan']->user->id;
-        
+
         $filename = $this->generateTimestampedFilename(
             'bilan_competences',
             $matricule
@@ -121,7 +121,7 @@ class PdfService
     public function generateTableauRecapitulatifPdf(array $data): Response
     {
         $anneeLabel = $data['annee'] ? $data['annee']->libelle : 'all';
-        
+
         $filename = $this->generateTimestampedFilename(
             'tableau_recapitulatif',
             $anneeLabel
@@ -140,7 +140,7 @@ class PdfService
     public function generateBilanSpecialitePdf(array $data): Response
     {
         $anneeLabel = $data['annee'] ? $data['annee']->libelle : 'all';
-        
+
         $filename = $this->generateTimestampedFilename(
             'bilan_specialite',
             $anneeLabel
@@ -159,7 +159,7 @@ class PdfService
     public function generateDetailSpecialitePdf(array $data): Response
     {
         $anneeLabel = $data['annee'] ? $data['annee']->libelle : 'all';
-        
+
         $filename = $this->generateTimestampedFilename(
             'detail_'.$data['specialite']->code,
             $anneeLabel

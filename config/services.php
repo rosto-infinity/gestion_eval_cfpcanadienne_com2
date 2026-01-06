@@ -38,7 +38,7 @@ return [
     ],
     // config/services.php
     'recaptcha' => [
-        'site_key'   => env('GOOGLE_RECAPTCHA_SITE_KEY'),
+        'site_key' => env('GOOGLE_RECAPTCHA_SITE_KEY'),
         'secret_key' => env('GOOGLE_RECAPTCHA_SECRET_KEY'),
     ],
 

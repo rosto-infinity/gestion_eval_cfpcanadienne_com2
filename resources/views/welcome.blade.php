@@ -20,6 +20,42 @@
         html {
             scroll-behavior: smooth;
         }
+.parent {
+    position: relative;
+    overflow: hidden;
+    height: 144px; /* 3 * 48px (h-16 + space-y-3) */
+}
+
+.parent.smooth-scroll > div {
+    position: absolute;
+    width: 100%;
+}
+
+@keyframes smoothScrollUp {
+    0% {
+        transform: translateY(144px); /* Démarre du bas */
+    }
+    100% {
+        transform: translateY(-48px); /* Monte vers le haut et disparaît */
+    }
+}
+.enfant1 {
+    animation: smoothScrollUp 12s linear infinite;
+    animation-delay: 0s;
+}
+
+.enfant2 {
+    animation: smoothScrollUp 12s linear infinite;
+    animation-delay: 4s;
+}
+
+.enfant3 {
+    animation: smoothScrollUp 12s linear infinite;
+    animation-delay: 8s;
+}
+
+
+
 
         /* Micro-interactions */
         .feature-card {
@@ -194,16 +230,16 @@
                                     PDF
                                 </div>
                             </div>
-                            <div class="space-y-3">
-                                <div class="h-16 bg-card rounded border border-border p-3 flex justify-between">
+                            <div class="space-y-3 parent smooth-scroll">
+                                <div class="enfant1 h-16 bg-card rounded border border-border p-3 flex justify-between">
                                     <div class="h-3 w-24 bg-muted rounded mt-1"></div>
                                     <div class="h-3 w-8 bg-primary/20 rounded mt-1"></div>
                                 </div>
-                                <div class="h-16 bg-card rounded border border-border p-3 flex justify-between">
+                                <div class="enfant2 h-16 bg-card rounded border border-border p-3 flex justify-between">
                                     <div class="h-3 w-32 bg-muted rounded mt-1"></div>
                                     <div class="h-3 w-8 bg-primary/20 rounded mt-1"></div>
                                 </div>
-                                <div class="h-16 bg-card rounded border border-border p-3 flex justify-between">
+                                <div class="enfant3 h-16 bg-card rounded border border-border p-3 flex justify-between">
                                     <div class="h-3 w-20 bg-muted rounded mt-1"></div>
                                     <div class="h-3 w-8 bg-primary/20 rounded mt-1"></div>
                                 </div>
@@ -452,34 +488,22 @@
                     class="flex flex-wrap justify-center items-center gap-8 lg:gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
                     <!-- Laravel -->
                     <div class="flex items-center gap-2 text-2xl font-bold text-foreground">
-                        <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M23.642 5.43a.364.364 0 01-.014.1l-3.264 17.735a.5.5 0 01-.216.314.506.506 0 01-.367.064l-5.243-1.108-2.784 3.364a.523.523 0 01-.398.184.494.494 0 01-.273-.081.504.504 0 01-.232-.39l-.243-4.282-6.625-1.4a.5.5 0 01-.295-.194.504.504 0 01-.1-.352L8.16 2.924a.502.502 0 01.62-.544l14.52 2.96a.501.501 0 01.342.09z" />
-                        </svg>
+                        logo-
                         Laravel 12
                     </div>
                     <!-- MySQL -->
                     <div class="flex items-center gap-2 text-2xl font-bold text-primary">
-                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M12.002 0c-1.586 0-3.063.233-4.39.625C5.744 1.312 4.3 2.5 3.455 4.07 2.586 5.672 2.12 7.603 2.12 9.73c0 2.15.475 4.093 1.35 5.693.854 1.57 2.295 2.75 4.14 3.414 1.322.39 2.796.615 4.38.615 1.58 0 3.053-.225 4.373-.615 1.847-.664 3.29-1.843 4.146-3.414.875-1.6 1.352-3.543 1.352-5.693 0-2.127-.466-4.058-1.336-5.66-.846-1.57-2.29-2.758-4.156-3.445C15.064.233 13.587 0 12.002 0zm-.517 2.055c.736.007 1.45.067 2.132.174 1.69.266 2.74.92 3.23 1.685.528.83.514 1.88.06 2.65-.463.793-1.39 1.278-2.507 1.278-.56 0-1.172-.12-1.816-.37-1.076-.416-2.032-.53-2.86-.343-.787.18-1.41.612-1.77 1.21-.35.58-.47 1.294-.335 2.045.14.776.56 1.584 1.23 2.34 1.33 1.495 3.722 2.613 6.938 2.613 1.07 0 2.088-.13 3.015-.36.915-.226 1.73-.575 2.41-1.04.15-.105.294-.22.428-.345.278.95.44 1.983.44 3.07 0 1.76-.38 3.36-1.07 4.62-.672 1.22-1.724 2.12-3.062 2.61-1.07.39-2.32.6-3.727.6-1.407 0-2.655-.21-3.724-.6-1.336-.49-2.388-1.39-3.06-2.61-.69-1.26-1.07-2.86-1.07-4.62 0-1.76.38-3.35 1.07-4.61.673-1.22 1.725-2.12 3.06-2.61 1.07-.39 2.318-.59 3.725-.59.19 0 .38 0 .565.01zm.325 4.6c.287 0 .568.05.834.15.65.24 1.14.65 1.46 1.17.325.52.47 1.14.42 1.74-.05.59-.29 1.16-.72 1.59-.424.43-.994.68-1.634.72-.644.05-1.28-.12-1.79-.47-.51-.35-.86-.86-.97-1.44-.11-.58.01-1.2.33-1.71.32-.52.84-.92 1.5-1.13.26-.08.54-.12.82-.12z" />
-                        </svg>
+                       logo-
                         MySQL
                     </div>
                     <!-- Tailwind -->
                     <div class="flex items-center gap-2 text-2xl font-bold text-cyan-400">
-                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z" />
-                        </svg>
+                        logo-
                         Tailwind CSS
                     </div>
                     <!-- Chart.js (Generic icon representation) -->
                     <div class="flex items-center gap-2 text-2xl font-bold text-pink-500">
-                        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-                        </svg>
+                        logo-
                         Chart.js
                     </div>
                 </div>

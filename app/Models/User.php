@@ -36,15 +36,15 @@ class User extends Authenticatable
         'date_naissance',
         'lieu_naissance',
         'nationalite',
-        
+
         // Contact
         'telephone',
         'telephone_urgence',
         'adresse',
-        
+
         // Documents
         'piece_identite',
-        
+
         // Statut
         'statut',
     ];
@@ -64,11 +64,12 @@ class User extends Authenticatable
         ];
     }
 
-       public function getLogoUrlAttribute()
+    public function getLogoUrlAttribute()
     {
         if ($this->profile) {
             return Storage::url($this->profile);
         }
+
         return null;
     }
     // --- Helpers de rôle (Syntaxe corrigée) ---
@@ -104,7 +105,7 @@ class User extends Authenticatable
     protected static function booted(): void
     {
         // Assigner le rôle USER par défaut lors de la création
-        static::created(function (self $user) {
+        static::created(function (self $user): void {
             if (empty($user->role)) {
                 $user->role = Role::USER->value;
                 $user->saveQuietly();
@@ -265,19 +266,19 @@ class User extends Authenticatable
     public static function generateMatricule(?string $userName = null): string
     {
         $year = date('Y');
-        
+
         // 🔍 Debug : Vérifier l'année académique
-        \Log::info('Génération matricule pour: ' . $userName . ' - Année: ' . $year);
-        
+        \Log::info('Génération matricule pour: '.$userName.' - Année: '.$year);
+
         // Obtenir les deux derniers chiffres de l'année active (ex: 2025-2026 → 26)
         $lastTwoDigits = substr($year, -2);
-        
+
         // Générer 3 lettres aléatoires du nom
         $nameLetters = 'XXX'; // Valeur par défaut
         if ($userName) {
             // Nettoyer le nom et convertir en majuscules
             $cleanName = preg_replace('/[^a-zA-Z]/', '', strtoupper($userName));
-            
+
             if (strlen($cleanName) >= 3) {
                 // Prendre 3 lettres aléatoires du nom
                 $nameLetters = substr(str_shuffle($cleanName), 0, 3);
@@ -285,25 +286,25 @@ class User extends Authenticatable
                 // Compléter avec des lettres aléatoires si le nom est trop court
                 $remaining = 3 - strlen($cleanName);
                 $randomLetters = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $remaining);
-                $nameLetters = $cleanName . $randomLetters;
+                $nameLetters = $cleanName.$randomLetters;
             }
         }
-        
+
         // Compter le nombre d'utilisateurs pour cette année (sans dépendre de la base)
         $count = self::whereNotNull('matricule')
             ->where('matricule', 'like', "CFPC-{$lastTwoDigits}%")
             ->count();
-        
+
         // 🔍 Debug : Vérifier le comptage
-        \Log::info('Matricules existants pour ' . $year . ': ' . $count);
-        
+        \Log::info('Matricules existants pour '.$year.': '.$count);
+
         $sequence = str_pad((string) ($count + 1), 3, '0', STR_PAD_LEFT);
-        
+
         $matricule = "CFPC-{$lastTwoDigits}{$nameLetters}{$sequence}";
-        
+
         // 🔍 Debug : Matricule généré
-        \Log::info('Matricule généré: ' . $matricule);
-        
+        \Log::info('Matricule généré: '.$matricule);
+
         return $matricule;
     }
 
@@ -312,10 +313,10 @@ class User extends Authenticatable
      */
     public function getProfileUrlAttribute(): ?string
     {
-        if (!$this->profile) {
+        if (! $this->profile) {
             return null;
         }
-        
+
         return Storage::url($this->profile);
     }
 
@@ -324,8 +325,6 @@ class User extends Authenticatable
      */
     public function getProfilePhotoUrlAttribute(): string
     {
-        return $this->profile_url ?? "https://ui-avatars.com/api/?name=" . urlencode($this->name) . "&color=7F9CF5&background=EBF4FF";
+        return $this->profile_url ?? 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&color=7F9CF5&background=EBF4FF';
     }
-
-
 }
