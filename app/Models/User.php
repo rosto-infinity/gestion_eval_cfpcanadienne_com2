@@ -63,6 +63,14 @@ class User extends Authenticatable
             'niveau' => Niveau::class,
         ];
     }
+
+       public function getLogoUrlAttribute()
+    {
+        if ($this->profile) {
+            return Storage::url($this->profile);
+        }
+        return null;
+    }
     // --- Helpers de rôle (Syntaxe corrigée) ---
 
     public function isSuperAdmin(): bool
@@ -99,12 +107,6 @@ class User extends Authenticatable
         static::created(function (self $user) {
             if (empty($user->role)) {
                 $user->role = Role::USER->value;
-                $user->saveQuietly();
-            }
-            
-            // Générer automatiquement le matricule si non fourni
-            if (empty($user->matricule)) {
-                $user->matricule = self::generateMatricule($user->name);
                 $user->saveQuietly();
             }
         });
@@ -264,6 +266,9 @@ class User extends Authenticatable
     {
         $year = date('Y');
         
+        // 🔍 Debug : Vérifier l'année académique
+        \Log::info('Génération matricule pour: ' . $userName . ' - Année: ' . $year);
+        
         // Obtenir les deux derniers chiffres de l'année active (ex: 2025-2026 → 26)
         $lastTwoDigits = substr($year, -2);
         
@@ -273,30 +278,33 @@ class User extends Authenticatable
             // Nettoyer le nom et convertir en majuscules
             $cleanName = preg_replace('/[^a-zA-Z]/', '', strtoupper($userName));
             
-            if (strlen($cleanName) >= 4) {
-                // Prendre 4lettres aléatoires du nom
-                $nameLetters = substr(str_shuffle($cleanName), 0, 4);
+            if (strlen($cleanName) >= 3) {
+                // Prendre 3 lettres aléatoires du nom
+                $nameLetters = substr(str_shuffle($cleanName), 0, 3);
             } elseif (strlen($cleanName) > 0) {
                 // Compléter avec des lettres aléatoires si le nom est trop court
-                $remaining = 4 - strlen($cleanName);
+                $remaining = 3 - strlen($cleanName);
                 $randomLetters = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $remaining);
                 $nameLetters = $cleanName . $randomLetters;
             }
         }
         
-        // Compter le nombre d'utilisateurs pour cette année
-        $count = self::where('annee_academique_id', function($query) use ($year) {
-                $query->select('id')
-                    ->from('annees_academiques')
-                    ->whereYear('date_debut', $year);
-            })
-            ->whereNotNull('matricule')
+        // Compter le nombre d'utilisateurs pour cette année (sans dépendre de la base)
+        $count = self::whereNotNull('matricule')
             ->where('matricule', 'like', "CFPC-{$lastTwoDigits}%")
             ->count();
         
-        $sequence = str_pad((string) ($count + 2), 3, '0', STR_PAD_LEFT);
+        // 🔍 Debug : Vérifier le comptage
+        \Log::info('Matricules existants pour ' . $year . ': ' . $count);
         
-        return "CFPC-{$lastTwoDigits}{$nameLetters}{$sequence}";
+        $sequence = str_pad((string) ($count + 1), 3, '0', STR_PAD_LEFT);
+        
+        $matricule = "CFPC-{$lastTwoDigits}{$nameLetters}{$sequence}";
+        
+        // 🔍 Debug : Matricule généré
+        \Log::info('Matricule généré: ' . $matricule);
+        
+        return $matricule;
     }
 
     /**
@@ -318,4 +326,6 @@ class User extends Authenticatable
     {
         return $this->profile_url ?? "https://ui-avatars.com/api/?name=" . urlencode($this->name) . "&color=7F9CF5&background=EBF4FF";
     }
+
+
 }

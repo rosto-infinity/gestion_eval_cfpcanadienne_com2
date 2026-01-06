@@ -15,7 +15,7 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // À adapter selon vos permissions
+       return auth()->check();
     }
 
     /**
@@ -23,15 +23,14 @@ class StoreUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'matricule' => 'nullable|string|max:20|unique:users,matricule',
+       $rules= [
+            'matricule' =>'nullable|string|max:20|unique:users,matricule',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'password' => 'required', 'confirmed', Password::defaults(),
             'sexe' => 'nullable|in:M,F,Autre',
             'niveau' => 'nullable|in:' . implode(',', Niveau::values()),
-            'profile' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'specialite_id' => 'nullable|exists:specialites,id',
+            'specialite_id' =>'nullable|exists:specialites,id',
             'annee_academique_id' => 'nullable|exists:annees_academiques,id',
             
             // Informations civiles
@@ -50,7 +49,17 @@ class StoreUserRequest extends FormRequest
             // Statut
             'statut' => 'nullable|in:actif,inactif,suspendu,archive',
         ];
+             // Pour la création, le logo est requis
+        if ($this->isMethod('post')) {
+            $rules['profile'] = ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'];
+        } else {
+            // Pour la mise à jour, le profile est optionnel
+            $rules['profile'] = ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'];
+        }
+
+        return $rules;
     }
+
 
     /**
      * Messages de validation personnalisés en français
