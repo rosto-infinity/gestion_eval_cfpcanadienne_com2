@@ -1,14 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Auth\Events\Lockout;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
+use App\Rules\ReCaptcha;
 use Illuminate\Support\Str;
+use Illuminate\Auth\Events\Lockout;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
@@ -20,7 +19,6 @@ class LoginRequest extends FormRequest
     {
         return true;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -31,9 +29,23 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+            'g-recaptcha-response' => ['required', new ReCaptcha()],
         ];
     }
-
+  public function messages(): array
+    {
+       return [
+        // Email
+        'email.required' => 'L\'adresse email est obligatoire pour vous connecter.',
+        'email.email'    => 'Le format de l\'adresse email n\'est pas valide.',
+        
+        // Mot de passe
+        'password.required' => 'Le mot de passe est requis.',
+        
+        // ReCaptcha (Priorité sécurité)
+        'g-recaptcha-response.required' => 'La vérification anti-robot est obligatoire.',
+    ];
+    }
     /**
      * Attempt to authenticate the request's credentials.
      *
@@ -84,4 +96,5 @@ class LoginRequest extends FormRequest
     {
         return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
     }
+   
 }

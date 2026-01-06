@@ -1,3 +1,4 @@
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <x-guest-layout>
     <div class=" flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-950 p-4 sm:p-6">
         <div class="w-full max-w-md">
@@ -76,6 +77,20 @@
                             @endif
                         </div>
 
+                         <!-- g-recaptcha -->
+                        <div class="mb-4 ">
+                            <x-input-label :value="__('Vérification de sécurité')"
+                                class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2 block" />
+
+                            <div class="flex justify-center items-center">
+                                <!-- Assurez-vous que la clé dans le .env est la même qu'ici -->
+                                <div class="g-recaptcha"
+                                    data-sitekey="{{ config('services.recaptcha.site_key')}}"> 
+                                </div>
+                            </div>
+
+                            <x-input-error :messages="$errors->get('g-recaptcha-response')" class="mt-2 text-sm text-red-500 dark:text-red-400" />
+                        </div>
                         <!-- Submit Button & Register Link -->
                         <div class="space-y-4">
                             <x-primary-button class="w-full bg-primary hover:bg-primary/90 text-white font-medium py-1 px-4 rounded-md shadow-[0_2px_4px_0_rgba(121,23,249,0.25)] transition-all duration-200 flex items-center justify-center gap-2">
