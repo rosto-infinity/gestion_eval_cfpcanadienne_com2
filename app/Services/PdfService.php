@@ -13,7 +13,7 @@ class PdfService
      * Configuration par défaut pour les PDFs
      */
     private array $defaultOptions = [
-        'defaultFont' => 'DejaVu Sans', // Assurez-vous que cette police est installée sinon utiliser 'Helvetica'
+        'defaultFont' => 'DejaVu Sans',
         'isHtml5ParserEnabled' => true,
         'isRemoteEnabled' => true,
         'margin_top' => 10,
@@ -35,13 +35,11 @@ class PdfService
      */
     public function generateLandscapePdf(string $view, array $data, string $filename): Response
     {
-        // Cette méthode force l'orientation paysage qui correspond à votre demande
         return $this->generatePdf($view, $data, $filename, 'landscape');
     }
 
     /**
      * Méthode générique de génération
-     * Définit le format A4 et l'orientation via ->setPaper()
      */
     public function generatePdf(
         string $view,
@@ -53,7 +51,6 @@ class PdfService
         $options = array_merge($this->defaultOptions, $customOptions);
 
         $pdf = Pdf::loadView($view, $data)
-            // Définit explicitement le format A4 et l'orientation
             ->setPaper('a4', $orientation)
             ->setOptions($options);
 
@@ -62,11 +59,13 @@ class PdfService
 
     /**
      * Génère un nom de fichier horodaté
+     * ✅ Accepte maintenant les valeurs null
      */
-    public function generateTimestampedFilename(string $prefix, string $identifier = ''): string
+    public function generateTimestampedFilename(string $prefix, ?string $identifier = ''): string
     {
         $parts = [$prefix];
 
+        // ✅ Gère les valeurs null et vides
         if (!empty($identifier)) {
             $parts[] = $identifier;
         }
@@ -78,12 +77,15 @@ class PdfService
 
     /**
      * PDF Relevé de Notes
+     * ✅ Gère le cas où matricule est null
      */
     public function generateReleveNotesPdf(array $data): Response
     {
+        $matricule = $data['user']->matricule ?? 'user_'.$data['user']->id;
+        
         $filename = $this->generateTimestampedFilename(
             'releve_notes',
-            $data['user']->matricule
+            $matricule
         );
 
         return $this->generatePortraitPdf(
@@ -95,12 +97,15 @@ class PdfService
 
     /**
      * PDF Bilan individuel
+     * ✅ Gère le cas où matricule est null
      */
     public function generateBilanPdf(array $data): Response
     {
+        $matricule = $data['bilan']->user->matricule ?? 'user_'.$data['bilan']->user->id;
+        
         $filename = $this->generateTimestampedFilename(
             'bilan_competences',
-            $data['bilan']->user->matricule
+            $matricule
         );
 
         return $this->generatePortraitPdf(
@@ -112,17 +117,16 @@ class PdfService
 
     /**
      * PDF Tableau Récapitulatif
-     * Utilise generateLandscapePdf pour forcer le format A4 Paysage
      */
     public function generateTableauRecapitulatifPdf(array $data): Response
     {
         $anneeLabel = $data['annee'] ? $data['annee']->libelle : 'all';
+        
         $filename = $this->generateTimestampedFilename(
             'tableau_recapitulatif',
             $anneeLabel
         );
 
-        // Ici, nous appelons explicitement la méthode Paysage
         return $this->generateLandscapePdf(
             'bilans.tableau-recapitulatif-pdf',
             $data,
@@ -136,12 +140,12 @@ class PdfService
     public function generateBilanSpecialitePdf(array $data): Response
     {
         $anneeLabel = $data['annee'] ? $data['annee']->libelle : 'all';
+        
         $filename = $this->generateTimestampedFilename(
             'bilan_specialite',
             $anneeLabel
         );
 
-        // Utilisé le paysage pour les tableaux globaux aussi
         return $this->generateLandscapePdf(
             'bilanspecialite.bilan-specialite-pdf',
             $data,
@@ -155,6 +159,7 @@ class PdfService
     public function generateDetailSpecialitePdf(array $data): Response
     {
         $anneeLabel = $data['annee'] ? $data['annee']->libelle : 'all';
+        
         $filename = $this->generateTimestampedFilename(
             'detail_'.$data['specialite']->code,
             $anneeLabel
