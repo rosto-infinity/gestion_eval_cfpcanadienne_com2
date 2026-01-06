@@ -85,12 +85,12 @@
                                 </svg>
                             </x-primary-button>
 
-                            <div class="text-center text-sm text-gray-600 dark:text-gray-400">
+                            {{-- <div class="text-center text-sm text-gray-600 dark:text-gray-400">
                                 <span>{{ __("Vous n'avez pas de compte ?") }}</span>
                                 <a href="{{ route('register') }}" class="font-medium text-primary hover:text-primary/80 ms-1 transition-colors duration-200">
                                     {{ __('Créez-en un gratuitement') }}
                                 </a>
-                            </div>
+                            </div> --}}
                         </div>
                     </form>
                 </div>

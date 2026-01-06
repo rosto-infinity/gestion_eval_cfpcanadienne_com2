@@ -7,7 +7,7 @@
         <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <a href="{{ route('dashboard') }}" title="Tableau de bord">
                 <i class='bx bxs-dashboard'></i>
-                <span class="text">Dashboard</span>
+                <span class="text"> Tableau de bord</span>
             </a>
         </li>
         <li class="{{ request()->routeIs('welcome') ? 'active' : '' }}">

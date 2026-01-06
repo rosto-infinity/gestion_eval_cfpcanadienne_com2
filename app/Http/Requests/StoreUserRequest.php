@@ -49,9 +49,9 @@ class StoreUserRequest extends FormRequest
             // Statut
             'statut' => 'nullable|in:actif,inactif,suspendu,archive',
         ];
-             // Pour la création, le logo est requis
+             // Pour la création, le profile est optionnel
         if ($this->isMethod('post')) {
-            $rules['profile'] = ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'];
+            $rules['profile'] = ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'];
         } else {
             // Pour la mise à jour, le profile est optionnel
             $rules['profile'] = ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'];

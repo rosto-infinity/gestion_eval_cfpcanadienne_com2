@@ -109,7 +109,7 @@
                     <a href="{{ route('login') }}" class="text-sm font-medium hover:text-primary transition-colors">Se
                         connecter</a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}"
+                        <a href="{{ route('login') }}"
                             class="bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-sm shadow-primary/20">
                             S'enrengistrer
                         </a>
