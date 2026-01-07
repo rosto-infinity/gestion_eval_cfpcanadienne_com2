@@ -28,7 +28,16 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::middleware('role:admin,superadmin')->group(function (): void {
 
         // Gestion des utilisateurs
+        // Import Excel des utilisateurs
+        Route::get('users/import', [UserController::class, 'import'])->name('users.import');
+        Route::post('users/import', [UserController::class, 'importStore'])->name('users.import.store');
+        Route::get('users/import/template', [UserController::class, 'importTemplate'])->name('users.import.template');
+        // Export Excel des utilisateurs
+        Route::get('users/export/all', [UserController::class, 'exportAll'])->name('users.export.all');
+        Route::get('users/export/by-specialite', [UserController::class, 'exportBySpecialite'])->name('users.export.by.specialite');
+        
         Route::resource('users', UserController::class);
+    
 
         // Paramétrage académique
         Route::resource('annees', AnneeAcademiqueController::class);

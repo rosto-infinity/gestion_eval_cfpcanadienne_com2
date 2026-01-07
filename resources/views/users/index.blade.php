@@ -38,7 +38,7 @@
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"/>
                 </svg>
-                Filtres
+                Filtres et Exports
             </h2>
         </div>
         <div class="p-6">
@@ -90,6 +90,62 @@
                         </select>
                     </div>
 
+                    <!-- Boutons d'export -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-foreground mb-2">
+                            Export Excel
+                        </label>
+                        
+                        <!-- Export tous les utilisateurs -->
+                        <form method="GET" action="{{ route('users.export.all') }}" class="inline">
+                            @if(request()->hasAny(['specialite_id', 'annee_id']))
+                                <input type="hidden" name="specialite_id" value="{{ request('specialite_id') }}">
+                                <input type="hidden" name="annee_id" value="{{ request('annee_id') }}">
+                            @endif
+                            <button type="submit" 
+                                    class="w-full px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0-6-6-6-6v6m0 0-6-6-6-6v6m0 0-6-6-6-6v6"/>
+                                </svg>
+                                Exporter tous
+                            </button>
+                        </form>
+
+                        <!-- Export par spécialité -->
+                        <form method="GET" action="{{ route('users.export.by.specialite') }}" class="inline">
+                            @if(request()->has('annee_id'))
+                                <input type="hidden" name="annee_id" value="{{ request('annee_id') }}">
+                            @endif
+                            <button type="submit" 
+                                    class="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v1a3 3 0 006 0h6a3 3 0 006 0v1M9 7H6a3 3 0 00-3 3v9a3 3 0 003 3h6a3 3 0 003-3V10a3 3 0 00-3-3H6a3 3 0 00-3 3v9a3 3 0 003 3h6a3 3 0 003-3V10a3 3 0 00-3-3H6a3 3 0 00-3 3v9a3 3 0 003 3z"/>
+                                </svg>
+                                Exporter par spécialité
+                            </button>
+                        </form>
+
+                        <!-- Import Excel -->
+                        <a href="{{ route('users.import') }}" 
+                           class="w-full px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                            </svg>
+                            Importer Excel
+                        </a>
+
+                        <!-- Télécharger modèle -->
+                        <form method="GET" action="{{ route('users.import.template') }}" class="inline">
+                            <button type="submit" 
+                                    class="w-full px-4 py-2.5 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0-6-6-6-6v6m0 0-6-6-6-6v6"/>
+                                </svg>
+                                Modèle Excel
+                            </button>
+                        </form>
+                    </div>
+
                     <!-- Bouton Filtrer -->
                     <div class="flex items-end">
                         <button type="submit" 
@@ -100,7 +156,6 @@
                             Filtrer
                         </button>
                     </div>
-
                 </div>
 
                 <!-- Lien réinitialiser -->
