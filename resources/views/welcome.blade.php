@@ -478,6 +478,164 @@
         </section>
 
         <!-- =======================
+             SPECIALITIES SECTION
+             ======================= -->
+        <section class="py-20 bg-card">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-3xl font-bold mb-4 text-foreground">Spécialités Agréées TIC en DQP</h2>
+                    <p class="text-muted-foreground">Découvrez nos 9 spécialités professionnelles reconnues</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Secrétariat Bureautique -->
+                    <div class="bg-background rounded-xl p-6 border border-border hover:border-primary/30 transition-all">
+                        <div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2 2v5a2 2 0 002 2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2-2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-foreground">Secrétariat Bureautique</h3>
+                        <div class="text-sm text-muted-foreground mb-4">
+                            <p class="mb-2"><strong>Durée:</strong> 12 mois</p>
+                            <p class="mb-2"><strong>Accès:</strong> 3è / BEPC / CAP / GCE O Level</p>
+                            <p>Formation aux outils bureautiques, gestion administrative et communication professionnelle.</p>
+                        </div>
+                        <div class="text-xs text-primary font-semibold">1090 heures</div>
+                    </div>
+
+                    <!-- Comptabilité Informatisée -->
+                    <div class="bg-background rounded-xl p-6 border border-border hover:border-primary/30 transition-all">
+                        <div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M15 7h6m0 10v-3m-3 3h.01M15 17h.01M5 7h14"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-foreground">Comptabilité Informatisée</h3>
+                        <div class="text-sm text-muted-foreground mb-4">
+                            <p class="mb-2"><strong>Durée:</strong> 12 mois</p>
+                            <p class="mb-2"><strong>Accès:</strong> Terminale / Upper Sixth</p>
+                            <p>Utilisation de logiciels comptables, gestion financière et analyse.</p>
+                        </div>
+                        <div class="text-xs text-primary font-semibold">1220 heures</div>
+                    </div>
+
+                    <!-- Webmestre -->
+                    <div class="bg-background rounded-xl p-6 border border-border hover:border-primary/30 transition-all">
+                        <div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9 9m0 9a9 9 0 019-9 9m-9-9a9 9 0 00-9 9"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-foreground">Webmestre</h3>
+                        <div class="text-sm text-muted-foreground mb-4">
+                            <p class="mb-2"><strong>Durée:</strong> 12 mois</p>
+                            <p class="mb-2"><strong>Accès:</strong> BAC / GCE A Level</p>
+                            <p>Création, maintenance et gestion de sites web et applications.</p>
+                        </div>
+                        <div class="text-xs text-primary font-semibold">1270 heures</div>
+                    </div>
+
+                    <!-- Secrétariat de Direction -->
+                    <div class="bg-background rounded-xl p-6 border border-border hover:border-primary/30 transition-all">
+                        <div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 19 7.5 19S10.832 18.477 13 17.753V6.253z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-foreground">Secrétariat de Direction</h3>
+                        <div class="text-sm text-muted-foreground mb-4">
+                            <p class="mb-2"><strong>Durée:</strong> 12 mois</p>
+                            <p class="mb-2"><strong>Accès:</strong> BAC / GCE A Level</p>
+                            <p>Support aux cadres supérieurs, organisation et communication.</p>
+                        </div>
+                        <div class="text-xs text-primary font-semibold">1440 heures</div>
+                    </div>
+
+                    <!-- Secrétariat Comptable -->
+                    <div class="bg-background rounded-xl p-6 border border-border hover:border-primary/30 transition-all">
+                        <div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M15 7h6m0 10v-3m-3 3h.01M15 17h.01M5 7h14"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-foreground">Secrétariat Comptable</h3>
+                        <div class="text-sm text-muted-foreground mb-4">
+                            <p class="mb-2"><strong>Durée:</strong> 12 mois</p>
+                            <p class="mb-2"><strong>Accès:</strong> Première / Lower Sixth</p>
+                            <p>Combinaison de secrétariat et comptabilité informatisée.</p>
+                        </div>
+                        <div class="text-xs text-primary font-semibold">1530 heures</div>
+                    </div>
+
+                    <!-- Maintenance Informatique -->
+                    <div class="bg-background rounded-xl p-6 border border-border hover:border-primary/30 transition-all">
+                        <div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-foreground">Maintenance Informatique</h3>
+                        <div class="text-sm text-muted-foreground mb-4">
+                            <p class="mb-2"><strong>Durée:</strong> 12 mois</p>
+                            <p class="mb-2"><strong>Accès:</strong> Première / Lower Sixth</p>
+                            <p>Diagnostic et réparation des systèmes informatiques.</p>
+                        </div>
+                        <div class="text-xs text-primary font-semibold">920 heures</div>
+                    </div>
+
+                    <!-- Développement d'Application -->
+                    <div class="bg-background rounded-xl p-6 border border-border hover:border-primary/30 transition-all">
+                        <div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4m6-4v1a3 3 0 00-3 3H7a3 3 0 00-3-3v-1a3 3 0 003 3h14a3 3 0 003-3v-1z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-foreground">Développement d'Application</h3>
+                        <div class="text-sm text-muted-foreground mb-4">
+                            <p class="mb-2"><strong>Durée:</strong> 12 mois</p>
+                            <p class="mb-2"><strong>Accès:</strong> BAC / GCE A Level</p>
+                            <p>Conception et développement d'applications web et mobiles.</p>
+                        </div>
+                        <div class="text-xs text-primary font-semibold">1170 heures</div>
+                    </div>
+
+                    <!-- Graphisme de Production -->
+                    <div class="bg-background rounded-xl p-6 border border-border hover:border-primary/30 transition-all">
+                        <div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586 1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586 1.586a2 2 0 012.828 0L20 14"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-foreground">Graphisme de Production</h3>
+                        <div class="text-sm text-muted-foreground mb-4">
+                            <p class="mb-2"><strong>Durée:</strong> 12 mois</p>
+                            <p class="mb-2"><strong>Accès:</strong> Terminale / Upper Sixth</p>
+                            <p>Conception graphique, création de supports visuels et impression.</p>
+                        </div>
+                        <div class="text-xs text-primary font-semibold">990 heures</div>
+                    </div>
+
+                    <!-- Maintenance des Réseaux -->
+                    <div class="bg-background rounded-xl p-6 border border-border hover:border-primary/30 transition-all">
+                        <div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H5m14 0h-2m2 6h2M3 9h6"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-foreground">Maintenance des Réseaux</h3>
+                        <div class="text-sm text-muted-foreground mb-4">
+                            <p class="mb-2"><strong>Durée:</strong> 12 mois</p>
+                            <p class="mb-2"><strong>Accès:</strong> Terminale / Upper Sixth</p>
+                            <p>Configuration, sécurité et maintenance des réseaux informatiques.</p>
+                        </div>
+                        <div class="text-xs text-primary font-semibold">1100 heures</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================
              TECH STACK
              ======================= -->
         <section id="tech" class="py-16 border-t border-border">
@@ -510,7 +668,7 @@
             </div>
         </section>
 
-        <!-- =======================
+       <!-- =======================
              CTA / FOOTER
              ======================= -->
         <section class="py-20 bg-primary text-primary-foreground">
@@ -537,19 +695,17 @@
 
     <footer class="bg-background border-t border-border py-12">
         <div class="max-w-7xl mx-auto px-6 lg:px-8 grid md:grid-cols-4 gap-8 text-sm">
-            <div class="col-span-1 md:col-span-2">
+            <!-- Logo et Description -->
+            <div>
                 <div class="flex items-center gap-2 font-bold text-lg mb-4">
-                    <div class="flex items-center gap-2 font-bold text-xl tracking-tight">
-            <div
-                class="py-2 rounded-lg flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
-                <a href="#" class="brand mr-2">
-                    <img src="/android-chrome-192x192.png" alt="logo-app-cfpc" style="height:30px; margin-left:13px">
-                </a>
-            </div>
-            <span>Gestion<span class="text-primary">Eval</span></span>
-        </div>
+                    <div class="flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
+                        <a href="#" class="brand">
+                            <img src="/android-chrome-192x192.png" alt="logo-app-cfpc" style="height:35px; margin-left:10px">
+                        </a>
+                    </div>
+                    <span>Gestion<span class="text-primary">Eval</span></span>
                 </div>
-                <p class="text-muted-foreground mb-6 max-w-xs">
+                <p class="text-muted-foreground mb-6">
                     Solution de gestion académique développée avec passion pour l'éducation.
                 </p>
                 <p class="text-muted-foreground text-xs">
@@ -557,22 +713,35 @@
                 </p>
             </div>
 
+            <!-- Application -->
             <div>
                 <h4 class="font-bold text-foreground mb-4">Application</h4>
                 <ul class="space-y-2 text-muted-foreground">
                     <li><a href="#features" class="hover:text-primary transition-colors">Fonctionnalités</a></li>
                     <li><a href="#methodology" class="hover:text-primary transition-colors">Calculs</a></li>
                     <li><a href="#tech" class="hover:text-primary transition-colors">Technique</a></li>
-                    <li><a href="#" class="hover:text-primary transition-colors">Mises à jour</a></li>
+                    <li><a href="{{ route('login') }}" class="hover:text-primary transition-colors">Connexion</a></li>
                 </ul>
             </div>
 
+            <!-- Support -->
             <div>
                 <h4 class="font-bold text-foreground mb-4">Support</h4>
                 <ul class="space-y-2 text-muted-foreground">
                     <li><a href="#" class="hover:text-primary transition-colors">Documentation</a></li>
                     <li><a href="#" class="hover:text-primary transition-colors">Contact</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Aide</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">FAQ</a></li>
+                </ul>
+            </div>
+
+            <!-- Légal -->
+            <div>
+                <h4 class="font-bold text-foreground mb-4">Légal</h4>
+                <ul class="space-y-2 text-muted-foreground">
                     <li><a href="#" class="hover:text-primary transition-colors">Confidentialité</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Conditions d'utilisation</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Mentions légales</a></li>
                     <li><span class="text-muted-foreground">Par WAFFO LELE Rostand</span></li>
                 </ul>
             </div>
