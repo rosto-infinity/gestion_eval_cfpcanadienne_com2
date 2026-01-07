@@ -120,7 +120,7 @@ x-init="
             <div class="flex justify-around gap-5 items-center">
 
                 <!-- Dark Mode Toggler -->
-                {{-- <label :class="darkMode ? 'bg-primary' : 'bg-gray-600'"
+                <label :class="darkMode ? 'bg-primary' : 'bg-gray-600'"
                     class="relative m-0 block h-7.5 w-14 rounded-full">
                     <input type="checkbox" :value="darkMode" @change="darkMode = !darkMode"
                         class="absolute top-0 z-50 m-0 h-7.5 w-14 cursor-pointer opacity-0" />
@@ -146,7 +146,7 @@ x-init="
                             </svg>
                         </span>
                     </span>
-                </label> --}}
+                </label>
                 <!-- Dark Mode Toggler -->
                 <a href="#" class="notification">
                     <i class='bx bxs-bell'></i>
