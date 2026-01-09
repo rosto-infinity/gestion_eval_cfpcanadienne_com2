@@ -125,7 +125,7 @@
                     </div>
                 @endif
                 @if ($selectedUser && $modules->isNotEmpty())
-<!-- ✅ -Section Debug - Ajoutez ceci après les infos étudiant -->
+<!-- ✅ --Section Debug - Ajoutez ceci après les infos étudiant -->
 <div class="mt-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-xs">
     <p><strong class="text-blue-800 dark:text-blue-200">🔍 Informations de débogage :</strong></p>
     <p>• Spécialité étudiant : <span class="font-bold">{{ $selectedUser->specialite_id }} ({{ $selectedUser->specialite?->intitule ?? 'N/A' }})</span></p>
