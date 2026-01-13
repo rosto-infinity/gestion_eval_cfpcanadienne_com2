@@ -7,6 +7,7 @@ namespace App\Http\Requests;
 use App\Enums\Niveau;
 use App\Enums\Role;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -17,7 +18,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // À adapter selon vos permissions
+        return Auth::check();
     }
 
     /**
@@ -31,11 +32,11 @@ class UpdateUserRequest extends FormRequest
             'role' => ['nullable', Rule::enum(Role::class)],
             'email' => 'required|email|unique:users,email,'.$this->user->id,
             'password' => ['nullable', 'confirmed', Password::defaults()],
-            'sexe' => 'nullable|in:M,F,Autre',
-            'niveau' => 'nullable|in:'.implode(',', Niveau::values()),
-            'profile' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'specialite_id' => 'nullable|exists:specialites,id',
-            'annee_academique_id' => 'nullable|exists:annees_academiques,id',
+            'sexe' => 'required|in:M,F,Autre',
+            'niveau' => 'required|in:'.implode(',', Niveau::values()),
+            'profile' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
+            'specialite_id' => 'required|exists:specialites,id',
+            'annee_academique_id' => 'required|exists:annees_academiques,id',
 
             // Informations civiles
             'date_naissance' => 'nullable|date|before:today',
@@ -82,15 +83,20 @@ class UpdateUserRequest extends FormRequest
             'password.numbers' => 'Le mot de passe doit contenir au moins un chiffre.',
             'password.symbols' => 'Le mot de passe doit contenir au moins un caractère spécial.',
 
+            'sexe.required' => 'Le sexe est obligatoire.',
             'sexe.in' => 'Le sexe doit être : M, F ou Autre.',
 
+            'niveau.required' => 'Le niveau est obligatoire.',
             'niveau.in' => 'Le niveau sélectionné n\'existe pas.',
 
             'profile.image' => 'Le fichier doit être une image valide.',
-            'profile.mimes' => 'L\'image doit être au format JPG, JPEG, PNG ou GIF.',
+            'profile.mimes' => 'L\'image doit être au format JPG, JPEG, PNG, GIF, SVG ou WEBP.',
             'profile.max' => 'L\'image ne doit pas dépasser 2 MB.',
 
+            'specialite_id.required' => 'La spécialité est obligatoire.',
             'specialite_id.exists' => 'La spécialité sélectionnée n\'existe pas.',
+            
+            'annee_academique_id.required' => 'L\'année académique est obligatoire.',
             'annee_academique_id.exists' => 'L\'année académique sélectionnée n\'existe pas.',
 
             'date_naissance.date' => 'La date de naissance doit être une date valide.',

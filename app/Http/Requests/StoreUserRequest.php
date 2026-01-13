@@ -6,6 +6,7 @@ namespace App\Http\Requests;
 
 use App\Enums\Niveau;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 
 class StoreUserRequest extends FormRequest
@@ -15,7 +16,7 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        return Auth::check();
     }
 
     /**
@@ -28,10 +29,10 @@ class StoreUserRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required', 'confirmed', Password::defaults(),
-            'sexe' => 'nullable|in:M,F,Autre',
-            'niveau' => 'nullable|in:'.implode(',', Niveau::values()),
-            'specialite_id' => 'nullable|exists:specialites,id',
-            'annee_academique_id' => 'nullable|exists:annees_academiques,id',
+            'sexe' => 'required|in:M,F,Autre',
+            'niveau' => 'required|in:'.implode(',', Niveau::values()),
+            'specialite_id' => 'required|exists:specialites,id',
+            'annee_academique_id' => 'required|exists:annees_academiques,id',
 
             // Informations civiles
             'date_naissance' => 'nullable|date|before:today',

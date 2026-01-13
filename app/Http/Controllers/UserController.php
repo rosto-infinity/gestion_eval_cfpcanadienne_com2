@@ -4,23 +4,28 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Enums\Niveau;
 use App\Enums\Role;
-use App\Exports\UsersExport;
-use App\Exports\UsersBySpecialiteExport;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
-use App\Imports\UsersImport;
-use App\Models\AnneeAcademique;
-use App\Models\Specialite;
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use App\Enums\Niveau;
 use Illuminate\View\View;
+use App\Models\Specialite;
+use Illuminate\Support\Str;
+use App\Exports\UsersExport;
+use App\Imports\UsersImport;
+use Illuminate\Http\Request;
+
+use App\Models\AnneeAcademique;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+use Intervention\Image\ImageManager;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\StoreUserRequest;
+use Illuminate\Support\Facades\Storage;
+use App\Exports\UsersBySpecialiteExport;
+use App\Http\Requests\UpdateUserRequest;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Laravel\Facades\Image;
 
 class UserController extends Controller
 {
@@ -60,8 +65,9 @@ class UserController extends Controller
         $specialites = Specialite::ordered()->get();
         $anneesAcademiques = AnneeAcademique::ordered()->get();
         $niveaux = Niveau::grouped();
+        $anneeActive = AnneeAcademique::active()->first();
 
-        return view('users.create', compact('specialites', 'anneesAcademiques', 'niveaux'));
+        return view('users.create', compact('specialites', 'anneesAcademiques', 'niveaux', 'anneeActive'));
     }
 
     /**
@@ -120,10 +126,11 @@ class UserController extends Controller
 
         $specialites = Specialite::ordered()->get();
         $anneesAcademiques = AnneeAcademique::ordered()->get();
+        $anneeActive = AnneeAcademique::active()->first();
         // CORRECTION : Récupérer les cases de l'Enum Niveau
         $niveaux = \App\Enums\Niveau::cases();
 
-        return view('users.edit', compact('user', 'specialites', 'anneesAcademiques', 'niveaux', 'roles'));
+        return view('users.edit', compact('user', 'specialites', 'anneesAcademiques', 'niveaux', 'roles', 'anneeActive'));
     }
 
     /**
@@ -222,18 +229,16 @@ class UserController extends Controller
                 Storage::disk('public')->makeDirectory($path, 0755, true);
             }
 
-            // 🖼️ Optimiser l'image avec Intervention Image
-            $image = Image::make($file->getRealPath());
+            // 🖼️ Optimiser l'image avec Intervention Image v3
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file->getRealPath());
 
-            // Redimensionner à 500x500 (portrait)
-            $image->fit(500, 500, function ($constraint): void {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
+            // Redimensionner à 500x500 (portrait) avec crop
+            $image->cover(500, 500);
 
             // Compresser et sauvegarder
             $fullPath = $path.'/'.$filename;
-            $image->encode('jpg', 85)->save(Storage::disk('public')->path($fullPath));
+            $image->toJpeg(85)->save(Storage::disk('public')->path($fullPath));
 
             return $fullPath;
 

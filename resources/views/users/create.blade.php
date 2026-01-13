@@ -51,7 +51,7 @@
         @endif
 
         <!-- Formulaire -->
-        <form action="{{ route('users.store') }}" method="POST" class="space-y-8 enctype="multipart/form-data">
+        <form action="{{ route('users.store') }}" method="POST" class="space-y-8" enctype="multipart/form-data">
             @csrf
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -122,7 +122,7 @@
                             <select id="sexe" name="sexe"
                                 class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('sexe') border-destructive ring-2 ring-destructive/50 @enderror">
                                 <option value="">-- Sélectionner --</option>
-                                <option value="M" {{ old('sexe') === 'M' ? 'selected' : '' }}>Masculin</option>
+                                <option value="M" {{ old('sexe', 'M') === 'M' ? 'selected' : '' }}>Masculin</option>
                                 <option value="F" {{ old('sexe') === 'F' ? 'selected' : '' }}>Féminin</option>
                                 <option value="Autre" {{ old('sexe') === 'Autre' ? 'selected' : '' }}>Autre</option>
                             </select>
@@ -141,39 +141,57 @@
                         <!-- Photo de profil -->
                         <div>
                             <label for="profile" class="block text-sm font-semibold text-foreground mb-2">
-                                Photo de profil <span class="text-red-500">*</span>
+                                Photo de profil
                             </label>
 
-                            <div class="flex items-center gap-4">
-                                <label for="profile" class="cursor-pointer flex-1">
-                                    <div
-                                        class="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-6 text-center hover:border-[#ff0000] dark:hover:border-[#f95454] transition-colors">
-                                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                        </svg>
-                                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                                            <span class="font-semibold text-[#ff0000]  dark:text-[#f95454]">Cliquez pour
-                                                uploader</span> ou glissez-déposez
+                            <div class="space-y-4">
+                                <!-- Zone d'upload -->
+                                <label for="profile" class="cursor-pointer block">
+                                    <div id="upload-zone"
+                                        class="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-6 text-center hover:border-primary dark:hover:border-primary transition-all duration-300 relative group">
+                                        
+                                        <!-- Image de prévisualisation -->
+                                        <div id="image-preview-container" class="mb-4">
+                                            <div id="placeholder-icon" class="mx-auto">
+                                                <svg class="h-16 w-16 text-gray-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                                </svg>
+                                            </div>
+                                            <img id="preview-image" class="hidden mx-auto h-32 w-32 object-cover rounded-full border-4 border-white shadow-lg" alt="Aperçu">
+                                        </div>
+                                        
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 group-hover:text-primary transition-colors">
+                                            <span class="font-semibold">Cliquez pour uploader</span> ou glissez-déposez
                                         </p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-500">PNG, JPG, GIF, SVG, WEBP (max.
-                                            2MB)</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-500 mt-2">
+                                            Formats: PNG, JPG, GIF, SVG, WEBP (max. 2MB)
+                                        </p>
+                                        
+                                        <!-- Indicateur de chargement -->
+                                        <div id="loading-indicator" class="hidden absolute inset-0 bg-white/80 rounded-xl flex items-center justify-center">
+                                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                                        </div>
                                     </div>
                                     <input type="file" id="profile" name="profile" accept="image/*" class="hidden"
-                                        onchange="previewImage(event)">
+                                        onchange="handleImageUpload(event)">
                                 </label>
+
+                                <!-- Informations sur le fichier -->
+                                <div id="file-info" class="hidden p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                                    <div class="flex items-center gap-2 text-sm text-blue-800 dark:text-blue-200">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span id="file-name"></span>
+                                        <span id="file-size" class="text-xs text-blue-600 dark:text-blue-400"></span>
+                                    </div>
+                                </div>
                             </div>
-                             <div id="preview" class="mt-4  pb-7 hidden">
-                                <img id="preview-image"
-                                    class="h-32  w-auto object-contain rounded-xl border-2 border-gray-200 dark:border-gray-700">
-                            </div>
+                            
                             @error('profile')
                                 <p class="mt-2 text-sm text-destructive font-medium flex items-center gap-1">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                            clip-rule="evenodd" />
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                                     </svg>
                                     {{ $message }}
                                 </p>
@@ -346,7 +364,7 @@
                                     class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('niveau') border-destructive ring-2 ring-destructive/50 @enderror">
                                     <option value="">-- Sélectionner --</option>
                                     <option value="3eme" {{ old('niveau') === '3eme' ? 'selected' : '' }}>3ème</option>
-                                    <option value="bepc" {{ old('niveau') === 'bepc' ? 'selected' : '' }}>BEPC</option>
+                                    <option value="bepc" {{ old('niveau', 'bepc') === 'bepc' ? 'selected' : '' }}>BEPC</option>
                                     <option value="premiere" {{ old('niveau') === 'premiere' ? 'selected' : '' }}>Première
                                     </option>
                                     <option value="probatoire" {{ old('niveau') === 'probatoire' ? 'selected' : '' }}>
@@ -409,7 +427,7 @@
                                     <option value="">-- Sélectionner --</option>
                                     @foreach ($anneesAcademiques as $annee)
                                         <option value="{{ $annee->id }}"
-                                            {{ old('annee_academique_id') == $annee->id ? 'selected' : '' }}>
+                                            {{ old('annee_academique_id', $anneeActive?->id) == $annee->id ? 'selected' : '' }}>
                                             {{ $annee->libelle }}
                                             @if ($annee->is_active)
                                                 <span class="text-primary font-semibold">(Active)</span>
@@ -647,32 +665,156 @@
                         <li>Tous les champs marqués d'un <span class="text-destructive font-bold">*</span> sont
                             obligatoires</li>
                         <li>L'année académique active sera sélectionnée par défaut</li>
+                        <li>La photo de profil sera automatiquement redimensionnée (500x500px)</li>
+                        <li>Formats acceptés : PNG, JPG, GIF, SVG, WEBP (max. 2MB)</li>
+                        <li>Vous pouvez glisser-déposer une image directement dans la zone d'upload</li>
                     </ul>
                 </div>
             </div>
         </div>
 
+        <!-- Indicateur de progression -->
+        <div id="progress-indicator" class="hidden fixed bottom-4 right-4 bg-primary text-white px-4 py-2 rounded-lg shadow-lg z-50">
+            <div class="flex items-center gap-2">
+                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                <span>Création en cours...</span>
+            </div>
+        </div>
+
     </div>
 <script>
-// Fonction globale pour la prévisualisation d'image
-function previewImage(event) {
-    const preview = document.getElementById('preview');
-    const previewImage = document.getElementById('preview-image');
+// Fonction améliorée pour la gestion de l'upload d'image
+function handleImageUpload(event) {
     const file = event.target.files[0];
+    const previewContainer = document.getElementById('image-preview-container');
+    const previewImage = document.getElementById('preview-image');
+    const placeholderIcon = document.getElementById('placeholder-icon');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const fileInfo = document.getElementById('file-info');
+    const fileName = document.getElementById('file-name');
+    const fileSize = document.getElementById('file-size');
     
+    // Réinitialiser l'état
     if (file) {
+        // Afficher le loader
+        loadingIndicator.classList.remove('hidden');
+        
+        // Validation côté client
+        const maxSize = 2 * 1024 * 1024; // 2MB
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml', 'image/webp'];
+        
+        if (!allowedTypes.includes(file.type)) {
+            showError('Le format de fichier n\'est pas autorisé. Formats acceptés: PNG, JPG, GIF, SVG, WEBP');
+            resetUploadState();
+            return;
+        }
+        
+        if (file.size > maxSize) {
+            showError('L\'image ne doit pas dépasser 2MB');
+            resetUploadState();
+            return;
+        }
+        
+        // Afficher les informations du fichier
+        fileName.textContent = file.name;
+        fileSize.textContent = `(${formatFileSize(file.size)})`;
+        fileInfo.classList.remove('hidden');
+        
+        // Lire et afficher l'image
         const reader = new FileReader();
         reader.onload = function(e) {
-            previewImage.src = e.target.result;
-            preview.classList.remove('hidden');
-        }
+            setTimeout(() => {
+                previewImage.src = e.target.result;
+                previewImage.classList.remove('hidden');
+                placeholderIcon.classList.add('hidden');
+                loadingIndicator.classList.add('hidden');
+            }, 500); // Simuler un léger délai pour montrer le loader
+        };
+        
+        reader.onerror = function() {
+            showError('Erreur lors de la lecture du fichier');
+            resetUploadState();
+        };
+        
         reader.readAsDataURL(file);
     }
 }
 
+// Fonction pour réinitialiser l'état de l'upload
+function resetUploadState() {
+    const previewImage = document.getElementById('preview-image');
+    const placeholderIcon = document.getElementById('placeholder-icon');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const fileInfo = document.getElementById('file-info');
+    
+    previewImage.classList.add('hidden');
+    placeholderIcon.classList.remove('hidden');
+    loadingIndicator.classList.add('hidden');
+    fileInfo.classList.add('hidden');
+}
+
+// Fonction pour afficher une erreur
+function showError(message) {
+    // Créer une notification d'erreur temporaire
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse';
+    errorDiv.innerHTML = `
+        <div class="flex items-center gap-2">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            ${message}
+        </div>
+    `;
+    
+    document.body.appendChild(errorDiv);
+    
+    // Auto-suppression après 3 secondes
+    setTimeout(() => {
+        errorDiv.remove();
+    }, 3000);
+}
+
+// Fonction pour formater la taille du fichier
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// Gestion du drag and drop
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialisation si nécessaire
-    console.log('Formulaire de création chargé');
+    const uploadZone = document.getElementById('upload-zone');
+    const fileInput = document.getElementById('profile');
+    
+    if (uploadZone) {
+        // Empêcher le comportement par défaut
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        // Gérer le drop
+        uploadZone.addEventListener('drop', handleDrop, false);
+    }
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length > 0) {
+            fileInput.files = files;
+            handleImageUpload({ target: fileInput });
+        }
+    }
+    
+    console.log('Formulaire de création utilisateur chargé avec gestion avancée des images');
 });
 </script>
 @endsection
