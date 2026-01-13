@@ -106,26 +106,60 @@
 
 
             <!-- Infos Étudiant -->
-            <div class="grid grid-cols-2 gap-4 mb-6 bg-muted/30 p-4 rounded">
-                <div>
-                    <p class="text-xs text-muted-foreground">Matricule</p>
-                    <p class="font-semibold text-foreground">{{ $user->matricule }}</p>
+            <div class="grid grid-cols-4 gap-4 mb-6 bg-muted/30 p-4 rounded">
+                <!-- Photo de profil -->
+                <div class="col-span-1">
+                    <p class="text-xs text-muted-foreground mb-2">Photo</p>
+                    @if($user->profile)
+                        <img src="{{ Storage::url($user->profile) }}" alt="Photo de profil" 
+                             class="w-16 h-16 rounded-full object-cover border-2 border-white shadow">
+                    @else
+                        <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        </div>
+                    @endif
                 </div>
-                <div>
-                    <p class="text-xs text-muted-foreground">Nom et Prénom</p>
-                    <p class="font-semibold text-foreground">{{ $user->name }}</p>
-                </div>
-                <div>
-                    <p class="text-xs text-muted-foreground">Spécialité</p>
-                    <p class="font-semibold text-foreground">
-                        {{ $user->specialite->intitule ?? 'Module non assigné'  }}
-                        
-                    </p>
-                </div>
-                <div>
-                    <p class="text-xs text-muted-foreground">Code</p>
-                    <p class="font-semibold text-foreground">{{ $user->specialite->code ?? 'Code non assigné'}}</p>
-                </div>
+                
+               <!-- Informations principales -->
+<div class="col-span-3 grid grid-cols-3 gap-1 leading-none">
+    <div>
+        <p class="text-xs text-muted-foreground">Matricule</p>
+        <p class="font-semibold text-foreground">{{ $user->matricule }}</p>
+    </div>
+    <div>
+        <p class="text-xs text-muted-foreground">Nom et Prénom</p>
+        <p class="font-semibold text-foreground">{{ $user->name }}</p>
+    </div>
+    <div>
+        <p class="text-xs text-muted-foreground">Sexe</p>
+        <p class="font-semibold text-foreground">
+            @if($user->sexe === 'M') 👨 Masculin
+            @elseif($user->sexe === 'F') 👩 Féminin
+            @else 🧑 Autre @endif
+        </p>
+    </div>
+    <div>
+        <p class="text-xs text-muted-foreground">Date de naissance</p>
+        <p class="font-semibold text-foreground">{{ $user->date_naissance ? \Carbon\Carbon::parse($user->date_naissance)->format('d/m/Y') : 'Non spécifiée' }}</p>
+    </div>
+    <div>
+        <p class="text-xs text-muted-foreground">Lieu de naissance</p>
+        <p class="font-semibold text-foreground">{{ $user->lieu_naissance ?? 'Non spécifié' }}</p>
+    </div>
+    <div>
+        <p class="text-xs text-muted-foreground">Niveau</p>
+        <p class="font-semibold text-foreground">{{ $user->niveau ?? 'Non défini' }}</p>
+    </div>
+    <div>
+        <p class="text-xs text-muted-foreground">Spécialité</p>
+        <p class="font-semibold text-foreground">{{ $user->specialite->intitule ?? 'Non assignée' }}</p>
+    </div>
+    <div>
+        <p class="text-xs text-muted-foreground">Année de Formation</p>
+        <p class="font-semibold text-foreground">{{ $user->anneeAcademique->libelle ?? 'Non définie' }}</p>
+    </div>
+</div>
+
             </div>
 
             <!-- Semestre 1 -->

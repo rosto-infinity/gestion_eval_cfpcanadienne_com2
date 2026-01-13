@@ -347,37 +347,70 @@
 
         <!-- INFORMATIONS ÉTUDIANT -->
         <div class="info-section">
-            <div class="info-grid">
-                <div class="info-row">
-                    <div class="info-cell">
-                        <div class="info-label">Matricule</div>
-                        <div class="info-value">
-                            <span class="badge-code">{{ $user->matricule }}</span>
+            <!-- Photo et informations principales -->
+            <div style="display: flex; gap: 20px; margin-bottom: 20px; align-items: flex-start;">
+                <!-- Photo de profil -->
+                <div style="text-align: center;">
+                    <div style="font-size: 10px; color: #6b7280; margin-bottom: 5px;">Photo</div>
+                    @if($user->profile)
+                        <img src="{{ Storage::url($user->profile) }}" alt="Photo de profil" 
+                             style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #e5e7eb;">
+                    @else
+                        <div style="width: 60px; height: 60px; border-radius: 50%; background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: #6b7280;">
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
                         </div>
-                    </div>
-                    <div class="info-cell">
-                        <div class="info-label">Nom Complet</div>
-                        <div class="info-value">{{ $user->name }}</div>
-                    </div>
+                    @endif
                 </div>
-                <div class="info-row">
-                    <div class="info-cell">
-                        <div class="info-label">Email</div>
-                        <div class="info-value">{{ $user->email }}</div>
-                    </div>
-                    <div class="info-cell">
-                        <div class="info-label">Spécialité</div>
-                        <div class="info-value">{{ $user->specialite->intitule ?? 'N/A' }}</div>
-                    </div>
-                </div>
-                <div class="info-row">
-                    <div class="info-cell">
-                        <div class="info-label">Année Académique</div>
-                        <div class="info-value">{{ $user->anneeAcademique->libelle ?? 'N/A' }}</div>
-                    </div>
-                    <div class="info-cell">
-                        <div class="info-label">Date d'Édition</div>
-                        <div class="info-value">{{ now()->format('d/m/Y') }}</div>
+                
+                <!-- Informations détaillées -->
+                <div style="flex: 1;">
+                    <div class="info-grid">
+                        <div class="info-row">
+                            <div class="info-cell">
+                                <div class="info-label">Matricule</div>
+                                <div class="info-value">
+                                    <span class="badge-code">{{ $user->matricule }}</span>
+                                </div>
+                            </div>
+                            <div class="info-cell">
+                                <div class="info-label">Nom et Prénom</div>
+                                <div class="info-value">{{ $user->name }}</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-cell">
+                                <div class="info-label">Sexe</div>
+                                <div class="info-value">
+                                    @if($user->sexe === 'M') 👨 Masculin
+                                    @elseif($user->sexe === 'F') 👩 Féminin
+                                    @else 🧑 Autre @endif
+                                </div>
+                            </div>
+                            <div class="info-cell">
+                                <div class="info-label">Date de naissance</div>
+                                <div class="info-value">{{ $user->date_naissance ? \Carbon\Carbon::parse($user->date_naissance)->format('d/m/Y') : 'Non spécifiée' }}</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-cell">
+                                <div class="info-label">Lieu de naissance</div>
+                                <div class="info-value">{{ $user->lieu_naissance ?? 'Non spécifié' }}</div>
+                            </div>
+                            <div class="info-cell">
+                                <div class="info-label">Niveau</div>
+                                <div class="info-value">{{ $user->niveau ?? 'Non défini' }}</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-cell">
+                                <div class="info-label">Spécialité</div>
+                                <div class="info-value">{{ $user->specialite->intitule ?? 'Non assignée' }}</div>
+                            </div>
+                            <div class="info-cell">
+                                <div class="info-label">Année de Formation</div>
+                                <div class="info-value">{{ $user->anneeAcademique->libelle ?? 'Non définie' }}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

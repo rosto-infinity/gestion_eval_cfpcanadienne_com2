@@ -10,37 +10,92 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ProfileController extends Controller
 {
     /**
-     * -Display the user's profile form.
+     * Display the user's profile form.
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+        $user->load(['specialite', 'anneeAcademique']);
+        
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
         ]);
     }
 
     /**
-     * -Update the user's profile information.
+     * Update the user's profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // 📸 Traitement de l'image de profil
+        if ($request->hasFile('profile')) {
+            $profilePath = $this->handleProfileImage($request->file('profile'));
+            $validated['profile'] = $profilePath;
         }
 
-        $request->user()->save();
+        // Mettre à jour les informations de l'utilisateur
+        $user->fill($validated);
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
-     * -Delete the user's account.
+     * Handle profile image upload and processing
+     */
+    private function handleProfileImage($file): ?string
+    {
+        if (!$file) {
+            return null;
+        }
+
+        try {
+            // 📁 Générer un nom de fichier unique
+            $filename = 'profile_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+            // 📁 Créer le dossier s'il n'existe pas (organisation par date)
+            $path = 'profiles/' . date('Y/m');
+            if (!Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->makeDirectory($path, 0755, true);
+            }
+
+            // 🖼️ Optimiser l'image avec Intervention Image v3
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file->getRealPath());
+
+            // Redimensionner à 500x500 (portrait) avec crop
+            $image->cover(500, 500);
+
+            // Compresser et sauvegarder
+            $fullPath = $path . '/' . $filename;
+            $image->toJpeg(85)->save(Storage::disk('public')->path($fullPath));
+
+            return $fullPath;
+
+        } catch (\Exception $e) {
+            Log::error('Erreur lors du traitement de l\'image de profil: ' . $e->getMessage());
+            throw new \Exception('Erreur lors du traitement de l\'image. Veuillez réessayer.');
+        }
+    }
+
+    /**
+     * Delete the user's account.
      */
     public function destroy(Request $request): RedirectResponse
     {
