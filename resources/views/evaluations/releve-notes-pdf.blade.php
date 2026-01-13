@@ -350,7 +350,7 @@
             <!-- Photo et informations principales -->
             <div style="display: flex; gap: 20px; margin-bottom: 20px; align-items: flex-start;">
                 <!-- Photo de profil -->
-                <div style="text-align: center;">
+                {{-- <div style="text-align: center;">
                     <div style="font-size: 10px; color: #6b7280; margin-bottom: 5px;">Photo</div>
                     @if($user->profile)
                         <img src="{{ Storage::url($user->profile) }}" alt="Photo de profil" 
@@ -360,10 +360,10 @@
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </div>
                     @endif
-                </div>
+                </div> --}}
                 
                 <!-- Informations détaillées -->
-                <div style="flex: 1;">
+                <div style="flex: 1; line-height: 1;">
                     <div class="info-grid">
                         <div class="info-row">
                             <div class="info-cell">
@@ -381,9 +381,9 @@
                             <div class="info-cell">
                                 <div class="info-label">Sexe</div>
                                 <div class="info-value">
-                                    @if($user->sexe === 'M') 👨 Masculin
-                                    @elseif($user->sexe === 'F') 👩 Féminin
-                                    @else 🧑 Autre @endif
+                                    @if($user->sexe === 'M')  Masculin
+                                    @elseif($user->sexe === 'F')  Féminin
+                                    @else  Autre @endif
                                 </div>
                             </div>
                             <div class="info-cell">
