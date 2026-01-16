@@ -235,9 +235,9 @@
                             </div>
 
                             <!-- Bouton de sauvegarde -->
-                            <button type="submit" class="w-full py-2.5 px-4 rounded-lg font-medium transition-colors duration-200 hover:bg-black"
-                                    style="background-color: var(--primary); color: var(--primary-foreground)"
-                                    onmouseover="this.style.backgroundColor='var(--primary-hover)'"
+                            <button type="submit" class=" w-full py-2.5 px-4 bg-red-500 text-white hover:bg-red-500 hover:text-white rounded-lg  "
+                                   
+                                    onmouseover="this.style.backgroundColor='var(--primary)'"
                                     onmouseout="this.style.backgroundColor='var(--primary)'">
                                 Mettre à jour la photo
                             </button>

@@ -216,6 +216,15 @@ class User extends Authenticatable
         return $query->orderBy('name', 'asc');
     }
 
+    public function scopeStudentsOnly(Builder $query): Builder
+    {
+        return $query->whereNotIn('role', [
+            Role::SUPERADMIN->value,
+            Role::ADMIN->value,
+            Role::MANAGER->value
+        ]);
+    }
+
     public function scopeSearch(Builder $query, string $search): Builder
     {
         return $query->where(function ($q) use ($search): void {

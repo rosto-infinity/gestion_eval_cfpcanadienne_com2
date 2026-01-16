@@ -52,7 +52,7 @@ class BilanCompetenceController extends Controller
                 ->with('info', 'Un bilan existe déjà pour cet étudiant. Vous pouvez le modifier.');
         }
 
-        $users = User::with(['specialite', 'anneeAcademique'])
+        $users = User::studentsOnly()->with(['specialite', 'anneeAcademique'])
             ->whereDoesntHave('bilanCompetence')
             ->ordered()
             ->get();

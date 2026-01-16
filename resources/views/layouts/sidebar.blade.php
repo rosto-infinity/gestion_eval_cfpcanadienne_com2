@@ -4,14 +4,25 @@
     </a>
     
     <ul class="side-menu top">
-        <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-            <a href="{{ route('dashboard') }}" title="Tableau de bord">
-                <i class='bx bxs-dashboard'></i>
-                <span class="text"> Tableau de bord</span>
-            </a>
-        </li>
+        <!-- Dashboard adaptatif selon le rôle -->
+        @if(in_array(auth()->user()->role->value, [\App\Enums\Role::SUPERADMIN->value, \App\Enums\Role::ADMIN->value, \App\Enums\Role::MANAGER->value]))
+            <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <a href="{{ route('dashboard') }}" title="Dashboard Administrateur">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text"> Admin Dashboard</span>
+                </a>
+            </li>
+        @else
+            <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <a href="{{ route('dashboard') }}" title="Mon Tableau de bord">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text"> Mon Dashboard</span>
+                </a>
+            </li>
+        @endif
+        
         <li class="{{ request()->routeIs('welcome') ? 'active' : '' }}">
-            <a href="{{ route('welcome') }}" title="Tableau de bord">
+            <a href="{{ route('welcome') }}" title="Accueil">
                 <i class='bx bxs-home'></i>
                 <span class="text">Accueil</span>
             </a>

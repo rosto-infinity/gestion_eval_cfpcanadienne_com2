@@ -32,7 +32,7 @@ class UserController extends Controller
     public function index(Request $request): View
     {
         // ✅ IMPORTANT : Charger les relations AVANT paginate()
-        $query = User::query()
+        $query = User::studentsOnly()
             ->with(['specialite', 'anneeAcademique']);
         // dd($query);
         // Recherche

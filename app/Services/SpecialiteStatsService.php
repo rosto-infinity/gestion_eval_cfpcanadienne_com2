@@ -26,7 +26,7 @@ class SpecialiteStatsService
         }
 
         return $query->with(['users' => function ($q) use ($anneeId): void {
-            $q->where('annee_academique_id', $anneeId)->with(['bilanCompetence']);
+            $q->studentsOnly()->where('annee_academique_id', $anneeId)->with(['bilanCompetence']);
         }])
             ->get()
             ->map(fn ($specialite) => $this->calculateSpecialiteStats($specialite))

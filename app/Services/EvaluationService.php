@@ -134,7 +134,7 @@ class EvaluationService
         int $semestre,
         int $anneeAcademiqueId
     ): Collection {
-        $users = User::where('specialite_id', $specialiteId)
+        $users = User::studentsOnly()->where('specialite_id', $specialiteId)
             ->where('annee_academique_id', $anneeAcademiqueId)
             ->ordered()
             ->get();

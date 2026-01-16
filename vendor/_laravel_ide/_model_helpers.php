@@ -1699,6 +1699,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User query()
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User ordered()
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User studentsOnly()
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User search(string $search)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User bySpecialite(int $specialiteId)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User byAnneeAcademique(int $anneeId)

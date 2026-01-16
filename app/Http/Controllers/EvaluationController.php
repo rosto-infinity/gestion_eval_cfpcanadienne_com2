@@ -46,7 +46,7 @@ class EvaluationController extends Controller
         }
 
         $evaluations = $query->latest()->paginate(20);
-        $users = User::ordered()->get();
+        $users = User::studentsOnly()->ordered()->get();
         $specialites = Specialite::ordered()->get();
         $annees = AnneeAcademique::ordered()->get();
 

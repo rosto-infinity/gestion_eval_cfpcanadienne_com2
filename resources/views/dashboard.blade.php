@@ -13,14 +13,24 @@
                     <a href="{{ route('dashboard') }}">Dashboard</a>
                 </li>
                 <li><i class='bx bx-chevron-right'></i></li>
-               
+                <li class="active">Administration</li>
             </ul>
         </div>
-        {{-- Bouton Télécharger (PDF) --}}
-        <a href="#" class="btn-download">
-            <i class='bx bxs-cloud-download'></i>
-            <span class="text">Télécharger Rapport</span>
-        </a>
+        <!-- Infos de l'administrateur connecté -->
+        <div class="user-profile-header">
+            @if($user->profile)
+                <img src="{{ Storage::url($user->profile) }}" alt="Photo de profil" class="profile-header-avatar">
+            @else
+                <div class="profile-header-avatar-placeholder">
+                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                </div>
+            @endif
+            <div class="profile-header-info">
+                <h3>{{ $user->name }}</h3>
+                <p>{{ $user->email }}</p>
+                <span class="role-badge admin">{{ ucfirst($user->role) }}</span>
+            </div>
+        </div>
     </div>
 
     <!-- KPIs (Box Info) -->
@@ -279,22 +289,60 @@
         color: var(--primary);
     }
 
-    .btn-download {
+    /* En-tête profil administrateur */
+    .user-profile-header {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 10px 20px;
-        background: var(--primary);
-        color: var(--primary-foreground);
-        text-decoration: none;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        transition: opacity 0.2s;
+        gap: 15px;
+        padding: 15px 20px;
+        background: var(--card);
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--border);
     }
 
-    .btn-download:hover {
-        opacity: 0.9;
+    .profile-header-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--primary);
+    }
+
+    .profile-header-avatar-placeholder {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        border: 3px solid var(--primary);
+    }
+
+    .profile-header-info h3 {
+        margin: 0 0 5px 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--foreground);
+    }
+
+    .profile-header-info p {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        color: var(--muted-foreground);
+    }
+
+    .role-badge.admin {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
     }
 
     /* Box Info (Stats) */
