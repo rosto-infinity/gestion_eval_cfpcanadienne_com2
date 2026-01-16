@@ -107,7 +107,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     // Profil personnel
     Route::controller(ProfileController::class)->group(function (): void {
         Route::get('/profile', 'edit')->name('profile.edit');
-        Route::put('/profile', 'update')->name('profile.update');
+        Route::patch('/profile', 'update')->name('profile.update');
         Route::delete('/profile', 'destroy')->name('profile.destroy');
     });
 });

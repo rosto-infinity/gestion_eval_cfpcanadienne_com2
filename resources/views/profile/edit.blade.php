@@ -170,7 +170,11 @@
 
                         <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                             @csrf
-                            @method('PUT')
+                            @method('PATCH')
+
+                            <!-- Champs requis cachés pour la validation -->
+                            <input type="hidden" name="name" value="{{ auth()->user()->name }}">
+                            <input type="hidden" name="email" value="{{ auth()->user()->email }}">
 
                             <!-- Photo actuelle -->
                             @if(auth()->user()->profile)
@@ -231,7 +235,7 @@
                             </div>
 
                             <!-- Bouton de sauvegarde -->
-                            <button type="submit" class="w-full py-2.5 px-4 rounded-lg font-medium transition-colors duration-200"
+                            <button type="submit" class="w-full py-2.5 px-4 rounded-lg font-medium transition-colors duration-200 hover:bg-black"
                                     style="background-color: var(--primary); color: var(--primary-foreground)"
                                     onmouseover="this.style.backgroundColor='var(--primary-hover)'"
                                     onmouseout="this.style.backgroundColor='var(--primary)'">
