@@ -10,7 +10,6 @@ use App\Models\Module;
 use App\Models\Specialite;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -18,12 +17,12 @@ class DashboardController extends Controller
     public function index(): View
     {
         $user = auth()->user();
-        
+
         // Vérifier si l'utilisateur est un administrateur
         $isAdmin = in_array($user->role->value, [
             Role::SUPERADMIN->value,
             Role::ADMIN->value,
-            Role::MANAGER->value
+            Role::MANAGER->value,
         ]);
 
         if ($isAdmin) {
@@ -50,7 +49,7 @@ class DashboardController extends Controller
             ->get();
 
         // 3. Données pour le Graphique Barres (Étudiants par Spécialité)
-        $studentsPerSpeciality = Specialite::withCount(['users' => function ($query) {
+        $studentsPerSpeciality = Specialite::withCount(['users' => function ($query): void {
             $query->studentsOnly();
         }])
             ->orderBy('users_count', 'desc')
@@ -89,11 +88,11 @@ class DashboardController extends Controller
         $userEvaluations = Evaluation::where('user_id', $user->id)
             ->with(['module', 'specialite', 'anneeAcademique'])
             ->get();
-        
+
         $totalEvaluations = $userEvaluations->count();
         $moyenneGenerale = $userEvaluations->avg('note');
         $modulesCount = $userEvaluations->pluck('module_id')->unique()->count();
-        
+
         // 2. Données pour le Graphique Linéaire (Évolution des notes par semestre)
         $notesBySemestre = Evaluation::select('semestre', DB::raw('avg(note) as moyenne, count(*) as count'))
             ->where('user_id', $user->id)
@@ -120,9 +119,9 @@ class DashboardController extends Controller
             ->get();
 
         // 5. Modules par semestre pour l'affichage détaillé
-        $modulesSemestre1 = $userEvaluations->filter(fn($eval) => $eval->semestre === 1);
-        $modulesSemestre2 = $userEvaluations->filter(fn($eval) => $eval->semestre === 2);
-        
+        $modulesSemestre1 = $userEvaluations->filter(fn ($eval) => $eval->semestre === 1);
+        $modulesSemestre2 = $userEvaluations->filter(fn ($eval) => $eval->semestre === 2);
+
         $moyenneSemestre1 = $modulesSemestre1->avg('note');
         $moyenneSemestre2 = $modulesSemestre2->avg('note');
 

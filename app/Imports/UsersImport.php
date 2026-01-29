@@ -15,49 +15,59 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
-use Maatwebsite\Excel\Validators\Failure;
 
-class UsersImport implements ToCollection, WithHeadingRow, WithValidation, SkipsOnError, SkipsOnFailure, WithBatchInserts, WithUpserts
+class UsersImport implements SkipsOnError, ToCollection, WithBatchInserts, WithHeadingRow, WithUpserts
 {
     use Importable;
 
     public $errors = [];
+
     public $successCount = 0;
+
     public $failureCount = 0;
+
     public $skippedCount = 0;
 
     /**
      * Importer les données depuis la collection
      */
-    public function collection(Collection $rows)
+    public function collection(Collection $rows): void
     {
         foreach ($rows as $index => $row) {
             try {
                 // Ignorer les lignes vides
                 if ($this->isEmptyRow($row)) {
                     $this->skippedCount++;
+
                     continue;
                 }
 
                 // Valider et créer l'utilisateur
                 $this->createUserFromRow($row, $index + 2); // +2 car ligne 1 = en-tête
                 $this->successCount++;
-
-            } catch (\Exception $e) {
+            } catch (ValidationException $e) {
+                // Capturer les erreurs de validation spécifiques
+                $errorMessage = $e->validator->errors()->first();
                 $this->errors[] = [
                     'row' => $index + 2,
                     'data' => $row->toArray(),
-                    'error' => $e->getMessage()
+                    'error' => $errorMessage,
                 ];
                 $this->failureCount++;
-                Log::error("Import Users - Row " . ($index + 2) . ": " . $e->getMessage());
+            } catch (\Exception $e) {
+                // Capturer les autres erreurs
+                $this->errors[] = [
+                    'row' => $index + 2,
+                    'data' => $row->toArray(),
+                    'error' => $e->getMessage(),
+                ];
+                $this->failureCount++;
+                Log::error('Import Users - Row '.($index + 2).': '.$e->getMessage());
             }
         }
     }
@@ -94,7 +104,7 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
         $userData = [
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password'] ?? 'password123'), // Mot de passe par défaut
+            'password' => Hash::make('Cfpc3231'), // Mot de passe par défaut demandé par le client
             'matricule' => $matricule,
             'sexe' => $data['sexe'] ?? null,
             'niveau' => $this->getNiveauEnum($data['niveau'] ?? null),
@@ -106,8 +116,8 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
             'telephone' => $data['telephone'] ?? null,
             'telephone_urgence' => $data['telephone_urgence'] ?? null,
             'adresse' => $data['adresse'] ?? null,
-            'piece_identite' => $data['piece_identite'] ?? null,
-            'statut' => $data['statut'] ?? 'actif',
+            'piece_identite' => null,
+            'statut' => 'actif',
             'role' => $this->getRoleEnum($data['role'] ?? 'etudiant'),
         ];
 
@@ -119,23 +129,53 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
      */
     private function prepareUserData($row, int $rowNumber): array
     {
+        // Mapping des colonnes du modèle Excel (slug par Maatwebsite) vers nos attributs
+        $name = $row['name'] ?? $row['nom'] ?? $row['nom_et_prenom'] ?? '';
+        $email = $row['email'] ?? '';
+        // Password retiré du template, on utilise la valeur par défaut définie plus haut
+        $password = null;
+        $matricule = $row['matricule'] ?? $row['matricule_optionnel_sera_genere_automatiquement'] ?? null;
+        $sexe = $row['sexe'] ?? $row['sexe_mfautre'] ?? null;
+        $niveau = $row['niveau'] ?? null;
+        $specialite = $row['specialite'] ?? $row['specialite_intitule'] ?? null;
+        $annee = $row['annee_academique'] ?? $row['annee'] ?? null;
+
+        $dateNaissance = $row['date_naissance'] ?? $row['date_de_naissance_ddmmyyyy'] ?? null;
+        // Correction pour les dates Excel (numériques)
+        if (is_numeric($dateNaissance)) {
+            try {
+                // Convertir le numéro de série Excel en objet DateTime
+                $dateObject = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($dateNaissance);
+                $dateNaissance = $dateObject->format('Y-m-d');
+            } catch (\Exception $e) {
+                // Si la conversion échoue, on garde la valeur brute pour la validation
+            }
+        }
+
+        $lieuNaissance = $row['lieu_naissance'] ?? $row['lieu_de_naissance'] ?? null;
+        $telephoneUrgence = $row['telephone_urgence'] ?? $row['telephone_durgence'] ?? null;
+        $telephoneUrgence = $row['telephone_urgence'] ?? $row['telephone_durgence'] ?? null;
+        // Piece identite et Statut retirés du template
+        $pieceIdentite = null;
+        $statut = 'actif';
+
         return [
-            'name' => $this->cleanString($row['name'] ?? $row['nom'] ?? ''),
-            'email' => $this->cleanString($row['email'] ?? ''),
-            'password' => $row['password'] ?? null,
-            'matricule' => $this->cleanString($row['matricule'] ?? null),
-            'sexe' => $this->cleanString($row['sexe'] ?? null),
-            'niveau' => $this->cleanString($row['niveau'] ?? null),
-            'specialite' => $this->cleanString($row['specialite'] ?? $row['specialite_intitule'] ?? null),
-            'annee_academique' => $this->cleanString($row['annee_academique'] ?? $row['annee'] ?? null),
-            'date_naissance' => $row['date_naissance'] ?? null,
-            'lieu_naissance' => $this->cleanString($row['lieu_naissance'] ?? null),
+            'name' => $this->cleanString($name),
+            'email' => $this->cleanString($email),
+            'password' => $password,
+            'matricule' => $this->cleanString($matricule),
+            'sexe' => $this->cleanString($sexe),
+            'niveau' => $this->cleanString($niveau),
+            'specialite' => $this->cleanString($specialite),
+            'annee_academique' => $this->cleanString($annee),
+            'date_naissance' => $dateNaissance,
+            'lieu_naissance' => $this->cleanString($lieuNaissance),
             'nationalite' => $this->cleanString($row['nationalite'] ?? null),
             'telephone' => $this->cleanString($row['telephone'] ?? null),
-            'telephone_urgence' => $this->cleanString($row['telephone_urgence'] ?? null),
+            'telephone_urgence' => $this->cleanString($telephoneUrgence),
             'adresse' => $this->cleanString($row['adresse'] ?? null),
-            'piece_identite' => $this->cleanString($row['piece_identite'] ?? null),
-            'statut' => $this->cleanString($row['statut'] ?? 'actif'),
+            'piece_identite' => $this->cleanString($pieceIdentite),
+            'statut' => $this->cleanString($statut),
             'role' => $this->cleanString($row['role'] ?? 'etudiant'),
         ];
     }
@@ -143,7 +183,7 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
     /**
      * Valider les données utilisateur
      */
-    private function validateUserData(array $data, int $rowNumber)
+    private function validateUserData(array $data, int $rowNumber): void
     {
         $validator = Validator::make($data, [
             'name' => 'required|string|max:255',
@@ -156,10 +196,10 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
             'statut' => 'nullable|in:actif,inactif,suspendu,archive',
             'role' => 'nullable|string',
         ], [
-            'name.required' => "Ligne {$rowNumber}: Le nom est obligatoire",
-            'email.required' => "Ligne {$rowNumber}: L'email est obligatoire",
-            'email.email' => "Ligne {$rowNumber}: L'email doit être valide",
-            'date_naissance.before' => "Ligne {$rowNumber}: La date de naissance doit être dans le passé",
+            'name.required' => "Ligne {$rowNumber}: Le nom est obligatoire. (H: Nom et Prénom)",
+            'email.required' => "Ligne {$rowNumber}: L'email est obligatoire.",
+            'email.email' => "Ligne {$rowNumber}: L'email doit être une adresse valide.",
+            'date_naissance.before' => "Ligne {$rowNumber}: La date de naissance doit être dans le passé.",
         ]);
 
         if ($validator->fails()) {
@@ -172,7 +212,7 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
      */
     private function getSpecialite(?string $specialiteName): ?Specialite
     {
-        if (!$specialiteName) {
+        if (! $specialiteName) {
             return null;
         }
 
@@ -186,7 +226,7 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
      */
     private function getAnneeAcademique(?string $anneeName): ?AnneeAcademique
     {
-        if (!$anneeName) {
+        if (! $anneeName) {
             return null;
         }
 
@@ -199,46 +239,39 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
      */
     private function getNiveauEnum(?string $niveau): ?Niveau
     {
-        if (!$niveau) {
+        if (! $niveau) {
             return null;
         }
 
         // Normaliser le nom du niveau
         $niveau = strtolower(trim($niveau));
-        
+
         // Mapping des niveaux possibles selon les spécifications
         $niveauMapping = [
-            '3ème' => 'L1',
-            '3eme' => 'L1',
-            'troisième' => 'L1',
-            'troisieme' => 'L1',
-            'bepc' => 'L1',
-            'première' => 'L2',
-            'premiere' => 'L2',
-            'probatoire' => 'L2',
-            'terminale' => 'L3',
-            'baccalauréat' => 'L3',
-            'baccalaureat' => 'L3',
-            'bac' => 'L3',
-            'licence' => 'M1',
-            'ce' => 'M2',
-            
-            // Anciens mappings pour compatibilité
-            'l1' => 'L1',
-            'l2' => 'L2',
-            'l3' => 'L3',
-            'm1' => 'M1',
-            'm2' => 'M2',
-            'licence 1' => 'L1',
-            'licence 2' => 'L2',
-            'licence 3' => 'L3',
-            'master 1' => 'M1',
-            'master 2' => 'M2',
-            '1ere année' => 'L1',
-            '2eme année' => 'L2',
-            '3eme année' => 'L3',
-            '4eme année' => 'M1',
-            '5eme année' => 'M2',
+            '3ème' => '3eme',
+            '3eme' => '3eme',
+            'troisième' => '3eme',
+            'troisieme' => '3eme',
+            'bepc' => 'bepc',
+            'première' => 'premiere',
+            'premiere' => 'premiere',
+            'probatoire' => 'probatoire',
+            'terminale' => 'terminale',
+            'baccalauréat' => 'bacc',
+            'baccalaureat' => 'bacc',
+            'bac' => 'bacc',
+            'licence' => 'licence',
+            'licence 1' => 'licence',
+            'licence 2' => 'licence',
+            'licence 3' => 'licence',
+            'l1' => 'licence',
+            'l2' => 'licence',
+            'l3' => 'licence',
+            // Cas par défaut pour masters -> licence si pas de master, ou gérer l'erreur ?
+            // L'enum n'a pas M1/M2, donc on ne peut PAS mapper sur M1/M2.
+            // Si l'université gère Master, il faut ajouter Master à l'Enum.
+            // Pour l'instant, on mappe ce qu'on peut.
+            'cep' => 'cep',
         ];
 
         $normalizedNiveau = $niveauMapping[$niveau] ?? strtoupper($niveau);
@@ -258,12 +291,12 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
      */
     private function getRoleEnum(?string $role): Role
     {
-        if (!$role) {
+        if (! $role) {
             return Role::USER; // Par défaut USER au lieu de ETUDIANT
         }
 
         $role = strtolower(trim($role));
-        
+
         $roleMapping = [
             'user' => 'USER',
             'utilisateur' => 'USER',
@@ -293,7 +326,7 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
      */
     private function parseDate(?string $date): ?\DateTime
     {
-        if (!$date) {
+        if (! $date) {
             return null;
         }
 
@@ -302,14 +335,14 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
         } catch (\Exception $e) {
             // Essayer différents formats
             $formats = ['d/m/Y', 'Y-m-d', 'd-m-Y', 'm/d/Y'];
-            
+
             foreach ($formats as $format) {
                 $dateObj = \DateTime::createFromFormat($format, $date);
                 if ($dateObj) {
                     return $dateObj;
                 }
             }
-            
+
             throw new \Exception("Format de date invalide: {$date}");
         }
     }
@@ -317,13 +350,13 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
     /**
      * Nettoyer une chaîne de caractères
      */
-    private function cleanString(?string $value): ?string
+    private function cleanString(mixed $value): ?string
     {
         if ($value === null) {
             return null;
         }
 
-        return trim(preg_replace('/\s+/', ' ', $value));
+        return trim(preg_replace('/\s+/', ' ', (string) $value));
     }
 
     /**
@@ -332,25 +365,14 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
     private function isEmptyRow($row): bool
     {
         $requiredFields = ['name', 'email'];
-        
+
         foreach ($requiredFields as $field) {
-            if (!empty($row[$field])) {
+            if (! empty($row[$field])) {
                 return false;
             }
         }
-        
-        return true;
-    }
 
-    /**
-     * Validation des en-têtes
-     */
-    public function rules(): array
-    {
-        return [
-            'name' => 'required|string',
-            'email' => 'required|email',
-        ];
+        return true;
     }
 
     /**
@@ -370,30 +392,14 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
     }
 
     /**
-     * Gérer les erreurs de validation
-     */
-    public function onFailure(Failure ...$failures)
-    {
-        foreach ($failures as $failure) {
-            $this->errors[] = [
-                'row' => $failure->row(),
-                'attribute' => $failure->attribute(),
-                'errors' => $failure->errors(),
-                'values' => $failure->values()
-            ];
-            $this->failureCount++;
-        }
-    }
-
-    /**
      * Gérer les erreurs générales
      */
-    public function onError(\Throwable $e)
+    public function onError(\Throwable $e): void
     {
-        Log::error("Import Users Error: " . $e->getMessage());
+        Log::error('Import Users Error: '.$e->getMessage());
         $this->errors[] = [
             'row' => 'Général',
-            'error' => $e->getMessage()
+            'error' => $e->getMessage(),
         ];
         $this->failureCount++;
     }

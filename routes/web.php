@@ -35,9 +35,8 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
         // Export Excel des utilisateurs
         Route::get('users/export/all', [UserController::class, 'exportAll'])->name('users.export.all');
         Route::get('users/export/by-specialite', [UserController::class, 'exportBySpecialite'])->name('users.export.by.specialite');
-        
+
         Route::resource('users', UserController::class);
-    
 
         // Paramétrage académique
         Route::resource('annees', AnneeAcademiqueController::class);

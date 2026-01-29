@@ -8,12 +8,12 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-use Intervention\Image\ImageManager;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class ProfileController extends Controller
 {
@@ -24,7 +24,7 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         $user->load(['specialite', 'anneeAcademique']);
-        
+
         return view('profile.edit', [
             'user' => $user,
         ]);
@@ -61,35 +61,36 @@ class ProfileController extends Controller
      */
     private function handleProfileImage($file): ?string
     {
-        if (!$file) {
+        if (! $file) {
             return null;
         }
 
         try {
             // 📁 Générer un nom de fichier unique
-            $filename = 'profile_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $filename = 'profile_'.time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
 
             // 📁 Créer le dossier s'il n'existe pas (organisation par date)
-            $path = 'profiles/' . date('Y/m');
-            if (!Storage::disk('public')->exists($path)) {
+            $path = 'profiles/'.date('Y/m');
+            if (! Storage::disk('public')->exists($path)) {
                 Storage::disk('public')->makeDirectory($path, 0755, true);
             }
 
             // 🖼️ Optimiser l'image avec Intervention Image v3
-            $manager = new ImageManager(new Driver());
+            $manager = new ImageManager(new Driver);
             $image = $manager->read($file->getRealPath());
 
             // Redimensionner à 500x500 (portrait) avec crop
             $image->cover(500, 500);
 
             // Compresser et sauvegarder
-            $fullPath = $path . '/' . $filename;
+            $fullPath = $path.'/'.$filename;
             $image->toJpeg(85)->save(Storage::disk('public')->path($fullPath));
 
             return $fullPath;
 
         } catch (\Exception $e) {
-            Log::error('Erreur lors du traitement de l\'image de profil: ' . $e->getMessage());
+            Log::error('Erreur lors du traitement de l\'image de profil: '.$e->getMessage());
+
             throw new \Exception('Erreur lors du traitement de l\'image. Veuillez réessayer.');
         }
     }

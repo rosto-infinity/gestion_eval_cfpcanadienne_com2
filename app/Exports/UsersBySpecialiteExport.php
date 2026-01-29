@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace App\Exports;
 
-use App\Models\User;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-class UsersBySpecialiteExport implements FromCollection, WithHeadings, WithMapping, WithColumnWidths, WithStyles, WithTitle
+class UsersBySpecialiteExport implements FromCollection, WithColumnWidths, WithHeadings, WithMapping, WithStyles, WithTitle
 {
     protected $users;
 
@@ -53,7 +52,7 @@ class UsersBySpecialiteExport implements FromCollection, WithHeadings, WithMappi
             'Statut',
             'Adresse',
             'Pièce d\'identité',
-            'Date de création'
+            'Date de création',
         ];
     }
 
@@ -114,7 +113,7 @@ class UsersBySpecialiteExport implements FromCollection, WithHeadings, WithMappi
                 ],
                 'fill' => [
                     'fillType' => Fill::FILL_SOLID,
-                    'startColor' => ['argb' => 'FFDC3545']
+                    'startColor' => ['argb' => 'FFDC3545'],
                 ],
                 'alignment' => [
                     'horizontal' => Alignment::HORIZONTAL_LEFT,
@@ -123,7 +122,7 @@ class UsersBySpecialiteExport implements FromCollection, WithHeadings, WithMappi
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,
-                        'color' => ['argb' => 'FF000000']
+                        'color' => ['argb' => 'FF000000'],
                     ],
                 ],
             ],

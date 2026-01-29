@@ -4,28 +4,27 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Enums\Role;
-use App\Models\User;
 use App\Enums\Niveau;
-use Illuminate\View\View;
-use App\Models\Specialite;
-use Illuminate\Support\Str;
-use App\Exports\UsersExport;
-use App\Imports\UsersImport;
-use Illuminate\Http\Request;
-
-use App\Models\AnneeAcademique;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
-use Intervention\Image\ImageManager;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Http\RedirectResponse;
-use App\Http\Requests\StoreUserRequest;
-use Illuminate\Support\Facades\Storage;
+use App\Enums\Role;
 use App\Exports\UsersBySpecialiteExport;
+use App\Exports\UsersExport;
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Imports\UsersImport;
+use App\Models\AnneeAcademique;
+use App\Models\Specialite;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use Intervention\Image\Laravel\Facades\Image;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -46,12 +45,25 @@ class UserController extends Controller
         }
 
         // Filtre par année académique
-        if ($anneeId = $request->input('annee_id')) {
+        $anneeId = $request->input('annee_id');
+        if ($anneeId) {
             $query->where('annee_academique_id', $anneeId);
+        } else {
+            // Par defaut, on prend l'annee active si elle existe
+            $anneeActive = AnneeAcademique::active()->first();
+            if ($anneeActive) {
+                $anneeId = $anneeActive->id;
+                $query->where('annee_academique_id', $anneeId);
+            }
         }
 
         // ✅ Paginer APRÈS avoir construit la query
         $users = $query->ordered()->paginate(20);
+
+        // On passe l'année selectionnée (ou par defaut) à la vue pour le filtre
+        if (! $request->has('annee_id') && isset($anneeActive)) {
+            $request->merge(['annee_id' => $anneeActive->id]);
+        }
 
         $specialites = Specialite::ordered()->get();
         $annees = AnneeAcademique::ordered()->get();
@@ -230,7 +242,7 @@ class UserController extends Controller
             }
 
             // 🖼️ Optimiser l'image avec Intervention Image v3
-            $manager = new ImageManager(new Driver());
+            $manager = new ImageManager(new Driver);
             $image = $manager->read($file->getRealPath());
 
             // Redimensionner à 500x500 (portrait) avec crop
@@ -257,28 +269,29 @@ class UserController extends Controller
         try {
             $specialiteId = $request->input('specialite_id');
             $anneeId = $request->input('annee_id');
-            
+
             $filename = 'utilisateurs';
-            
+
             if ($specialiteId) {
                 $specialite = Specialite::find($specialiteId);
                 $filename .= '_'.$specialite->code;
             }
-            
+
             if ($anneeId) {
                 $annee = AnneeAcademique::find($anneeId);
                 $filename .= '_'.$annee->libelle;
             }
-            
+
             $filename .= '_'.date('Y-m-d_H-i').'.xlsx';
 
             return Excel::download(
-                new UsersExport($specialiteId, $anneeId), 
+                new UsersExport($specialiteId, $anneeId),
                 $filename
             );
 
         } catch (\Exception $e) {
             Log::error('Erreur UserController@exportAll: '.$e->getMessage());
+
             return back()->with('error', 'Erreur lors de l\'exportation: '.$e->getMessage());
         }
     }
@@ -289,18 +302,18 @@ class UserController extends Controller
     public function exportBySpecialite(Request $request)
     {
         try {
-            $specialites = Specialite::with(['users' => function($query) use ($request) {
+            $specialites = Specialite::with(['users' => function ($query) use ($request) {
                 $query->with(['anneeAcademique']);
-                
+
                 if ($anneeId = $request->input('annee_id')) {
                     $query->where('annee_academique_id', $anneeId);
                 }
-                
+
                 return $query->orderBy('name');
             }])->get();
 
             $exports = [];
-            
+
             foreach ($specialites as $specialite) {
                 if ($specialite->users->isNotEmpty()) {
                     $exports[] = new UsersBySpecialiteExport($specialite->users);
@@ -320,6 +333,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Erreur UserController@exportBySpecialite: '.$e->getMessage());
+
             return back()->with('error', 'Erreur lors de l\'exportation: '.$e->getMessage());
         }
     }
@@ -347,41 +361,40 @@ class UserController extends Controller
             ]);
 
             $file = $request->file('file');
-            
+
             // Créer l'instance d'import
-            $import = new UsersImport();
-            
+            $import = new UsersImport;
+
             // Importer le fichier
             Excel::import($import, $file);
-            
+
             // Obtenir le rapport d'importation
             $report = $import->getImportReport();
-            
+
             // Préparer le message de résultat
-            $message = "Importation terminée : ";
+            $message = 'Importation terminée : ';
             $message .= "{$report['success_count']} utilisateur(s) créé(s) avec succès";
-            
+
             if ($report['failure_count'] > 0) {
                 $message .= ", {$report['failure_count']} erreur(s)";
             }
-            
+
             if ($report['skipped_count'] > 0) {
                 $message .= ", {$report['skipped_count']} ligne(s) ignorées";
             }
-            
+
             // Stocker les erreurs en session pour affichage
-            if (!empty($report['errors'])) {
+            if (! empty($report['errors'])) {
                 session(['import_errors' => $report['errors']]);
             }
-            
-            return redirect()
-                ->route('users.index')
+
+            return back()
                 ->with('success', $message)
                 ->with('import_report', $report);
 
         } catch (\Exception $e) {
             Log::error('Erreur UserController@importStore: '.$e->getMessage());
-            
+
             return back()
                 ->withInput()
                 ->with('error', 'Erreur lors de l\'importation: '.$e->getMessage());
@@ -394,75 +407,11 @@ class UserController extends Controller
     public function importTemplate()
     {
         try {
-            // Créer un fichier Excel avec les en-têtes de base
-            $headers = [
-                'name' => 'Nom et Prénom',
-                'email' => 'Email',
-                'password' => 'Mot de passe (optionnel)',
-                'matricule' => 'Matricule (optionnel - sera généré automatiquement)',
-                'sexe' => 'Sexe (M/F/Autre)',
-                'niveau' => 'Niveau',
-                'specialite' => 'Spécialité',
-                'annee_academique' => 'Année Académique',
-                'date_naissance' => 'Date de naissance (DD/MM/YYYY)',
-                'lieu_naissance' => 'Lieu de naissance',
-                'nationalite' => 'Nationalité',
-                'telephone' => 'Téléphone',
-                'telephone_urgence' => 'Téléphone d\'urgence',
-                'adresse' => 'Adresse',
-                'piece_identite' => 'Pièce d\'identité',
-                'statut' => 'Statut (actif/inactif/suspendu/archive)',
-            ];
-
-            return Excel::download(new class($headers) implements \Maatwebsite\Excel\Concerns\FromArray, \Maatwebsite\Excel\Concerns\WithHeadings, \Maatwebsite\Excel\Concerns\WithStyles {
-                protected $headers;
-
-                public function __construct(array $headers)
-                {
-                    $this->headers = $headers;
-                }
-
-                public function array(): array
-                {
-                    return [$this->headers];
-                }
-
-                public function headings(): array
-                {
-                    return array_values($this->headers);
-                }
-
-                public function styles($sheet)
-                {
-                    return [
-                        // Style pour la première ligne (en-têtes)
-                        1 => [
-                            'font' => [
-                                'bold' => true,
-                                'size' => 12,
-                            ],
-                            'alignment' => [
-                                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                            ],
-                            'fill' => [
-                                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                                'startColor' => ['argb' => 'FFE1E5E9'],
-                            ],
-                            'borders' => [
-                                'allBorders' => [
-                                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                                    'color' => ['argb' => 'FF000000'],
-                                ],
-                            ],
-                        ],
-                    ];
-                }
-            }, 'modele_import_utilisateurs.xlsx');
+            return Excel::download(new \App\Exports\UserTemplateExport, 'modele_import_utilisateurs.xlsx');
 
         } catch (\Exception $e) {
             Log::error('Erreur UserController@importTemplate: '.$e->getMessage());
-            
+
             return back()->with('error', 'Erreur lors du téléchargement du modèle: '.$e->getMessage());
         }
     }

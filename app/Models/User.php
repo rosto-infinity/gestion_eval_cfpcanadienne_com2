@@ -221,7 +221,7 @@ class User extends Authenticatable
         return $query->whereNotIn('role', [
             Role::SUPERADMIN->value,
             Role::ADMIN->value,
-            Role::MANAGER->value
+            Role::MANAGER->value,
         ]);
     }
 

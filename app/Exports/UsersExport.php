@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Exports;
 
 use App\Models\User;
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-class UsersExport implements FromQuery, WithHeadings, WithMapping, WithColumnWidths, WithStyles
+class UsersExport implements FromQuery, WithColumnWidths, WithHeadings, WithMapping, WithStyles
 {
     protected $specialiteId;
+
     protected $anneeId;
 
     public function __construct(?int $specialiteId = null, ?int $anneeId = null)
@@ -60,7 +60,7 @@ class UsersExport implements FromQuery, WithHeadings, WithMapping, WithColumnWid
             'Statut',
             'Adresse',
             'Pièce d\'identité',
-            'Date de création'
+            'Date de création',
         ];
     }
 
@@ -121,7 +121,7 @@ class UsersExport implements FromQuery, WithHeadings, WithMapping, WithColumnWid
                 ],
                 'fill' => [
                     'fillType' => Fill::FILL_SOLID,
-                    'startColor' => ['argb' => 'FFDC3545']
+                    'startColor' => ['argb' => 'FFDC3545'],
                 ],
                 'alignment' => [
                     'horizontal' => Alignment::HORIZONTAL_CENTER,
@@ -130,7 +130,7 @@ class UsersExport implements FromQuery, WithHeadings, WithMapping, WithColumnWid
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,
-                        'color' => ['argb' => 'FF000000']
+                        'color' => ['argb' => 'FF000000'],
                     ],
                 ],
             ],

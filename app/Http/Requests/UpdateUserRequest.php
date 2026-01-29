@@ -95,7 +95,7 @@ class UpdateUserRequest extends FormRequest
 
             'specialite_id.required' => 'La spécialité est obligatoire.',
             'specialite_id.exists' => 'La spécialité sélectionnée n\'existe pas.',
-            
+
             'annee_academique_id.required' => 'L\'année académique est obligatoire.',
             'annee_academique_id.exists' => 'L\'année académique sélectionnée n\'existe pas.',
 
