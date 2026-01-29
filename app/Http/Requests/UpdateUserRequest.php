@@ -27,16 +27,16 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'matricule' => 'nullable|string|max:20|unique:users,matricule,'.$this->user->id,
+            'matricule' => 'nullable|string|max:20|unique:users,matricule,' . $this->user->id,
             'name' => 'required|string|max:255',
             'role' => ['nullable', Rule::enum(Role::class)],
-            'email' => 'required|email|unique:users,email,'.$this->user->id,
+            'email' => 'required|email|unique:users,email,' . $this->user->id,
             'password' => ['nullable', 'confirmed', Password::defaults()],
-            'sexe' => 'required|in:M,F,Autre',
-            'niveau' => 'required|in:'.implode(',', Niveau::values()),
+            'sexe' => 'sometimes|required|in:M,F,Autre',
+            'niveau' => 'sometimes|required|in:' . implode(',', Niveau::values()),
             'profile' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
-            'specialite_id' => 'required|exists:specialites,id',
-            'annee_academique_id' => 'required|exists:annees_academiques,id',
+            'specialite_id' => 'sometimes|required|exists:specialites,id',
+            'annee_academique_id' => 'sometimes|required|exists:annees_academiques,id',
 
             // Informations civiles
             'date_naissance' => 'nullable|date|before:today',
