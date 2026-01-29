@@ -145,20 +145,22 @@
                         </div>
 
                         <!-- Sexe -->
+                        @if(!in_array($user->role->value, [\App\Enums\Role::SUPERADMIN->value, \App\Enums\Role::ADMIN->value, \App\Enums\Role::MANAGER->value]))
                         <div>
                             <label for="sexe" class="block text-sm font-semibold text-foreground mb-2">
                                 Sexe
                                 <span class="text-destructive font-bold">*</span>
                             </label>
-                            <select id="sexe" name="sexe" required
-                                class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('sexe') border-destructive ring-2 ring-destructive/50 @enderror">
+                            <select 
+                                id="sexe" 
+                                name="sexe" 
+                                @if(!in_array($user->role->value, [\App\Enums\Role::SUPERADMIN->value, \App\Enums\Role::ADMIN->value, \App\Enums\Role::MANAGER->value])) required @endif
+                                class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('sexe') border-destructive ring-2 ring-destructive/50 @enderror"
+                            >
                                 <option value="">-- Sélectionner --</option>
-                                <option value="M" {{ old('sexe', $user->sexe) === 'M' ? 'selected' : '' }}>Masculin
-                                </option>
-                                <option value="F" {{ old('sexe', $user->sexe) === 'F' ? 'selected' : '' }}>Féminin
-                                </option>
-                                <option value="Autre" {{ old('sexe', $user->sexe) === 'Autre' ? 'selected' : '' }}>Autre
-                                </option>
+                                <option value="M" {{ old('sexe', $user->sexe) === 'M' ? 'selected' : '' }}>Masculin</option>
+                                <option value="F" {{ old('sexe', $user->sexe) === 'F' ? 'selected' : '' }}>Féminin</option>
+                                <option value="Autre" {{ old('sexe', $user->sexe) === 'Autre' ? 'selected' : '' }}>Autre</option>
                             </select>
                             @error('sexe')
                                 <p class="mt-2 text-sm text-destructive font-medium flex items-center gap-1">
@@ -171,6 +173,7 @@
                                 </p>
                             @enderror
                         </div>
+                        @endif
 
                         <!-- Photo de profil -->
                         <div>
@@ -562,6 +565,7 @@
                         <div class="p-6 space-y-6">
 
                                                  <!-- Niveau -->
+                        @if(!in_array($user->role->value, [\App\Enums\Role::SUPERADMIN->value, \App\Enums\Role::ADMIN->value, \App\Enums\Role::MANAGER->value]))
                         <div>
                             <label for="niveau" class="block text-sm font-semibold text-foreground mb-2">
                                 Niveau 
@@ -570,7 +574,7 @@
                             <select 
                                 id="niveau" 
                                 name="niveau" 
-                                required
+                                @if(!in_array($user->role->value, [\App\Enums\Role::SUPERADMIN->value, \App\Enums\Role::ADMIN->value, \App\Enums\Role::MANAGER->value])) required @endif
                                 class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('niveau') border-destructive ring-2 ring-destructive/50 @enderror"
                             >
                                 <option value="">-- Sélectionner --</option>
@@ -596,62 +600,69 @@
                                 </p>
                             @enderror
                         </div>
+                        @endif
                             <!-- Spécialité -->
-                            <div>
-                                <label for="specialite_id" class="block text-sm font-semibold text-foreground mb-2">
-                                    Spécialité
-                                </label>
-                                <select id="specialite_id" name="specialite_id"
-                                    class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('specialite_id') border-destructive ring-2 ring-destructive/50 @enderror">
-                                    <option value="">-- Sélectionner --</option>
-                                    @foreach ($specialites as $specialite)
-                                        <option value="{{ $specialite->id }}"
-                                            {{ old('specialite_id', $user->specialite_id) == $specialite->id ? 'selected' : '' }}>
-                                            {{ $specialite->intitule }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('specialite_id')
-                                    <p class="mt-2 text-sm text-destructive font-medium flex items-center gap-1">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        {{ $message }}
-                                    </p>
-                                @enderror
-                            </div>
+                        @if(!in_array($user->role->value, [\App\Enums\Role::SUPERADMIN->value, \App\Enums\Role::ADMIN->value, \App\Enums\Role::MANAGER->value]))
+                        <div>
+                            <label for="specialite_id" class="block text-sm font-semibold text-foreground mb-2">
+                                Spécialité
+                                @if(!in_array($user->role->value, [\App\Enums\Role::SUPERADMIN->value, \App\Enums\Role::ADMIN->value, \App\Enums\Role::MANAGER->value])) <span class="text-destructive font-bold">*</span> @endif
+                            </label>
+                            <select id="specialite_id" name="specialite_id"
+                                class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('specialite_id') border-destructive ring-2 ring-destructive/50 @enderror">
+                                <option value="">-- Sélectionner --</option>
+                                @foreach ($specialites as $specialite)
+                                    <option value="{{ $specialite->id }}"
+                                        {{ old('specialite_id', $user->specialite_id) == $specialite->id ? 'selected' : '' }}>
+                                        {{ $specialite->intitule }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('specialite_id')
+                                <p class="mt-2 text-sm text-destructive font-medium flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                        @endif
 
-                            <!-- Année Académique -->
-                            <div>
-                                <label for="annee_academique_id" class="block text-sm font-semibold text-foreground mb-2">
-                                    Année Académique
-                                </label>
-                                <select id="annee_academique_id" name="annee_academique_id"
-                                    class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('annee_academique_id') border-destructive ring-2 ring-destructive/50 @enderror">
-                                    <option value="">-- Sélectionner --</option>
-                                    @foreach ($anneesAcademiques as $annee)
-                                        <option value="{{ $annee->id }}"
-                                            {{ old('annee_academique_id', $user->annee_academique_id) == $annee->id ? 'selected' : '' }}>
-                                            {{ $annee->libelle }}
-                                            @if ($annee->is_active)
-                                                <span class="text-primary font-semibold">(Active)</span>
-                                            @endif
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('annee_academique_id')
-                                    <p class="mt-2 text-sm text-destructive font-medium flex items-center gap-1">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        {{ $message }}
-                                    </p>
-                                @enderror
-                            </div>
+                        <!-- Année Académique -->
+                        @if(!in_array($user->role->value, [\App\Enums\Role::SUPERADMIN->value, \App\Enums\Role::ADMIN->value, \App\Enums\Role::MANAGER->value]))
+                        <div>
+                            <label for="annee_academique_id" class="block text-sm font-semibold text-foreground mb-2">
+                                Année Académique
+                                @if(!in_array($user->role->value, [\App\Enums\Role::SUPERADMIN->value, \App\Enums\Role::ADMIN->value, \App\Enums\Role::MANAGER->value])) <span class="text-destructive font-bold">*</span> @endif
+                            </label>
+                            <select id="annee_academique_id" name="annee_academique_id"
+                                class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('annee_academique_id') border-destructive ring-2 ring-destructive/50 @enderror">
+                                <option value="">-- Sélectionner --</option>
+                                @foreach ($anneesAcademiques as $annee)
+                                    <option value="{{ $annee->id }}"
+                                        {{ old('annee_academique_id', $user->annee_academique_id) == $annee->id ? 'selected' : '' }}>
+                                        {{ $annee->libelle }}
+                                        @if ($annee->is_active)
+                                            <span class="text-primary font-semibold">(Active)</span>
+                                        @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('annee_academique_id')
+                                <p class="mt-2 text-sm text-destructive font-medium flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                        @endif
 
                         </div>
                     </div>
@@ -730,7 +741,7 @@
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500">
                     </div>
 
-                    <!-- Rôle (La partie critique) -->
+                    <!-- Rôle -->
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700">Rôle attribué</label>
                         <select name="role"
@@ -747,10 +758,9 @@
                         @enderror
                     </div>
 
-                    <div class="flex justify-between items-center border-t pt-4">
-                        <a href="{{ route('users.index') }}" class="text-sm text-gray-600 hover:underline">Annuler</a>
+                    <div class="mb-4">
                         <button type="submit"
-                            class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">
+                            class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition">
                             Enregistrer les modifications
                         </button>
                     </div>
@@ -788,7 +798,6 @@
             </div>
         @endif
     </div>
-
 
 
 
