@@ -10,6 +10,7 @@ enum Role: string
 {
     use EnumHelpers;
 
+    // enums
     case SUPERADMIN = 'superadmin';
     case ADMIN = 'admin';
     case MANAGER = 'manager';

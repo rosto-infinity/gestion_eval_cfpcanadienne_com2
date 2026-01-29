@@ -34,7 +34,7 @@ class UsersImport implements SkipsOnError, ToCollection, WithBatchInserts, WithH
     public $skippedCount = 0;
 
     /**
-     * Importer les données depuis la collection
+     * -Importer les données depuis la collection
      */
     public function collection(Collection $rows): void
     {
