@@ -34,7 +34,7 @@ class BilanCompetence extends Model
         'moyenne_generale' => 'decimal:2',
     ];
 
-    // Relations
+    // --Relations
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
