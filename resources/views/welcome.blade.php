@@ -1,161 +1,38 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layouts.public')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@section('title', 'Gestion Évaluations Académiques | Solution Complète')
 
-    <title>{{ config('app.name', 'Gestion Évaluations Académiques | Solution Complète') }}</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-
-    <!-- Styles / Scripts -->
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @endif
-    <style>
-        /* Styles personnalisés supplémentaires */
-        html {
-            scroll-behavior: smooth;
-        }
-.parent {
-    position: relative;
-    overflow: hidden;
-    height: 144px; /* 3 * 48px (h-16 + space-y-3) */
-}
-
-.parent.smooth-scroll > div {
-    position: absolute;
-    width: 100%;
-}
-
-@keyframes smoothScrollUp {
-    0% {
-        transform: translateY(144px); /* Démarre du bas */
+@push('styles')
+<style>
+    .parent {
+        position: relative;
+        overflow: hidden;
+        height: 144px;
     }
-    100% {
-        transform: translateY(-48px); /* Monte vers le haut et disparaît */
+    .parent.smooth-scroll > div {
+        position: absolute;
+        width: 100%;
     }
-}
-.enfant1 {
-    animation: smoothScrollUp 12s linear infinite;
-    animation-delay: 0s;
-}
+    @keyframes smoothScrollUp {
+        0% { transform: translateY(144px); }
+        100% { transform: translateY(-48px); }
+    }
+    .enfant1 { animation: smoothScrollUp 12s linear infinite; animation-delay: 0s; }
+    .enfant2 { animation: smoothScrollUp 12s linear infinite; animation-delay: 4s; }
+    .enfant3 { animation: smoothScrollUp 12s linear infinite; animation-delay: 8s; }
 
-.enfant2 {
-    animation: smoothScrollUp 12s linear infinite;
-    animation-delay: 4s;
-}
+    .gradient-text {
+        background: linear-gradient(to right, #2563eb, #9333ea);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+</style>
+@endpush
 
-.enfant3 {
-    animation: smoothScrollUp 12s linear infinite;
-    animation-delay: 8s;
-}
-
-
-
-
-        /* Micro-interactions */
-        .feature-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
-        }
-
-        .gradient-text {
-            background: linear-gradient(to right, #2563eb, #9333ea);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Animation de fondu au chargement */
-        .fade-in-up {
-            animation: fadeInUp 0.8s ease-out forwards;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .delay-100 {
-            animation-delay: 0.1s;
-        }
-
-        .delay-200 {
-            animation-delay: 0.2s;
-        }
-
-        .delay-300 {
-            animation-delay: 0.3s;
-        }
-    </style>
-</head>
-
-<body
-    class="bg-background text-foreground antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen relative overflow-x-hidden">
-
-    <!-- Grille de fond décorative -->
-    <div class="fixed inset-0 bg-grid-pattern pointer-events-none z-0"></div>
-    <!-- Halo d'ambiance rouge -->
-    <div
-        class="fixed top-0 right-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] pointer-events-none z-0">
-    </div>
-
-    <!-- =======================
-         NAVIGATION
-         ======================= -->
-    <header class="relative z-50 w-full max-w-7xl mx-auto px-6 lg:px-8 py-6 flex justify-between items-center">
-        <!-- Logo -->
-        <div class="flex items-center gap-2 font-bold text-xl tracking-tight">
-            <div
-                class="py-2 rounded-lg flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
-                <a href="#" class="brand mr-2">
-                    <img src="/android-chrome-192x192.png" alt="logo-app-cfpc" style="height:30px; margin-left:13px">
-                </a>
-            </div>
-            <span>Gestion<span class="text-primary">Eval</span></span>
-        </div>
-
-        <!-- Desktop Nav -->
-        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-            <a href="#features" class="hover:text-primary transition-colors">Fonctionnalités</a>
-            <a href="#methodology" class="hover:text-primary transition-colors">Méthodologie</a>
-            <a href="#tech" class="hover:text-primary transition-colors">Technologie</a>
-        </nav>
-
-        <!-- Auth Buttons -->
-        <div class="flex items-center gap-3">
-            @if (Route::has('login'))
-                @auth
-                    <a href="{{ url('/dashboard') }}"
-                        class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
-                        Dashboard
-                    </a>
-                @else
-                    <a href="{{ route('login') }}" class="text-sm font-medium hover:text-primary transition-colors">Se
-                        connecter</a>
-                    @if (Route::has('register'))
-                        <a href="{{ route('login') }}"
-                            class="bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-sm shadow-primary/20">
-                            S'enrengistrer
-                        </a>
-                    @endif
-                @endauth
-            @endif
-        </div>
-    </header>
-
-    <main class="relative z-10 flex-grow">
+@section('content')
 
         <!-- =======================
              HERO SECTION
@@ -691,81 +568,21 @@
             </div>
         </section>
 
-    </main>
+@endsection
 
-    <footer class="bg-background border-t border-border py-12">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 grid md:grid-cols-4 gap-8 text-sm">
-            <!-- Logo et Description -->
-            <div>
-                <div class="flex items-center gap-2 font-bold text-lg mb-4">
-                    <div class="flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
-                        <a href="#" class="brand">
-                            <img src="/android-chrome-192x192.png" alt="logo-app-cfpc" style="height:35px; margin-left:10px">
-                        </a>
-                    </div>
-                    <span>Gestion<span class="text-primary">Eval</span></span>
-                </div>
-                <p class="text-muted-foreground mb-6">
-                    Solution de gestion académique développée avec passion pour l'éducation.
-                </p>
-                <p class="text-muted-foreground text-xs">
-                    &copy; 2025 EvalAcad. Tous droits réservés.
-                </p>
-            </div>
-
-            <!-- Application -->
-            <div>
-                <h4 class="font-bold text-foreground mb-4">Application</h4>
-                <ul class="space-y-2 text-muted-foreground">
-                    <li><a href="#features" class="hover:text-primary transition-colors">Fonctionnalités</a></li>
-                    <li><a href="#methodology" class="hover:text-primary transition-colors">Calculs</a></li>
-                    <li><a href="#tech" class="hover:text-primary transition-colors">Technique</a></li>
-                    <li><a href="{{ route('login') }}" class="hover:text-primary transition-colors">Connexion</a></li>
-                </ul>
-            </div>
-
-            <!-- Support -->
-            <div>
-                <h4 class="font-bold text-foreground mb-4">Support</h4>
-                <ul class="space-y-2 text-muted-foreground">
-                    <li><a href="#" class="hover:text-primary transition-colors">Documentation</a></li>
-                    <li><a href="#" class="hover:text-primary transition-colors">Contact</a></li>
-                    <li><a href="#" class="hover:text-primary transition-colors">Aide</a></li>
-                    <li><a href="#" class="hover:text-primary transition-colors">FAQ</a></li>
-                </ul>
-            </div>
-
-            <!-- Légal -->
-            <div>
-                <h4 class="font-bold text-foreground mb-4">Légal</h4>
-                <ul class="space-y-2 text-muted-foreground">
-                    <li><a href="#" class="hover:text-primary transition-colors">Confidentialité</a></li>
-                    <li><a href="#" class="hover:text-primary transition-colors">Conditions d'utilisation</a></li>
-                    <li><a href="#" class="hover:text-primary transition-colors">Mentions légales</a></li>
-                    <li><span class="text-muted-foreground">Par WAFFO LELE Rostand</span></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Script simple pour gérer l'état actif des liens au scroll -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Animation au défilement simple
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = 1;
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, {
-                threshold: 0.1
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
             });
-
-            // Sélectionne tous les éléments à animer si besoin (optionnel car le CSS le gère déjà au chargement)
+        }, {
+            threshold: 0.1
         });
-    </script>
-</body>
-
-</html>
+    });
+</script>
+@endpush

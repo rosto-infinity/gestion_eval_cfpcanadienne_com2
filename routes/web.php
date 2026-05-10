@@ -19,6 +19,10 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::get('/changelog', fn () => view('changelog'))
+    ->middleware(['auth', 'verified'])
+    ->name('changelog');
+
 // Routes pour les ressources protégées par authentification
 Route::middleware(['auth', 'verified'])->group(function (): void {
 
