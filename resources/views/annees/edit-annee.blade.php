@@ -15,7 +15,7 @@
                 </svg>
             </a>
             <div>
-                <h1 class="text-3xl font-bold text-foreground">✏️ Modifier l'Année Académique</h1>
+                <h1 class="text-3xl font-bold text-foreground"><i class='bx bx-edit'></i> Modifier l'Année Académique</h1>
                 <p class="mt-1 text-sm text-muted-foreground">
                     Vous pouvez ici modifier les informations de l'année académique sélectionnée.
                 </p>
@@ -241,7 +241,7 @@
                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
             </svg>
             <div class="text-sm text-muted-foreground">
-                <p class="font-semibold text-foreground mb-2">📝 Conseils de modification :</p>
+                <p class="font-semibold text-foreground mb-2"><i class='bx bx-pencil'></i> Conseils de modification :</p>
                 <ul class="space-y-1 list-disc list-inside">
                     <li>Vérifiez bien le libellé avant de valider</li>
                     <li>La date de fin doit être postérieure à la date de début</li>

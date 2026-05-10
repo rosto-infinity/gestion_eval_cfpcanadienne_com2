@@ -357,9 +357,9 @@
                     <div class="mention-badge {{ $mentionClass }}">{{ $mention }}</div>
                     <div style="font-size: 9px; margin-top: 5px;">
                         @if($bilan->moyenne_generale >= 10)
-                            ✅ Admis
+                            <i class='bx bx-check-circle'></i> Admis
                         @else
-                            ❌ Ajourné
+                            <i class='bx bx-x-circle'></i> Ajourné
                         @endif
                     </div>
                 </div>
@@ -367,7 +367,7 @@
         </div>
 
         <!-- Détail du calcul -->
-        <div class="section-title">📊 DÉTAIL DU CALCUL</div>
+        <div class="section-title"><i class='bx bx-bar-chart-alt-2'></i> DÉTAIL DU CALCUL</div>
 
         @php
             $moyS1 = $evaluationsSemestre1->avg('note') ?? 0;
@@ -433,7 +433,7 @@
         </div>
 
         <!-- Évaluations Semestre 1 -->
-        <div class="section-title">📚 ÉVALUATIONS SEMESTRE 1</div>
+        <div class="section-title"><i class='bx bx-book-open'></i> ÉVALUATIONS SEMESTRE 1</div>
         
         @if($evaluationsSemestre1->isEmpty())
         <div class="empty-message">Aucune évaluation pour le semestre 1</div>
@@ -482,7 +482,7 @@
         @endif
 
         <!-- Évaluations Semestre 2 -->
-        <div class="section-title" style="background: #007bff;">📚 ÉVALUATIONS SEMESTRE 2</div>
+        <div class="section-title" style="background: #007bff;"><i class='bx bx-book-open'></i> ÉVALUATIONS SEMESTRE 2</div>
         
         @if($evaluationsSemestre2->isEmpty())
         <div class="empty-message">Aucune évaluation pour le semestre 2</div>
@@ -533,7 +533,7 @@
         <!-- Observations -->
         @if($bilan->observations)
         <div class="observations-box">
-            <div class="observations-title">📝 Observations</div>
+            <div class="observations-title"><i class='bx bx-pencil'></i> Observations</div>
             <div class="observations-text">{{ $bilan->observations }}</div>
         </div>
         @endif

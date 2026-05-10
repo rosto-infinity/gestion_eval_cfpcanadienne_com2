@@ -7,7 +7,7 @@
     <!-- En-tête -->
     <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h1 class="text-4xl font-bold text-foreground">📅 Années Académiques</h1>
+            <h1 class="text-4xl font-bold text-foreground"><i class='bx bx-calendar'></i> Années Académiques</h1>
             <p class="mt-2 text-sm text-muted-foreground">Gestion des périodes scolaires et calendriers</p>
         </div>
         <a href="{{ route('annees.create') }}" 
@@ -86,7 +86,7 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 @if($annee->is_active)
-                                    <span class="text-xl">⭐</span>
+                                    <span class="text-xl"><i class='bx bxs-star' style='color:var(--primary)'></i></span>
                                 @else
                                     <div class="w-6 h-6 rounded-full bg-muted/30"></div>
                                 @endif

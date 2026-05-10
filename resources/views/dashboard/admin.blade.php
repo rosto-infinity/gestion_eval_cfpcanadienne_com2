@@ -78,7 +78,7 @@
                 </div>
             </div>
             <div class="role-stat-card">
-                <div class="role-icon admin">🛡️</div>
+                <div class="role-icon admin"><i class='bx bx-shield-quarter'></i></div>
                 <div class="role-info">
                     <h4>Admin</h4>
                     <p>{{ $roleStats['admin'] }}</p>

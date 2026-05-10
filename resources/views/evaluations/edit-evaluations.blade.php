@@ -21,7 +21,7 @@
     <div class="mb-8">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-bold text-foreground">✏️ Modifier l'Évaluation</h1>
+                <h1 class="text-3xl font-bold text-foreground"><i class="bx bx-edit"></i> Modifier l'Évaluation</h1>
                 <p class="mt-2 text-sm text-muted-foreground">
                     Mettre à jour la note de l'étudiant
                 </p>
@@ -266,7 +266,7 @@
                         </div>
                     </div>
                     <div class="flex items-start gap-2 p-2 bg-muted/30 rounded">
-                        <span class="text-accent font-bold">✏️</span>
+                        <span class="text-accent font-bold"><i class="bx bx-edit"></i></span>
                         <div>
                             <p class="font-medium text-foreground">Modifiée</p>
                             <p>{{ $evaluation->updated_at->format('d/m/Y H:i') }}</p>
@@ -282,7 +282,7 @@
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                     </svg>
                     <div>
-                        <h3 class="text-xs font-bold text-blue-900 dark:text-blue-100 uppercase tracking-wide mb-2">💡 Aide</h3>
+                        <h3 class="text-xs font-bold text-blue-900 dark:text-blue-100 uppercase tracking-wide mb-2"><i class="bx bx-bulb"></i> Aide</h3>
                         <ul class="text-xs text-blue-800 dark:text-blue-200 space-y-1.5">
                             <li class="flex items-start gap-1.5">
                                 <span class="font-bold">•</span>
@@ -388,27 +388,27 @@ function updateNoteAppreciation() {
     if (note >= 16) {
         appreciation = 'Très Bien';
         badgeClass = 'bg-green-100 text-green-700';
-        emoji = '🌟';
+        emoji = '<i class="bx bx-star"></i>';
     } else if (note >= 14) {
         appreciation = 'Bien';
         badgeClass = 'bg-green-100 text-green-700';
-        emoji = '✅';
+        emoji = '<i class="bx bx-check-circle"></i>';
     } else if (note >= 12) {
         appreciation = 'Assez Bien';
         badgeClass = 'bg-yellow-100 text-yellow-700';
-        emoji = '👍';
+        emoji = '<i class="bx bx-like"></i>';
     } else if (note >= 10) {
         appreciation = 'Passable';
         badgeClass = 'bg-orange-100 text-orange-700';
-        emoji = '⚠️';
+        emoji = '<i class="bx bx-error-circle"></i>';
     } else if (note > 0) {
         appreciation = 'Insuffisant';
         badgeClass = 'bg-red-100 text-red-700';
-        emoji = '❌';
+        emoji = '<i class="bx bx-x-circle"></i>';
     } else {
         appreciation = 'Aucune note';
         badgeClass = 'bg-gray-100 text-gray-700';
-        emoji = '📝';
+        emoji = '<i class="bx bx-pencil"></i>';
     }
     
     // Mise à jour de l'affichage

@@ -148,7 +148,7 @@
                 <!-- Aperçu du calcul -->
                 <div id="calculation-preview" class="hidden p-6 bg-gradient-to-br from-primary/5 to-secondary border border-border rounded-xl shadow-lg">
                     <h3 class="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
-                        <span>📊</span> Aperçu du calcul
+                        <span><i class='bx bx-bar-chart-alt-2'></i></span> Aperçu du calcul
                     </h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -172,7 +172,7 @@
                     </div>
 
                     <div class="bg-background/50 border border-border rounded-md p-3 text-xs text-muted-foreground">
-                        <p class="font-medium text-foreground mb-1">ℹ️ Note importante :</p>
+                        <p class="font-medium text-foreground mb-1"><i class='bx bx-info-circle'></i> Note importante :</p>
                         <p>La moyenne des évaluations sera calculée automatiquement à partir des notes déjà saisies pour cet étudiant (S1 + S2)/2.</p>
                     </div>
                 </div>

@@ -68,7 +68,7 @@
                                 {{ $user->sexe === 'M' ? 'Masculin' : 'Féminin' }}
                             </span>
                             <span class="inline-flex items-center gap-1 px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">
-                                📚 
+                                <i class='bx bx-book-open'></i> 
                                 @if (is_object($user->niveau))
                                     {{ $user->niveau->label() }}
                                 @else
@@ -215,16 +215,16 @@
                     <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold {{ $user->statut === 'actif' ? 'bg-green-100 text-green-700' : ($user->statut === 'inactif' ? 'bg-gray-100 text-gray-700' : ($user->statut === 'suspendu' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700')) }}">
                         @switch($user->statut)
                             @case('actif')
-                                ✅ Actif
+                                <i class='bx bx-check-circle'></i> Actif
                             @break
                             @case('inactif')
-                                ⏸️ Inactif
+                                <i class='bx bx-pause'></i> Inactif
                             @break
                             @case('suspendu')
                                 ⛔ Suspendu
                             @break
                             @case('archive')
-                                📦 Archivé
+                                <i class='bx bx-package'></i> Archivé
                             @break
                             @default
                                 ❓ Inconnu

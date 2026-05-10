@@ -8,7 +8,7 @@
         <!-- En-tête -->
         <div class="mb-6 flex justify-between items-center">
             <div>
-                <h1 class="text-2xl font-bold text-foreground">📊 Bilans de Compétences</h1>
+                <h1 class="text-2xl font-bold text-foreground"><i class='bx bx-bar-chart-alt-2'></i> Bilans de Compétences</h1>
                 <p class="mt-1 text-xs text-muted-foreground">Gestion des bilans d'étudiants</p>
             </div>
             <a href="{{ route('bilans.create') }}"

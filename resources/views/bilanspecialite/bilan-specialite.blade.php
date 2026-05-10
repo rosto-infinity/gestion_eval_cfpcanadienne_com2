@@ -6,7 +6,7 @@
 <!-- En-tête avec accent primary -->
 <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 no-print bg-primary/5 rounded-lg p-6 border border-border/50">
     <div>
-        <h1 class="text-3xl font-bold text-foreground">📈 Bilan par Spécialité</h1>
+        <h1 class="text-3xl font-bold text-foreground"><i class='bx bx-line-chart'></i> Bilan par Spécialité</h1>
         <p class="mt-2 text-sm text-muted-foreground">
             Vue d'ensemble des performances académiques par spécialité
         </p>
@@ -48,7 +48,7 @@
                         class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all">
                     @foreach($annees as $annee)
                     <option value="{{ $annee->id }}" {{ request('annee_id', $anneeActive?->id) == $annee->id ? 'selected' : '' }}>
-                        {{ $annee->libelle }} {{ $annee->is_active ? '⭐' : '' }}
+                        {{ $annee->libelle }} {!! $annee->is_active ? '<i class="bx bxs-star" style="color:var(--primary)"></i>' : '' !!}
                     </option>
                     @endforeach
                 </select>
@@ -138,7 +138,7 @@
 <!-- Tableau principal -->
 <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
     <div class="p-6 border-b border-border">
-        <h2 class="text-xl font-bold text-foreground">📊 Tableau récapitulatif par spécialité</h2>
+        <h2 class="text-xl font-bold text-foreground"><i class='bx bx-bar-chart-alt-2'></i> Tableau récapitulatif par spécialité</h2>
     </div>
     <div class="overflow-x-auto">
         @if($bilanParSpecialite->isEmpty())
@@ -236,7 +236,7 @@
 <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6 no-print">
     <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
         <div class="p-6 border-b border-border">
-            <h3 class="text-lg font-bold text-foreground">📊 Moyennes générales par spécialité</h3>
+            <h3 class="text-lg font-bold text-foreground"><i class='bx bx-bar-chart-alt-2'></i> Moyennes générales par spécialité</h3>
         </div>
         <div class="p-6">
             <canvas id="moyennesChart"></canvas>
@@ -245,7 +245,7 @@
     
     <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
         <div class="p-6 border-b border-border">
-            <h3 class="text-lg font-bold text-foreground">📈 Taux d'admission par spécialité</h3>
+            <h3 class="text-lg font-bold text-foreground"><i class='bx bx-line-chart'></i> Taux d'admission par spécialité</h3>
         </div>
         <div class="p-6">
             <canvas id="admissionChart"></canvas>

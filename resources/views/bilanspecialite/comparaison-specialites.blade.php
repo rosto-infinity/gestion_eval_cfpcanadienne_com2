@@ -49,7 +49,7 @@
                         <!-- Année académique -->
                         <div>
                             <label for="annee_id" class="block text-sm font-semibold mb-3" style="color: var(--foreground)">
-                                📅 Année académique
+                                <i class='bx bx-calendar'></i> Année académique
                             </label>
                             <select name="annee_id" id="annee_id"
                                 class="w-full px-4 py-2.5 rounded-lg border-2 transition-all duration-200"
@@ -57,7 +57,7 @@
                                 @foreach ($annees as $annee)
                                     <option value="{{ $annee->id }}"
                                         {{ request('annee_id') == $annee->id ? 'selected' : '' }}>
-                                        {{ $annee->libelle }} {{ $annee->is_active ? '⭐' : '' }}
+                                        {{ $annee->libelle }} {!! $annee->is_active ? '<i class="bx bxs-star" style="color:var(--primary)"></i>' : '' !!}
                                     </option>
                                 @endforeach
                             </select>
@@ -130,7 +130,7 @@
                     style="background-color: var(--card); border-color: var(--border)">
                     <div class="p-6 border-b-2" style="border-color: var(--border)">
                         <h3 class="text-lg font-bold flex items-center gap-2" style="color: var(--foreground)">
-                            <span style="color: var(--primary)">🎯</span>
+                            <span style="color: var(--primary)"><i class='bx bx-crosshair'></i></span>
                             Comparaison multi-critères
                         </h3>
                     </div>
@@ -144,7 +144,7 @@
                     style="background-color: var(--card); border-color: var(--border)">
                     <div class="p-6 border-b-2" style="border-color: var(--border)">
                         <h3 class="text-lg font-bold flex items-center gap-2" style="color: var(--foreground)">
-                            <span style="color: var(--primary)">📊</span>
+                            <span style="color: var(--primary)"><i class='bx bx-bar-chart-alt-2'></i></span>
                             Moyennes par semestre
                         </h3>
                     </div>
@@ -159,7 +159,7 @@
                 style="background-color: var(--card); border-color: var(--border)">
                 <div class="p-6 border-b-2" style="border-color: var(--border)">
                     <h3 class="text-lg font-bold flex items-center gap-2" style="color: var(--foreground)">
-                        <span style="color: var(--primary)">📈</span>
+                        <span style="color: var(--primary)"><i class='bx bx-line-chart'></i></span>
                         Taux d'admission et moyennes générales
                     </h3>
                 </div>

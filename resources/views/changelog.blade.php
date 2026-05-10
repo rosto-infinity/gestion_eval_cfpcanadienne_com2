@@ -11,7 +11,7 @@
             <span class="w-2.5 h-2.5 bg-primary rounded-full"></span>
             <span class="text-xs font-bold tracking-widest uppercase text-primary">Changelog</span>
         </div>
-        <h1 class="text-5xl font-black tracking-tight text-foreground mb-4 leading-tight">
+        <h1 class="text-5xl font-black  text-foreground mb-4 leading-tight">
             Journal des mises a jour
         </h1>
         <p class="text-xl text-muted-foreground font-medium max-w-2xl">
@@ -41,7 +41,7 @@
                 </span>
             </div>
 
-            <h2 class="text-3xl font-black text-foreground mb-6 leading-snug tracking-tight">
+            <h2 class="text-3xl font-black text-foreground mb-6 leading-snug ">
                 Architecture Actions & Resources -- Separation des couches
             </h2>
 
@@ -140,7 +140,7 @@
                 </span>
             </div>
 
-            <h2 class="text-2xl font-bold text-foreground mb-4 leading-tight tracking-tight">
+            <h2 class="text-2xl font-bold text-foreground mb-4 leading-tight ">
                 Architecture Laravel 13 & Optimisation Ultra Performance
             </h2>
 
@@ -202,7 +202,7 @@
                 </span>
             </div>
 
-            <h2 class="text-2xl font-bold text-foreground mb-4 leading-tight tracking-tight">
+            <h2 class="text-2xl font-bold text-foreground mb-4 leading-tight ">
                 Stabilisation des Evaluations & Refonte des Modules
             </h2>
 

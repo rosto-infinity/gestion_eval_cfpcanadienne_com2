@@ -59,7 +59,7 @@
                         @foreach ($annees as $annee)
                             <option value="{{ $annee->id }}"
                                 {{ request('annee_id', $anneeActive?->id) == $annee->id ? 'selected' : '' }}>
-                                {{ $annee->libelle }} {{ $annee->is_active ? '⭐' : '' }}
+                                {{ $annee->libelle }} {!! $annee->is_active ? '<i class="bx bxs-star" style="color:var(--primary)"></i>' : '' !!}
                             </option>
                         @endforeach
                     </select>
@@ -82,7 +82,7 @@
           <!-- Tableau principal -->
         <div class="card bg-card border border-border rounded-lg shadow-sm overflow-hidden">
             <div class="p-6 border-b border-border">
-                <h2 class="text-xl font-bold text-foreground">📊 Détail des étudiants</h2>
+                <h2 class="text-xl font-bold text-foreground"><i class='bx bx-bar-chart-alt-2'></i> Détail des étudiants</h2>
             </div>
             <div class="overflow-x-auto">
                 <!-- CORRECTION ICI : On utilise $bilans au lieu de $etudiants -->
@@ -393,7 +393,7 @@
                     </svg>
                 </div>
                 <div class="flex-1">
-                    <h3 class="text-sm font-bold text-foreground mb-3">💡 Information sur le calcul :</h3>
+                    <h3 class="text-sm font-bold text-foreground mb-3"><i class='bx bx-bulb'></i> Information sur le calcul :</h3>
                     <ul class="space-y-2 text-sm text-muted-foreground">
                         <li class="flex gap-2">
                             <span class="text-primary font-bold">•</span>

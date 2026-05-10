@@ -658,7 +658,7 @@
                         clip-rule="evenodd" />
                 </svg>
                 <div class="text-sm text-muted-foreground">
-                    <p class="font-semibold text-foreground mb-2">💡 Conseils :</p>
+                    <p class="font-semibold text-foreground mb-2"><i class='bx bx-bulb'></i> Conseils :</p>
                     <ul class="space-y-1 list-disc list-inside">
                         <li>L'email doit être unique et valide</li>
                         <li>Le mot de passe doit contenir au minimum 8 caractères</li>

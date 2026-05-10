@@ -4,7 +4,7 @@
          <div class="flex justify-between h-16">
              <div class="flex">
                  <div class="flex-shrink-0 flex items-center">
-                     <h1 class="text-xl font-bold text-red-600">📚 Gestion Académique</h1>
+                     <h1 class="text-xl font-bold text-red-600"><i class='bx bx-book-open'></i> Gestion Académique</h1>
                  </div>
                  <div class="hidden  sm:ml-8 sm:flex sm:space-x-8">
                      <a href="{{ route('dashboard') }}"
@@ -40,7 +40,7 @@
                          </a>
                          <a href="{{ route('saisir-par-specialite') }}"
                              class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('saisir-par-specialite') ? 'border-red-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} text-sm font-medium">
-                            📊 Saisie par Spécialité
+                            <i class='bx bx-bar-chart-alt-2'></i> Saisie par Spécialité
                          </a>
                         
                          <a href="{{ route('bilans.index') }}"

@@ -18,7 +18,7 @@
 
         <!-- En-tête -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-foreground">📊 Saisie des Notes par Spécialité</h1>
+            <h1 class="text-3xl font-bold text-foreground"><i class='bx bx-bar-chart-alt-2'></i> Saisie des Notes par Spécialité</h1>
             <p class="mt-2 text-sm text-muted-foreground">
                 Évaluer plusieurs étudiants d'une même spécialité pour un module donné
             </p>

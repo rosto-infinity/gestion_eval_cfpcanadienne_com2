@@ -15,7 +15,7 @@
                     </svg>
                 </a>
                 <div>
-                    <h1 class="text-3xl font-bold text-foreground">✏️ Modifier l'Utilisateur</h1>
+                    <h1 class="text-3xl font-bold text-foreground"><i class='bx bx-edit'></i> Modifier l'Utilisateur</h1>
                     <p class="mt-1 text-sm text-muted-foreground">
                         Mettez à jour les informations de <span
                             class="font-semibold text-foreground">{{ $user->name }}</span>
@@ -779,7 +779,7 @@
                         </svg>
                     </div>
                     <div class="flex-1">
-                        <h3 class="font-semibold text-destructive mb-2">⚠️ Zone de danger</h3>
+                        <h3 class="font-semibold text-destructive mb-2"><i class='bx bx-error-circle'></i> Zone de danger</h3>
                         <p class="text-sm text-muted-foreground mb-4">
                             Les actions suivantes sont irréversibles. Veuillez être prudent.
                         </p>

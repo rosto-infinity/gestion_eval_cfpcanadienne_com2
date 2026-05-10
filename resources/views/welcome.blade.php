@@ -48,12 +48,8 @@
             <div class="max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
                 <!-- Text Content -->
                 <div class="text-center lg:text-left z-10">
-                    <div
-                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-6 fade-in-up">
-                        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                        Version 1.2.0 Disponible
-                    </div>
-                    <h1 class="text-4xl lg:text-6xl font-bold tracking-tight mb-6 fade-in-up delay-100">
+                    
+                    <h1 class="text-4xl lg:text-6xl font-bold  mb-6 fade-in-up delay-100">
                         Gestion Evaluation <br>
                         <span class="text-primary">Intelligente & Automatisée</span>
                     </h1>
@@ -80,7 +76,7 @@
                                     d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
                                     clip-rule="evenodd" />
                             </svg>
-                            Mises à jour v1.2
+                            Mises à jour 
                         </div>
                     </div>
                 </div>

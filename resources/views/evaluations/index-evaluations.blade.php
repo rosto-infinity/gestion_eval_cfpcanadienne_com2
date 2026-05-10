@@ -8,7 +8,7 @@
         <!-- En-tête -->
         <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-foreground">📊 Évaluations</h1>
+                <h1 class="text-3xl font-bold text-foreground"><i class='bx bx-bar-chart-alt-2'></i> Évaluations</h1>
                 <p class="mt-1 text-sm text-muted-foreground">
                     Gestion des notes et évaluations des étudiants
                 </p>
@@ -261,7 +261,7 @@
                                     <td class="px-6 py-4">
                                         <span
                                             class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
-                                            📅 {{ $evaluation->anneeAcademique->libelle }}
+                                            <i class='bx bx-calendar'></i> {{ $evaluation->anneeAcademique->libelle }}
                                         </span>
                                     </td>
 

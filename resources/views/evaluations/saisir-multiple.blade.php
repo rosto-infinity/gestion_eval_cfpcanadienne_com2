@@ -125,15 +125,15 @@
                     </div>
                 @endif
                 @if ($selectedUser && $modules->isNotEmpty())
-<!-- ✅ --Section Debug - Ajoutez ceci après les infos étudiant -->
+<!-- <i class="bx bx-check-circle"></i> --Section Debug - Ajoutez ceci après les infos étudiant -->
 <div class="mt-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-xs">
-    <p><strong class="text-blue-800 dark:text-blue-200">🔍 Informations de débogage :</strong></p>
+    <p><strong class="text-blue-800 dark:text-blue-200"><i class="bx bx-search"></i> Informations de débogage :</strong></p>
     <p>• Spécialité étudiant : <span class="font-bold">{{ $selectedUser->specialite_id }} ({{ $selectedUser->specialite?->intitule ?? 'N/A' }})</span></p>
     <p>• Modules chargés : <span class="font-bold">{{ $modules->count() }}</span></p>
     <p>• Modules par spécialité : <span class="font-bold">{{ $modules->where('specialite_id', $selectedUser->specialite_id)->count() }}/{{ $modules->count() }}</span></p>
     @if($modules->where('specialite_id', '!=', $selectedUser->specialite_id)->isNotEmpty())
         <p class="text-red-600 dark:text-red-400 mt-1">
-            ⚠️ <strong>Attention :</strong> {{ $modules->where('specialite_id', '!=', $selectedUser->specialite_id)->count() }} module(s) n'appartiennent pas à cette spécialité !
+            <i class="bx bx-error-circle"></i> <strong>Attention :</strong> {{ $modules->where('specialite_id', '!=', $selectedUser->specialite_id)->count() }} module(s) n'appartiennent pas à cette spécialité !
         </p>
         <ul class="mt-1 ml-4 text-red-700 dark:text-red-300">
             @foreach($modules->where('specialite_id', '!=', $selectedUser->specialite_id) as $invalidModule)
@@ -328,15 +328,15 @@
 @push('scripts')
     <script>
         /**
-         * ✅ Valide et formate la note
+         * <i class="bx bx-check-circle"></i> Valide et formate la note
          */
         function validateNote(input) {
             let value = input.value.trim();
 
-            // ✅ Accepter virgule et point
+            // <i class="bx bx-check-circle"></i> Accepter virgule et point
             value = value.replace(',', '.');
 
-            // ✅ Vérifier si c'est vide
+            // <i class="bx bx-check-circle"></i> Vérifier si c'est vide
             if (value === '') {
                 input.value = '';
                 input.classList.remove('border-destructive', 'ring-1', 'ring-destructive/50');
@@ -345,20 +345,20 @@
                 return;
             }
 
-            // ✅ Convertir en nombre
+            // <i class="bx bx-check-circle"></i> Convertir en nombre
             let note = parseFloat(value);
 
-            // ✅ Vérifier si c'est un nombre valide
+            // <i class="bx bx-check-circle"></i> Vérifier si c'est un nombre valide
             if (isNaN(note)) {
                 input.value = '';
                 input.classList.add('border-destructive', 'ring-1', 'ring-destructive/50');
                 input.classList.remove('border-border');
-                console.warn('❌ Valeur invalide:', value);
+                console.warn('<i class="bx bx-x-circle"></i> Valeur invalide:', value);
                 updateNoteCount();
                 return;
             }
 
-            // ✅ Limiter entre 0 et 20
+            // <i class="bx bx-check-circle"></i> Limiter entre 0 et 20
             let hasError = false;
             if (note < 0) {
                 note = 0;
@@ -368,13 +368,13 @@
                 hasError = true;
             }
 
-            // ✅ Limiter à 2 décimales
+            // <i class="bx bx-check-circle"></i> Limiter à 2 décimales
             note = Math.round(note * 100) / 100;
 
-            // ✅ Afficher la valeur formatée
+            // <i class="bx bx-check-circle"></i> Afficher la valeur formatée
             input.value = note;
 
-            // ✅ Appliquer le style
+            // <i class="bx bx-check-circle"></i> Appliquer le style
             if (hasError) {
                 input.classList.add('border-destructive', 'ring-1', 'ring-destructive/50');
                 input.classList.remove('border-border');
@@ -383,12 +383,12 @@
                 input.classList.add('border-border');
             }
 
-            console.log(`✅ Note validée: ${note}`);
+            console.log(`<i class="bx bx-check-circle"></i> Note validée: ${note}`);
             updateNoteCount();
         }
 
         /**
-         * ✅ Met à jour le compteur de notes
+         * <i class="bx bx-check-circle"></i> Met à jour le compteur de notes
          */
         function updateNoteCount() {
             const inputs = document.querySelectorAll('.module-note-input');
@@ -405,22 +405,22 @@
         }
 
         /**
-         * ✅ Initialiser les écouteurs
+         * <i class="bx bx-check-circle"></i> Initialiser les écouteurs
          */
         document.addEventListener('DOMContentLoaded', function() {
             const noteInputs = document.querySelectorAll('.module-note-input');
             const form = document.getElementById('evaluationsForm');
 
             noteInputs.forEach(input => {
-                // ✅ Valider en temps réel
+                // <i class="bx bx-check-circle"></i> Valider en temps réel
                 input.addEventListener('input', () => validateNote(input));
                 input.addEventListener('blur', () => validateNote(input));
 
-                // ✅ Valider au chargement
+                // <i class="bx bx-check-circle"></i> Valider au chargement
                 validateNote(input);
             });
 
-            console.log(`✅ ${noteInputs.length} champ(s) note initialisé(s)`);
+            console.log(`<i class="bx bx-check-circle"></i> ${noteInputs.length} champ(s) note initialisé(s)`);
             updateNoteCount();
         });
     </script>

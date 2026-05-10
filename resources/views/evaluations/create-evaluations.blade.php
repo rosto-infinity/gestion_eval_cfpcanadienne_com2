@@ -18,7 +18,7 @@
 
         <!-- En-tête -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-foreground">📝 Nouvelle Évaluation</h1>
+            <h1 class="text-3xl font-bold text-foreground"><i class="bx bx-pencil"></i> Nouvelle Évaluation</h1>
             <p class="mt-2 text-sm text-muted-foreground">
                 Créer une nouvelle évaluation pour un étudiant
             </p>
@@ -368,7 +368,7 @@
                                 clip-rule="evenodd" />
                         </svg>
                         <div>
-                            <h3 class="text-xs font-bold text-blue-900 dark:text-blue-100 uppercase tracking-wide mb-2">💡
+                            <h3 class="text-xs font-bold text-blue-900 dark:text-blue-100 uppercase tracking-wide mb-2"><i class="bx bx-bulb"></i>
                                 Aide</h3>
                             <ul class="text-xs text-blue-800 dark:text-blue-200 space-y-1">
                                 <li class="flex items-start gap-1.5">
@@ -520,7 +520,7 @@
     // ============================================
 
     /**
-     * ✅ Charge les modules pour un utilisateur sélectionné
+     * <i class="bx bx-check-circle"></i> Charge les modules pour un utilisateur sélectionné
      */
     function loadUserModules() {
         const select = document.getElementById('user_id');
@@ -548,12 +548,12 @@
                 return response.json();
             })
             .then(data => {
-                console.log('✅ Données utilisateur reçues:', data);
+                console.log('<i class="bx bx-check-circle"></i> Données utilisateur reçues:', data);
 
                 updateUserInfoDisplay(data.user);
                 document.getElementById('annee_academique_id').value = data.user.annee_id;
 
-                // ✅ Stocker tous les modules pour le filtrage
+                // <i class="bx bx-check-circle"></i> Stocker tous les modules pour le filtrage
                 window.allModules = data.modules;
 
                 // Filtrer par semestre sélectionné
@@ -562,7 +562,7 @@
                 if (spinner) spinner.classList.add('hidden');
             })
             .catch(error => {
-                console.error('❌ Erreur AJAX:', error);
+                console.error('<i class="bx bx-x-circle"></i> Erreur AJAX:', error);
                 showError(`Erreur lors du chargement: ${error.message}`);
                 moduleSelect.innerHTML = '<option value="">Erreur de chargement</option>';
                 moduleSelect.disabled = true;
@@ -571,7 +571,7 @@
     }
 
     /**
-     * ✅ Filtre les modules en fonction du semestre sélectionné
+     * <i class="bx bx-check-circle"></i> Filtre les modules en fonction du semestre sélectionné
      */
     function filterModulesBySemestre() {
         const moduleSelect = document.getElementById('module_id');
@@ -583,10 +583,10 @@
             return;
         }
 
-        // ✅ Filtrer les modules par semestre
+        // <i class="bx bx-check-circle"></i> Filtrer les modules par semestre
         const filteredModules = window.allModules.filter(m => m.semestre == selectedSemestre);
 
-        console.log(`📚 Modules pour le semestre ${selectedSemestre}:`, filteredModules);
+        console.log(`Modules pour le semestre ${selectedSemestre}:`, filteredModules);
 
         moduleSelect.innerHTML = '<option value="">-- Sélectionner un module --</option>';
 
@@ -635,7 +635,7 @@
                 const radio = document.querySelector(`input[name="semestre"][value="${semestreValue}"]`);
                 if (radio) {
                     radio.checked = true;
-                    console.log(`✅ Semestre S${semestreValue} sélectionné`);
+                    console.log(`<i class="bx bx-check-circle"></i> Semestre S${semestreValue} sélectionné`);
                 }
             }
         } else if (moduleInfo) {
@@ -661,27 +661,27 @@
         if (note >= 16) {
             appreciation = 'Très Bien';
             badgeClass = 'bg-green-100 text-green-700';
-            emoji = '🌟';
+            emoji = '<i class="bx bx-star"></i>';
         } else if (note >= 14) {
             appreciation = 'Bien';
             badgeClass = 'bg-green-100 text-green-700';
-            emoji = '✅';
+            emoji = '<i class="bx bx-check-circle"></i>';
         } else if (note >= 12) {
             appreciation = 'Assez Bien';
             badgeClass = 'bg-yellow-100 text-yellow-700';
-            emoji = '👍';
+            emoji = '<i class="bx bx-like"></i>';
         } else if (note >= 10) {
             appreciation = 'Passable';
             badgeClass = 'bg-orange-100 text-orange-700';
-            emoji = '⚠️';
+            emoji = '<i class="bx bx-error-circle"></i>';
         } else if (note > 0) {
             appreciation = 'Insuffisant';
             badgeClass = 'bg-red-100 text-red-700';
-            emoji = '❌';
+            emoji = '<i class="bx bx-x-circle"></i>';
         } else {
             appreciation = 'Aucune note';
             badgeClass = 'bg-gray-100 text-gray-700';
-            emoji = '📝';
+            emoji = '<i class="bx bx-pencil"></i>';
         }
 
         if (appreciationText) appreciationText.textContent = appreciation;
@@ -696,7 +696,7 @@
     // ============================================
 
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('🚀 Page chargée - Initialisation...');
+        console.log('<i class="bx bx-rocket"></i> Page chargée - Initialisation...');
 
         const userSelect = document.getElementById('user_id');
         const userInfo = document.getElementById('userInfo');
@@ -706,17 +706,17 @@
 
         // Charger les modules si un utilisateur est pré-sélectionné
         if (userSelect && userSelect.value) {
-            console.log(`✅ Utilisateur pré-sélectionné: ${userSelect.value}`);
+            console.log(`<i class="bx bx-check-circle"></i> Utilisateur pré-sélectionné: ${userSelect.value}`);
             loadUserModules();
         } else {
             if (userInfo) userInfo.classList.add('hidden');
             if (moduleInfo) moduleInfo.classList.add('hidden');
         }
 
-        // ✅ Ajouter écouteur sur les radios semestre
+        // <i class="bx bx-check-circle"></i> Ajouter écouteur sur les radios semestre
         semestreRadios.forEach(radio => {
             radio.addEventListener('change', function() {
-                console.log(`📚 Semestre changé vers: ${this.value}`);
+                console.log(`Semestre changé vers: ${this.value}`);
                 filterModulesBySemestre();
             });
         });

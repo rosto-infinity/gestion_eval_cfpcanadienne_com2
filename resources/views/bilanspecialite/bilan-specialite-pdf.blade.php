@@ -8,7 +8,7 @@
     <div class="mb-8 text-center border-b-2 border-border pb-6">
         <div class="flex items-center justify-center mb-4">
             <div class="bg-primary text-primary-foreground w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl">
-                📊
+                <i class='bx bx-bar-chart-alt-2'></i>
             </div>
         </div>
         <h1 class="text-2xl font-bold text-foreground mb-2">BILAN DES PERFORMANCES ACADÉMIQUES</h1>
@@ -158,7 +158,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Meilleures performances -->
                 <div class="border border-border rounded-lg p-4 bg-card">
-                    <h4 class="font-bold text-foreground mb-3">🏆 MEILLEURES PERFORMANCES</h4>
+                    <h4 class="font-bold text-foreground mb-3"><i class='bx bx-trophy'></i> MEILLEURES PERFORMANCES</h4>
                     <ul class="space-y-2">
                         @php
                             $topMoyennes = $bilanParSpecialite->sortByDesc('moyenne_generale')->take(3);
@@ -175,7 +175,7 @@
                 
                 <!-- Taux d'admission -->
                 <div class="border border-border rounded-lg p-4 bg-card">
-                    <h4 class="font-bold text-foreground mb-3">📈 TAUX D'ADMISSION</h4>
+                    <h4 class="font-bold text-foreground mb-3"><i class='bx bx-line-chart'></i> TAUX D'ADMISSION</h4>
                     <ul class="space-y-2">
                         @php
                             $topAdmission = $bilanParSpecialite->sortByDesc('taux_admission')->take(3);
