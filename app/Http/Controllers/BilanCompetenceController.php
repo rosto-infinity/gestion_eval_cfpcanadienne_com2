@@ -14,7 +14,6 @@ use App\Services\PdfService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-
 class BilanCompetenceController extends Controller
 {
     public function __construct(

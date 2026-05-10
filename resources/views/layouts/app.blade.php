@@ -5,18 +5,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    {{-- Inline script to detect system dark mode preference and apply it immediately --}}
+    {{-- Inline script to detect saved or system dark mode preference and apply it immediately to prevent flash --}}
     <script>
         (function() {
-            const appearance = '{{ $appearance ?? 'system' }}';
+            const stored = localStorage.getItem('darkMode');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = stored !== null ? JSON.parse(stored) : prefersDark;
 
-            if (appearance === 'system') {
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-                if (prefersDark) {
-                    document.documentElement.classList.add('dark');
-                }
+            if (isDark) {
+                document.documentElement.classList.add('dark');
             }
+
+            document.documentElement.classList.add('no-transition');
         })();
     </script>
 
@@ -27,14 +27,13 @@
     <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     {{-- <link rel="stylesheet" href="/resources/css/style.css"> --}}
-   
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
 
 <body class="font-sans antialiased" x-data="{ 
-    darkMode: JSON.parse(localStorage.getItem('darkMode') || 'true'),
+    darkMode: JSON.parse(localStorage.getItem('darkMode') || JSON.stringify(window.matchMedia('(prefers-color-scheme: dark)').matches)),
     mobileMenuOpen: false 
 }"
 x-init="
@@ -46,6 +45,7 @@ x-init="
             document.body.style.overflow = '';
         }
     });
+    $nextTick(() => document.documentElement.classList.remove('no-transition'));
 "
 :class="{ 'dark': darkMode === true }">
 
@@ -193,7 +193,7 @@ x-init="
         <!-- NAVBAR -->
 
         <!-- MAIN -->
-        <main class="" style="background-color: #eee">
+        <main class="bg-background">
             @yield('content')
         </main>
         <!-- MAIN -->

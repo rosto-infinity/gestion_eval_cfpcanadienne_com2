@@ -5,6 +5,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        {{-- Inline script to prevent dark mode flash --}}
+        <script>
+            (function() {
+                const stored = localStorage.getItem('darkMode');
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const isDark = stored !== null ? JSON.parse(stored) : prefersDark;
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                }
+                document.documentElement.classList.add('no-transition');
+            })();
+        </script>
+
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
@@ -14,7 +27,10 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
+    <body class="font-sans text-gray-900 antialiased"
+          x-data="{ darkMode: JSON.parse(localStorage.getItem('darkMode') || JSON.stringify(window.matchMedia('(prefers-color-scheme: dark)').matches)) }"
+          x-init="$watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value))); $nextTick(() => document.documentElement.classList.remove('no-transition'))"
+          :class="{ 'dark': darkMode }">
        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
     <div class="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
         <!-- Colonne gauche - Logo et branding -->

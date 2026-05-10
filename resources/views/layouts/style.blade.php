@@ -18,7 +18,7 @@
         --light-orange: #FFE0D3;
     }
 
-    body.dark {
+    html.dark, body.dark {
         --light: #0C0C1E;
         --grey: #060714;
         --dark: #FBFBFB;
@@ -717,27 +717,33 @@
     }
 
     /* Dark mode specific adjustments */
+    html.dark #sidebar,
+    html.dark .mobile-sidebar,
     body.dark #sidebar,
     body.dark .mobile-sidebar {
         background: var(--light);
         border-right: 1px solid var(--grey);
     }
 
+    html.dark #content nav,
     body.dark #content nav {
         background: var(--light);
         border-bottom-color: var(--grey);
     }
 
+    html.dark #content main .table-data > div,
     body.dark #content main .table-data > div {
         background: var(--light);
         border: 1px solid var(--grey);
     }
 
+    html.dark #content main .table-data .order table th,
     body.dark #content main .table-data .order table th {
         background: var(--light);
         border-bottom-color: var(--grey);
     }
 
+    html.dark #content main .table-data .order table tbody tr:hover,
     body.dark #content main .table-data .order table tbody tr:hover {
         background: var(--grey);
     }

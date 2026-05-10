@@ -111,7 +111,7 @@
 body,
 
 :root {
-  --background: hsl(223.8136 -172.5242% 100.0000%);
+  --background: #eee;
   --foreground: hsl(223.8136 0.0000% 3.9388%);
   --card: hsl(223.8136 -172.5242% 100.0000%);
   --card-foreground: hsl(223.8136 0.0000% 3.9388%);
