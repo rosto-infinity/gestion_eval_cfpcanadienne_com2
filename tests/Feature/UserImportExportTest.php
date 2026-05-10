@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\Role;
 use App\Models\AnneeAcademique;
 use App\Models\Specialite;
 use App\Models\User;
@@ -24,7 +25,7 @@ class UserImportExportTest extends TestCase
         AnneeAcademique::factory()->create(['libelle' => '2025-2026', 'is_active' => true]);
 
         // Create an admin user to perform actions
-        $this->actingAs(User::factory()->create(['role' => \App\Enums\Role::ADMIN]));
+        $this->actingAs(User::factory()->create(['role' => Role::ADMIN]));
     }
 
     public function test_user_import_with_verbose_headers(): void

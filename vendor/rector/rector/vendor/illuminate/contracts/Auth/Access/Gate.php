@@ -1,13 +1,13 @@
 <?php
 
-namespace RectorPrefix202512\Illuminate\Contracts\Auth\Access;
+namespace RectorPrefix202604\Illuminate\Contracts\Auth\Access;
 
 interface Gate
 {
     /**
      * Determine if a given ability has been defined.
      *
-     * @param  string  $ability
+     * @param  \UnitEnum|string  $ability
      * @return bool
      */
     public function has($ability);

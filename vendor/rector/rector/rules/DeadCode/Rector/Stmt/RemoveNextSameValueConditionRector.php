@@ -5,8 +5,10 @@ namespace Rector\DeadCode\Rector\Stmt;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Stmt\Else_;
 use PhpParser\Node\Stmt\If_;
 use Rector\DeadCode\SideEffect\SideEffectNodeDetector;
+use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\PhpParser\Enum\NodeGroup;
 use Rector\PhpParser\Node\BetterNodeFinder;
 use Rector\Rector\AbstractRector;
@@ -82,6 +84,13 @@ CODE_SAMPLE
             if (!$stmt instanceof If_) {
                 continue;
             }
+            // only when no elseif/else in current if
+            if ($stmt->elseifs !== []) {
+                continue;
+            }
+            if ($stmt->else instanceof Else_) {
+                continue;
+            }
             // first condition must be without side effect
             if ($this->sideEffectNodeDetector->detect($stmt->cond)) {
                 continue;
@@ -96,6 +105,14 @@ CODE_SAMPLE
             if (!$this->nodeComparator->areNodesEqual($stmt->cond, $nextStmt->cond)) {
                 continue;
             }
+            // only when no elseif/else in next stmt
+            if ($nextStmt->elseifs !== []) {
+                continue;
+            }
+            if ($nextStmt->else instanceof Else_) {
+                continue;
+            }
+            $stmt->setAttribute(AttributeKey::COMMENTS, array_merge($stmt->getAttribute(AttributeKey::COMMENTS) ?? [], $nextStmt->getAttribute(AttributeKey::COMMENTS) ?? []));
             $stmt->stmts = array_merge($stmt->stmts, $nextStmt->stmts);
             // remove next node
             unset($node->stmts[$key + 1]);

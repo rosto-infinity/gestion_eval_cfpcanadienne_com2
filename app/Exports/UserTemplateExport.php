@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Exports;
 
+use App\Enums\Niveau;
 use App\Models\AnneeAcademique;
 use App\Models\Specialite;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -12,6 +13,7 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -92,7 +94,7 @@ class UserTemplateExport implements FromArray, ShouldAutoSize, WithEvents, WithH
                 $this->addDropdown($sheet, 'D2:D'.$rowCount, ['M', 'F', 'Autre']);
 
                 // Colonne E (Niveau)
-                $niveaux = array_map(fn ($case) => $case->label(), \App\Enums\Niveau::cases());
+                $niveaux = array_map(fn ($case) => $case->label(), Niveau::cases());
                 $this->addDropdown($sheet, 'E2:E'.$rowCount, $niveaux);
 
                 // Colonne F (Spécialité)
@@ -148,7 +150,7 @@ class UserTemplateExport implements FromArray, ShouldAutoSize, WithEvents, WithH
         // Pour simplifier, on utilise une colonne par liste nommée.
         // Gestion basique des colonnes : A=1, B=2...
         static $colIndex = 1;
-        $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIndex);
+        $colLetter = Coordinate::stringFromColumnIndex($colIndex);
 
         foreach ($options as $k => $option) {
             $dataSheet->setCellValue($colLetter.($k + 1), $option);

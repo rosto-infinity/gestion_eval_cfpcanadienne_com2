@@ -3,7 +3,7 @@
 declare (strict_types=1);
 namespace Rector\Php80\Rector\Class_;
 
-use RectorPrefix202512\Nette\Utils\Strings;
+use RectorPrefix202604\Nette\Utils\Strings;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use Rector\BetterPhpDocParser\PhpDoc\DoctrineAnnotationTagValueNode;
 use Rector\Php80\ValueObject\AnnotationToAttribute;
@@ -12,8 +12,8 @@ use Rector\Util\NewLineSplitter;
 final class AttributeValueResolver
 {
     /**
-     * @var string
      * @see https://regex101.com/r/CL9ktz/4
+     * @var string
      */
     private const END_SLASH_REGEX = '#\\\\$#';
     public function resolve(AnnotationToAttribute $annotationToAttribute, PhpDocTagNode $phpDocTagNode): ?AttributeValueAndDocComment

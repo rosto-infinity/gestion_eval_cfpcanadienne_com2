@@ -3,7 +3,7 @@
 declare (strict_types=1);
 namespace Rector\Naming\Naming;
 
-use RectorPrefix202512\Nette\Utils\Strings;
+use RectorPrefix202604\Nette\Utils\Strings;
 use PhpParser\Node\Name;
 use PHPStan\Type\Generic\GenericObjectType;
 use PHPStan\Type\ObjectType;
@@ -40,8 +40,8 @@ final class PropertyNaming
      */
     private const INTERFACE = 'Interface';
     /**
-     * @var string
      * @see https://regex101.com/r/U78rUF/1
+     * @var string
      */
     private const I_PREFIX_REGEX = '#^I[A-Z]#';
     /**

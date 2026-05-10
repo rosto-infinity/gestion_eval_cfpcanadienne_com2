@@ -39,7 +39,7 @@ final class AssertMethodAnalyzer
     public function detectTestCaseCall($call): bool
     {
         $objectCaller = $call instanceof MethodCall ? $call->var : $call->class;
-        if (!$this->nodeTypeResolver->isObjectType($objectCaller, new ObjectType('PHPUnit\Framework\TestCase'))) {
+        if (!$this->nodeTypeResolver->isObjectType($objectCaller, new ObjectType(PHPUnitClassName::TEST_CASE))) {
             return \false;
         }
         $methodName = $this->nodeNameResolver->getName($call->name);
@@ -55,7 +55,7 @@ final class AssertMethodAnalyzer
         }
         // only handle methods in TestCase or Assert class classes
         $declaringClassName = $extendedMethodReflection->getDeclaringClass()->getName();
-        return in_array($declaringClassName, [PHPUnitClassName::TEST_CASE, PHPUnitClassName::ASSERT]);
+        return in_array($declaringClassName, [PHPUnitClassName::TEST_CASE, PHPUnitClassName::ASSERT], \true);
     }
     public function detectTestCaseCallForStatic(MethodCall $methodCall): bool
     {

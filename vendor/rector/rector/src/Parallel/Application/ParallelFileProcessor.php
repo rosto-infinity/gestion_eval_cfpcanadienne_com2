@@ -3,12 +3,12 @@
 declare (strict_types=1);
 namespace Rector\Parallel\Application;
 
-use RectorPrefix202512\Clue\React\NDJson\Decoder;
-use RectorPrefix202512\Clue\React\NDJson\Encoder;
-use RectorPrefix202512\Nette\Utils\Random;
-use RectorPrefix202512\React\EventLoop\StreamSelectLoop;
-use RectorPrefix202512\React\Socket\ConnectionInterface;
-use RectorPrefix202512\React\Socket\TcpServer;
+use RectorPrefix202604\Clue\React\NDJson\Decoder;
+use RectorPrefix202604\Clue\React\NDJson\Encoder;
+use RectorPrefix202604\Nette\Utils\Random;
+use RectorPrefix202604\React\EventLoop\StreamSelectLoop;
+use RectorPrefix202604\React\Socket\ConnectionInterface;
+use RectorPrefix202604\React\Socket\TcpServer;
 use Rector\Configuration\Option;
 use Rector\Configuration\Parameter\SimpleParameterProvider;
 use Rector\Console\Command\ProcessCommand;
@@ -17,15 +17,15 @@ use Rector\Parallel\ValueObject\Bridge;
 use Rector\ValueObject\Error\SystemError;
 use Rector\ValueObject\ProcessResult;
 use Rector\ValueObject\Reporting\FileDiff;
-use RectorPrefix202512\Symfony\Component\Console\Command\Command;
-use RectorPrefix202512\Symfony\Component\Console\Input\InputInterface;
-use RectorPrefix202512\Symplify\EasyParallel\Enum\Action;
-use RectorPrefix202512\Symplify\EasyParallel\Enum\Content;
-use RectorPrefix202512\Symplify\EasyParallel\Enum\ReactCommand;
-use RectorPrefix202512\Symplify\EasyParallel\Enum\ReactEvent;
-use RectorPrefix202512\Symplify\EasyParallel\ValueObject\ParallelProcess;
-use RectorPrefix202512\Symplify\EasyParallel\ValueObject\ProcessPool;
-use RectorPrefix202512\Symplify\EasyParallel\ValueObject\Schedule;
+use RectorPrefix202604\Symfony\Component\Console\Command\Command;
+use RectorPrefix202604\Symfony\Component\Console\Input\InputInterface;
+use RectorPrefix202604\Symplify\EasyParallel\Enum\Action;
+use RectorPrefix202604\Symplify\EasyParallel\Enum\Content;
+use RectorPrefix202604\Symplify\EasyParallel\Enum\ReactCommand;
+use RectorPrefix202604\Symplify\EasyParallel\Enum\ReactEvent;
+use RectorPrefix202604\Symplify\EasyParallel\ValueObject\ParallelProcess;
+use RectorPrefix202604\Symplify\EasyParallel\ValueObject\ProcessPool;
+use RectorPrefix202604\Symplify\EasyParallel\ValueObject\Schedule;
 use Throwable;
 /**
  * Inspired from @see
@@ -46,7 +46,6 @@ final class ParallelFileProcessor
     /**
      * The number of chunks a worker can process before getting killed.
      * In contrast the jobSize defines the maximum size of a chunk, a worker process at a time.
-     *
      * @var int
      */
     private const MAX_CHUNKS_PER_WORKER = 8;

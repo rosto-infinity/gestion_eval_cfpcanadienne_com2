@@ -29,7 +29,7 @@ use const DIRECTORY_SEPARATOR;
 /** @internal */
 final class WrapperWorker
 {
-    public const COMMAND_EXIT = "EXIT\n";
+    public const string COMMAND_EXIT = "EXIT\n";
 
     public readonly SplFileInfo $statusFile;
     public readonly SplFileInfo $progressFile;
@@ -229,5 +229,10 @@ final class WrapperWorker
     public function isRunning(): bool
     {
         return $this->process->isRunning();
+    }
+
+    public function hasExecutedTests(): bool
+    {
+        return $this->inExecution > 0;
     }
 }

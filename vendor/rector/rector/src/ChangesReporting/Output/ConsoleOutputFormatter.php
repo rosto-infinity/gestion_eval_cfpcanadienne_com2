@@ -3,7 +3,7 @@
 declare (strict_types=1);
 namespace Rector\ChangesReporting\Output;
 
-use RectorPrefix202512\Nette\Utils\Strings;
+use RectorPrefix202604\Nette\Utils\Strings;
 use Rector\ChangesReporting\Contract\Output\OutputFormatterInterface;
 use Rector\Configuration\Option;
 use Rector\Configuration\Parameter\SimpleParameterProvider;
@@ -11,8 +11,8 @@ use Rector\ValueObject\Configuration;
 use Rector\ValueObject\Error\SystemError;
 use Rector\ValueObject\ProcessResult;
 use Rector\ValueObject\Reporting\FileDiff;
-use RectorPrefix202512\Symfony\Component\Console\Formatter\OutputFormatter;
-use RectorPrefix202512\Symfony\Component\Console\Style\SymfonyStyle;
+use RectorPrefix202604\Symfony\Component\Console\Formatter\OutputFormatter;
+use RectorPrefix202604\Symfony\Component\Console\Style\SymfonyStyle;
 final class ConsoleOutputFormatter implements OutputFormatterInterface
 {
     /**
@@ -24,8 +24,8 @@ final class ConsoleOutputFormatter implements OutputFormatterInterface
      */
     public const NAME = 'console';
     /**
-     * @var string
      * @see https://regex101.com/r/q8I66g/1
+     * @var string
      */
     private const ON_LINE_REGEX = '# on line #';
     public function __construct(SymfonyStyle $symfonyStyle)
@@ -44,6 +44,9 @@ final class ConsoleOutputFormatter implements OutputFormatterInterface
         // to keep space between progress bar and success message
         if ($configuration->shouldShowProgressBar() && $processResult->getFileDiffs() === []) {
             $this->symfonyStyle->newLine();
+        }
+        if ($configuration->shouldShowRulesSummary()) {
+            $this->reportRulesSummary($processResult, $configuration);
         }
         $message = $this->createSuccessMessage($processResult, $configuration);
         $this->symfonyStyle->success($message);
@@ -100,6 +103,20 @@ final class ConsoleOutputFormatter implements OutputFormatterInterface
             }
             $this->symfonyStyle->error($message);
         }
+    }
+    private function reportRulesSummary(ProcessResult $processResult, Configuration $configuration): void
+    {
+        $ruleApplicationCounts = $processResult->getRuleApplicationCounts();
+        if ($ruleApplicationCounts === []) {
+            return;
+        }
+        $verb = $configuration->isDryRun() ? 'would have been applied' : 'was applied';
+        $this->symfonyStyle->section('Rules Summary');
+        foreach ($ruleApplicationCounts as $ruleClass => $count) {
+            $ruleShortClass = (string) Strings::after($ruleClass, '\\', -1);
+            $this->symfonyStyle->writeln(sprintf(' * <info>%s</info> %s <comment>%d</comment> time%s', $ruleShortClass, $verb, $count, $count > 1 ? 's' : ''));
+        }
+        $this->symfonyStyle->newLine();
     }
     private function normalizePathsToRelativeWithLine(string $errorMessage): string
     {

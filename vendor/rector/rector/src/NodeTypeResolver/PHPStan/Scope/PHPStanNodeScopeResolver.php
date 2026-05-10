@@ -5,7 +5,6 @@ namespace Rector\NodeTypeResolver\PHPStan\Scope;
 
 use Error;
 use PhpParser\Node;
-use PhpParser\Node\Arg;
 use PhpParser\Node\ArrayItem;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
@@ -84,6 +83,7 @@ use PhpParser\Node\Stmt\Unset_;
 use PhpParser\Node\Stmt\While_;
 use PhpParser\Node\UnionType;
 use PhpParser\NodeTraverser;
+use PHPStan\Analyser\Fiber\FiberScope;
 use PHPStan\Analyser\MutatingScope;
 use PHPStan\Analyser\NodeScopeResolver;
 use PHPStan\Analyser\ScopeContext;
@@ -107,7 +107,7 @@ use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\PhpParser\Node\FileNode;
 use Rector\Util\Reflection\PrivatesAccessor;
-use RectorPrefix202512\Webmozart\Assert\Assert;
+use RectorPrefix202604\Webmozart\Assert\Assert;
 /**
  * @inspired by https://github.com/silverstripe/silverstripe-upgrader/blob/532182b23e854d02e0b27e68ebc394f436de0682/src/UpgradeRule/PHP/Visitor/PHPStanScopeVisitor.php
  * - https://github.com/silverstripe/silverstripe-upgrader/pull/57/commits/e5c7cfa166ad940d9d4ff69537d9f7608e992359#diff-5e0807bb3dc03d6a8d8b6ad049abd774
@@ -173,10 +173,12 @@ final class PHPStanNodeScopeResolver
         Assert::allIsInstanceOf($stmts, Stmt::class);
         $scope = $formerMutatingScope ?? $this->scopeFactory->createFromFile($filePath);
         $nodeCallback = function (Node $node, MutatingScope $mutatingScope) use (&$nodeCallback, $filePath): void {
+            if ($mutatingScope instanceof FiberScope) {
+                $mutatingScope = $mutatingScope->toMutatingScope();
+            }
             // the class reflection is resolved AFTER entering to class node
             // so we need to get it from the first after this one
             if ($node instanceof Class_ || $node instanceof Interface_ || $node instanceof Enum_) {
-                /** @var MutatingScope $mutatingScope */
                 $mutatingScope = $this->resolveClassOrInterfaceScope($node, $mutatingScope);
                 $node->setAttribute(AttributeKey::SCOPE, $mutatingScope);
                 if ($node instanceof Class_) {
@@ -242,10 +244,6 @@ final class PHPStanNodeScopeResolver
                 $this->processBinaryOp($node, $mutatingScope);
                 return;
             }
-            if ($node instanceof Arg) {
-                $node->value->setAttribute(AttributeKey::SCOPE, $mutatingScope);
-                return;
-            }
             if ($node instanceof Foreach_) {
                 // decorate value as well
                 $node->valueVar->setAttribute(AttributeKey::SCOPE, $mutatingScope);
@@ -284,10 +282,6 @@ final class PHPStanNodeScopeResolver
             }
             if ($node instanceof Catch_) {
                 $this->processCatch($node, $filePath, $mutatingScope);
-                return;
-            }
-            if ($node instanceof ArrayItem) {
-                $this->processArrayItem($node, $mutatingScope);
                 return;
             }
             if ($node instanceof NullableType) {
@@ -424,6 +418,12 @@ final class PHPStanNodeScopeResolver
         } elseif ($callLike instanceof New_ && !$callLike->class instanceof Class_) {
             $callLike->class->setAttribute(AttributeKey::SCOPE, $mutatingScope);
         }
+        if ($callLike->isFirstClassCallable()) {
+            return;
+        }
+        foreach ($callLike->getArgs() as $arg) {
+            $arg->value->setAttribute(AttributeKey::SCOPE, $mutatingScope);
+        }
     }
     /**
      * @param \PhpParser\Node\Expr\Assign|\PhpParser\Node\Expr\AssignOp|\PhpParser\Node\Expr\AssignRef $assign
@@ -439,17 +439,22 @@ final class PHPStanNodeScopeResolver
     private function processArray($array, MutatingScope $mutatingScope): void
     {
         foreach ($array->items as $arrayItem) {
-            if ($arrayItem instanceof ArrayItem) {
-                $this->processArrayItem($arrayItem, $mutatingScope);
+            if (!$arrayItem instanceof ArrayItem) {
+                continue;
             }
+            $this->processArrayItem($arrayItem, $mutatingScope);
         }
     }
     private function processArrayItem(ArrayItem $arrayItem, MutatingScope $mutatingScope): void
     {
+        $arrayItem->setAttribute(AttributeKey::SCOPE, $mutatingScope);
         if ($arrayItem->key instanceof Expr) {
             $arrayItem->key->setAttribute(AttributeKey::SCOPE, $mutatingScope);
         }
         $arrayItem->value->setAttribute(AttributeKey::SCOPE, $mutatingScope);
+        if ($arrayItem->value instanceof List_) {
+            $this->processArray($arrayItem->value, $mutatingScope);
+        }
     }
     /**
      * @param callable(Node $trait, MutatingScope $scope): void $nodeCallback

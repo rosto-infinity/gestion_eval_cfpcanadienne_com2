@@ -12,20 +12,44 @@ use DOMElement;
 use Rector\ChangesReporting\Contract\Output\OutputFormatterInterface;
 use Rector\ValueObject\Configuration;
 use Rector\ValueObject\ProcessResult;
-use RectorPrefix202512\Symfony\Component\Console\Style\SymfonyStyle;
+use RectorPrefix202604\Symfony\Component\Console\Style\SymfonyStyle;
 final class JUnitOutputFormatter implements OutputFormatterInterface
 {
     /**
      * @readonly
      */
     private SymfonyStyle $symfonyStyle;
+    /**
+     * @var string
+     */
     private const NAME = 'junit';
+    /**
+     * @var string
+     */
     private const XML_ATTRIBUTE_FILE = 'file';
+    /**
+     * @var string
+     */
     private const XML_ATTRIBUTE_NAME = 'name';
+    /**
+     * @var string
+     */
     private const XML_ATTRIBUTE_TYPE = 'type';
+    /**
+     * @var string
+     */
     private const XML_ELEMENT_TESTSUITES = 'testsuites';
+    /**
+     * @var string
+     */
     private const XML_ELEMENT_TESTSUITE = 'testsuite';
+    /**
+     * @var string
+     */
     private const XML_ELEMENT_TESTCASE = 'testcase';
+    /**
+     * @var string
+     */
     private const XML_ELEMENT_ERROR = 'error';
     public function __construct(SymfonyStyle $symfonyStyle)
     {
@@ -42,13 +66,13 @@ final class JUnitOutputFormatter implements OutputFormatterInterface
             return;
         }
         $domDocument = new DOMDocument('1.0', 'UTF-8');
-        $xmlTestSuite = $domDocument->createElement(self::XML_ELEMENT_TESTSUITE);
-        $xmlTestSuite->setAttribute(self::XML_ATTRIBUTE_NAME, 'rector');
+        $domElement = $domDocument->createElement(self::XML_ELEMENT_TESTSUITE);
+        $domElement->setAttribute(self::XML_ATTRIBUTE_NAME, 'rector');
         $xmlTestSuites = $domDocument->createElement(self::XML_ELEMENT_TESTSUITES);
-        $xmlTestSuites->appendChild($xmlTestSuite);
+        $xmlTestSuites->appendChild($domElement);
         $domDocument->appendChild($xmlTestSuites);
-        $this->appendSystemErrors($processResult, $configuration, $domDocument, $xmlTestSuite);
-        $this->appendFileDiffs($processResult, $configuration, $domDocument, $xmlTestSuite);
+        $this->appendSystemErrors($processResult, $configuration, $domDocument, $domElement);
+        $this->appendFileDiffs($processResult, $configuration, $domDocument, $domElement);
         echo $domDocument->saveXML() . \PHP_EOL;
     }
     private function appendSystemErrors(ProcessResult $processResult, Configuration $configuration, DOMDocument $domDocument, DOMElement $domElement): void
@@ -58,8 +82,9 @@ final class JUnitOutputFormatter implements OutputFormatterInterface
         }
         foreach ($processResult->getSystemErrors() as $systemError) {
             $filePath = $configuration->isReportingWithRealPath() ? $systemError->getAbsoluteFilePath() ?? '' : $systemError->getRelativeFilePath() ?? '';
-            $xmlError = $domDocument->createElement(self::XML_ELEMENT_ERROR, $systemError->getMessage());
+            $xmlError = $domDocument->createElement(self::XML_ELEMENT_ERROR);
             $xmlError->setAttribute(self::XML_ATTRIBUTE_TYPE, 'Error');
+            $xmlError->appendChild($domDocument->createTextNode($systemError->getMessage()));
             $xmlTestCase = $domDocument->createElement(self::XML_ELEMENT_TESTCASE);
             $xmlTestCase->setAttribute(self::XML_ATTRIBUTE_FILE, $filePath);
             $xmlTestCase->setAttribute(self::XML_ATTRIBUTE_NAME, $filePath . ':' . $systemError->getLine());
@@ -77,8 +102,9 @@ final class JUnitOutputFormatter implements OutputFormatterInterface
         foreach ($fileDiffs as $fileDiff) {
             $filePath = $configuration->isReportingWithRealPath() ? $fileDiff->getAbsoluteFilePath() ?? '' : $fileDiff->getRelativeFilePath() ?? '';
             $rectorClasses = implode(' / ', $fileDiff->getRectorShortClasses());
-            $xmlError = $domDocument->createElement(self::XML_ELEMENT_ERROR, $fileDiff->getDiff());
+            $xmlError = $domDocument->createElement(self::XML_ELEMENT_ERROR);
             $xmlError->setAttribute(self::XML_ATTRIBUTE_TYPE, $rectorClasses);
+            $xmlError->appendChild($domDocument->createTextNode($fileDiff->getDiff()));
             $xmlTestCase = $domDocument->createElement(self::XML_ELEMENT_TESTCASE);
             $xmlTestCase->setAttribute(self::XML_ATTRIBUTE_FILE, $filePath);
             $xmlTestCase->setAttribute(self::XML_ATTRIBUTE_NAME, $filePath . ':' . $fileDiff->getFirstLineNumber());

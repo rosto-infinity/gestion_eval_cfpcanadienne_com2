@@ -20,6 +20,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class UsersImport implements SkipsOnError, ToCollection, WithBatchInserts, WithHeadingRow, WithUpserts
 {
@@ -145,7 +146,7 @@ class UsersImport implements SkipsOnError, ToCollection, WithBatchInserts, WithH
         if (is_numeric($dateNaissance)) {
             try {
                 // Convertir le numéro de série Excel en objet DateTime
-                $dateObject = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($dateNaissance);
+                $dateObject = Date::excelToDateTimeObject($dateNaissance);
                 $dateNaissance = $dateObject->format('Y-m-d');
             } catch (\Exception $e) {
                 // Si la conversion échoue, on garde la valeur brute pour la validation

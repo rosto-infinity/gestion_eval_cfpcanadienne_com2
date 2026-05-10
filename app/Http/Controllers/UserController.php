@@ -6,8 +6,10 @@ namespace App\Http\Controllers;
 
 use App\Enums\Niveau;
 use App\Enums\Role;
+use App\Exports\MultiSheetUsersExport;
 use App\Exports\UsersBySpecialiteExport;
 use App\Exports\UsersExport;
+use App\Exports\UserTemplateExport;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Imports\UsersImport;
@@ -16,6 +18,7 @@ use App\Models\Specialite;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -140,7 +143,7 @@ class UserController extends Controller
         $anneesAcademiques = AnneeAcademique::ordered()->get();
         $anneeActive = AnneeAcademique::active()->first();
         // CORRECTION : Récupérer les cases de l'Enum Niveau
-        $niveaux = \App\Enums\Niveau::cases();
+        $niveaux = Niveau::cases();
 
         return view('users.edit', compact('user', 'specialites', 'anneesAcademiques', 'niveaux', 'roles', 'anneeActive'));
     }
@@ -221,7 +224,7 @@ class UserController extends Controller
      * - Organise les fichiers par date (Y/m)
      * - Génère un nom de fichier unique et sécurisé
      *
-     * @param  \Illuminate\Http\UploadedFile  $file  Le fichier uploadé
+     * @param  UploadedFile  $file  Le fichier uploadé
      * @return string Chemin du fichier stocké (ex: profiles/2025/01/profile_nom_1735862400.jpg)
      *
      * @throws \Exception Si le traitement de l'image échoue
@@ -327,7 +330,7 @@ class UserController extends Controller
             $filename = 'utilisateurs_par_specialite_'.date('Y-m-d_H-i').'.xlsx';
 
             return Excel::download(
-                new \App\Exports\MultiSheetUsersExport($exports),
+                new MultiSheetUsersExport($exports),
                 $filename
             );
 
@@ -407,7 +410,7 @@ class UserController extends Controller
     public function importTemplate()
     {
         try {
-            return Excel::download(new \App\Exports\UserTemplateExport, 'modele_import_utilisateurs.xlsx');
+            return Excel::download(new UserTemplateExport, 'modele_import_utilisateurs.xlsx');
 
         } catch (\Exception $e) {
             Log::error('Erreur UserController@importTemplate: '.$e->getMessage());

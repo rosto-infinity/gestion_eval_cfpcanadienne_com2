@@ -3,9 +3,9 @@
 declare (strict_types=1);
 namespace Rector\DependencyInjection;
 
-use RectorPrefix202512\Doctrine\Inflector\Inflector;
-use RectorPrefix202512\Doctrine\Inflector\Rules\English\InflectorFactory;
-use RectorPrefix202512\Illuminate\Container\Container;
+use RectorPrefix202604\Doctrine\Inflector\Inflector;
+use RectorPrefix202604\Doctrine\Inflector\Rules\English\InflectorFactory;
+use RectorPrefix202604\Illuminate\Container\Container;
 use PhpParser\Lexer;
 use PHPStan\Analyser\NodeScopeResolver;
 use PHPStan\Analyser\ScopeFactory;
@@ -35,6 +35,8 @@ use Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\ArrayP
 use Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\PlainValueParser;
 use Rector\Caching\Cache;
 use Rector\Caching\CacheFactory;
+use Rector\Caching\Config\FileHashComputer;
+use Rector\Caching\Contract\CacheMetaExtensionInterface;
 use Rector\ChangesReporting\Contract\Output\OutputFormatterInterface;
 use Rector\ChangesReporting\Output\ConsoleOutputFormatter;
 use Rector\ChangesReporting\Output\GitHubOutputFormatter;
@@ -119,6 +121,7 @@ use Rector\PhpParser\NodeVisitor\ArgNodeVisitor;
 use Rector\PhpParser\NodeVisitor\AssignedToNodeVisitor;
 use Rector\PhpParser\NodeVisitor\ByRefReturnNodeVisitor;
 use Rector\PhpParser\NodeVisitor\ByRefVariableNodeVisitor;
+use Rector\PhpParser\NodeVisitor\CallLikeThisBoundClosureArgsNodeVisitor;
 use Rector\PhpParser\NodeVisitor\ClassConstFetchNodeVisitor;
 use Rector\PhpParser\NodeVisitor\ClosureWithVariadicParametersNodeVisitor;
 use Rector\PhpParser\NodeVisitor\ContextNodeVisitor;
@@ -189,10 +192,10 @@ use Rector\StaticTypeMapper\PhpParser\NameNodeMapper;
 use Rector\StaticTypeMapper\PhpParser\NullableTypeNodeMapper;
 use Rector\StaticTypeMapper\PhpParser\StringNodeMapper;
 use Rector\StaticTypeMapper\PhpParser\UnionTypeNodeMapper;
-use RectorPrefix202512\Symfony\Component\Console\Application;
-use RectorPrefix202512\Symfony\Component\Console\Command\Command;
-use RectorPrefix202512\Symfony\Component\Console\Style\SymfonyStyle;
-use RectorPrefix202512\Webmozart\Assert\Assert;
+use RectorPrefix202604\Symfony\Component\Console\Application;
+use RectorPrefix202604\Symfony\Component\Console\Command\Command;
+use RectorPrefix202604\Symfony\Component\Console\Style\SymfonyStyle;
+use RectorPrefix202604\Webmozart\Assert\Assert;
 final class LazyContainerFactory
 {
     /**
@@ -210,7 +213,7 @@ final class LazyContainerFactory
     /**
      * @var array<class-string<DecoratingNodeVisitorInterface>>
      */
-    private const DECORATING_NODE_VISITOR_CLASSES = [ArgNodeVisitor::class, ClosureWithVariadicParametersNodeVisitor::class, PhpVersionConditionNodeVisitor::class, AssignedToNodeVisitor::class, SymfonyClosureNodeVisitor::class, ByRefReturnNodeVisitor::class, ByRefVariableNodeVisitor::class, ContextNodeVisitor::class, GlobalVariableNodeVisitor::class, NameNodeVisitor::class, StaticVariableNodeVisitor::class, PropertyOrClassConstDefaultNodeVisitor::class, ParamDefaultNodeVisitor::class, ClassConstFetchNodeVisitor::class];
+    private const DECORATING_NODE_VISITOR_CLASSES = [ArgNodeVisitor::class, ClosureWithVariadicParametersNodeVisitor::class, PhpVersionConditionNodeVisitor::class, AssignedToNodeVisitor::class, SymfonyClosureNodeVisitor::class, ByRefReturnNodeVisitor::class, ByRefVariableNodeVisitor::class, ContextNodeVisitor::class, GlobalVariableNodeVisitor::class, NameNodeVisitor::class, StaticVariableNodeVisitor::class, PropertyOrClassConstDefaultNodeVisitor::class, ParamDefaultNodeVisitor::class, ClassConstFetchNodeVisitor::class, CallLikeThisBoundClosureArgsNodeVisitor::class];
     /**
      * @var array<class-string<PhpDocTypeMapperInterface>>
      */
@@ -295,6 +298,7 @@ final class LazyContainerFactory
             $cacheFactory = $container->make(CacheFactory::class);
             return $cacheFactory->create();
         });
+        $rectorConfig->when(FileHashComputer::class)->needs('$cacheMetaExtensions')->giveTagged(CacheMetaExtensionInterface::class);
         // tagged services
         $rectorConfig->when(BetterPhpDocParser::class)->needs('$phpDocNodeDecorators')->giveTagged(PhpDocNodeDecoratorInterface::class);
         $rectorConfig->afterResolving(ArrayTypeMapper::class, static function (ArrayTypeMapper $arrayTypeMapper, Container $container): void {

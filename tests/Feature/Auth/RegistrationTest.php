@@ -6,7 +6,7 @@ test('registration screen can be rendered', function (): void {
     $response = $this->get('/register');
 
     $response->assertStatus(200);
-});
+})->skip('Registration is disabled');
 
 test('new users can register', function (): void {
     $response = $this->post('/register', [
@@ -18,4 +18,4 @@ test('new users can register', function (): void {
 
     $this->assertAuthenticated();
     $response->assertRedirect(route('dashboard', absolute: false));
-});
+})->skip('Registration is disabled');

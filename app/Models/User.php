@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\Niveau;
 use App\Enums\Role;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -245,7 +246,7 @@ class User extends Authenticatable
     }
 
     // Methods
-    public function getEvaluationsBySemestre(int $semestre): \Illuminate\Database\Eloquent\Collection
+    public function getEvaluationsBySemestre(int $semestre): Collection
     {
         return $this->evaluations()
             ->where('semestre', $semestre)

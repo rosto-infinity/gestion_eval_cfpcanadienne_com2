@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Models\BilanCompetence;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreBilanRequest extends FormRequest
@@ -29,9 +31,9 @@ class StoreBilanRequest extends FormRequest
                 // Règle personnalisée pour vérifier que l'étudiant n'a pas déjà de bilan pour l'année active
                 // (Ceci est une couche de sécurité, la logique métier principale reste dans le Service)
                 function ($attribute, $value, $fail): void {
-                    $user = \App\Models\User::find($value);
+                    $user = User::find($value);
                     if ($user && $user->annee_academique_id) {
-                        $exists = \App\Models\BilanCompetence::where('user_id', $value)
+                        $exists = BilanCompetence::where('user_id', $value)
                             ->where('annee_academique_id', $user->annee_academique_id)
                             ->exists();
                         if ($exists) {

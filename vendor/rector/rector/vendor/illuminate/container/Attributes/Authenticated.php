@@ -1,10 +1,10 @@
 <?php
 
-namespace RectorPrefix202512\Illuminate\Container\Attributes;
+namespace RectorPrefix202604\Illuminate\Container\Attributes;
 
 use Attribute;
-use RectorPrefix202512\Illuminate\Contracts\Container\Container;
-use RectorPrefix202512\Illuminate\Contracts\Container\ContextualAttribute;
+use RectorPrefix202604\Illuminate\Contracts\Container\Container;
+use RectorPrefix202604\Illuminate\Contracts\Container\ContextualAttribute;
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class Authenticated implements ContextualAttribute
 {

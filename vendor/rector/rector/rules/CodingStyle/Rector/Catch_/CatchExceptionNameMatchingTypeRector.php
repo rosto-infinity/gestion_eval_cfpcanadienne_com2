@@ -3,7 +3,7 @@
 declare (strict_types=1);
 namespace Rector\CodingStyle\Rector\Catch_;
 
-use RectorPrefix202512\Nette\Utils\Strings;
+use RectorPrefix202604\Nette\Utils\Strings;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\Closure;
@@ -34,8 +34,8 @@ final class CatchExceptionNameMatchingTypeRector extends AbstractRector
      */
     private PropertyNaming $propertyNaming;
     /**
-     * @var string
      * @see https://regex101.com/r/xmfMAX/1
+     * @var string
      */
     private const STARTS_WITH_ABBREVIATION_REGEX = '#^([A-Za-z]+?)([A-Z]{1}[a-z]{1})([A-Za-z]*)#';
     public function __construct(PropertyNaming $propertyNaming)
@@ -93,7 +93,6 @@ CODE_SAMPLE
             $catch = $stmt->catches[0];
             /** @var Variable $catchVar */
             $catchVar = $catch->var;
-            /** @var string $oldVariableName */
             $oldVariableName = (string) $this->getName($catchVar);
             $typeShortName = $this->resolveVariableName($catch->types[0]);
             $newVariableName = $this->resolveNewVariableName($typeShortName);

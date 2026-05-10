@@ -5,9 +5,9 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 declare (strict_types=1);
-namespace RectorPrefix202512\Nette\Utils;
+namespace RectorPrefix202604\Nette\Utils;
 
-use RectorPrefix202512\Nette;
+use RectorPrefix202604\Nette;
 use function constant, current, defined, end, explode, file_get_contents, implode, ltrim, next, ord, strrchr, strtolower, substr;
 use const T_AS, T_CLASS, T_COMMENT, T_CURLY_OPEN, T_DOC_COMMENT, T_DOLLAR_OPEN_CURLY_BRACES, T_ENUM, T_INTERFACE, T_NAME_FULLY_QUALIFIED, T_NAME_QUALIFIED, T_NAMESPACE, T_NS_SEPARATOR, T_STRING, T_TRAIT, T_USE, T_WHITESPACE, TOKEN_PARSE;
 /**
@@ -31,6 +31,9 @@ final class Reflection
     public static function getParameterDefaultValue(\ReflectionParameter $param)
     {
         if ($param->isDefaultValueConstant()) {
+            if ($param->getDefaultValueConstantName() === null) {
+                throw new Nette\ShouldNotHappenException();
+            }
             $const = $orig = $param->getDefaultValueConstantName();
             $pair = explode('::', $const);
             if (isset($pair[1])) {
@@ -55,6 +58,7 @@ final class Reflection
     }
     /**
      * Returns a reflection of a class or trait that contains a declaration of given property. Property can also be declared in the trait.
+     * @return \ReflectionClass<object>
      */
     public static function getPropertyDeclaringClass(\ReflectionProperty $prop): \ReflectionClass
     {
@@ -114,6 +118,7 @@ final class Reflection
     /**
      * Expands the name of the class to full name in the given context of given class.
      * Thus, it returns how the PHP parser would understand $name if it were written in the body of the class $context.
+     * @param  \ReflectionClass<object>  $context
      * @throws Nette\InvalidArgumentException
      */
     public static function expandClassName(string $name, \ReflectionClass $context): string
@@ -142,7 +147,10 @@ final class Reflection
             return $name;
         }
     }
-    /** @return array<string, class-string> of [alias => class] */
+    /**
+     * @param  \ReflectionClass<object>  $class
+     * @return array<string, class-string> of [alias => class]
+     */
     public static function getUseStatements(\ReflectionClass $class): array
     {
         if ($class->isAnonymous()) {
@@ -153,7 +161,7 @@ final class Reflection
             if ($class->isInternal()) {
                 $cache[$name] = [];
             } else {
-                $code = file_get_contents($class->getFileName());
+                $code = (string) file_get_contents((string) $class->getFileName());
                 $cache = self::parseUseStatements($code, $name) + $cache;
             }
         }
@@ -161,6 +169,7 @@ final class Reflection
     }
     /**
      * Parses PHP code to [class => [alias => class, ...]]
+     * @return array<string, array<string, string>>
      */
     private static function parseUseStatements(string $code, ?string $forClass = null): array
     {
@@ -176,7 +185,7 @@ final class Reflection
         $nameTokens = [T_STRING, T_NS_SEPARATOR, T_NAME_QUALIFIED, T_NAME_FULLY_QUALIFIED];
         while ($token = current($tokens)) {
             next($tokens);
-            switch ($token->id) {
+            switch (is_array($token) ? $token[0] : $token) {
                 case T_NAMESPACE:
                     $namespace = ltrim(self::fetch($tokens, $nameTokens) . '\\', '\\');
                     $uses = [];
@@ -199,8 +208,8 @@ final class Reflection
                         $name = ltrim($name, '\\');
                         if (self::fetch($tokens, '{')) {
                             while ($suffix = self::fetch($tokens, $nameTokens)) {
-                                if (self::fetch($tokens, T_AS)) {
-                                    $uses[self::fetch($tokens, T_STRING)] = $name . $suffix;
+                                if (self::fetch($tokens, T_AS) && $alias = self::fetch($tokens, T_STRING)) {
+                                    $uses[$alias] = $name . $suffix;
                                 } else {
                                     $tmp = explode('\\', $suffix);
                                     $uses[end($tmp)] = $name . $suffix;
@@ -209,8 +218,8 @@ final class Reflection
                                     break;
                                 }
                             }
-                        } elseif (self::fetch($tokens, T_AS)) {
-                            $uses[self::fetch($tokens, T_STRING)] = $name;
+                        } elseif (self::fetch($tokens, T_AS) && $alias = self::fetch($tokens, T_STRING)) {
+                            $uses[$alias] = $name;
                         } else {
                             $tmp = explode('\\', $name);
                             $uses[end($tmp)] = $name;
@@ -235,14 +244,15 @@ final class Reflection
         return $res;
     }
     /**
-     * @param string|int|mixed[] $take
+     * @param  \PhpToken[]  $tokens
+     * @param  string|int|int[]  $take
      */
     private static function fetch(array &$tokens, $take): ?string
     {
         $res = null;
         while ($token = current($tokens)) {
             if ($token->is($take)) {
-                $res .= $token->text;
+                $res .= is_array($token) ? $token[1] : $token;
             } elseif (!$token->is([T_DOC_COMMENT, T_WHITESPACE, T_COMMENT])) {
                 break;
             }

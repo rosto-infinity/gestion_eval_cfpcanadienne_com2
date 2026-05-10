@@ -17,9 +17,10 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Param;
 use PhpParser\NodeVisitor;
 use PHPStan\Analyser\Scope;
-use PHPStan\Reflection\Annotations\AnnotationMethodReflection;
+use PHPStan\Reflection\MethodReflection;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\Node\AttributeKey;
+use Rector\NodeTypeResolver\PHPStan\ParametersAcceptorSelectorVariantsWrapper;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
 use Rector\PhpParser\AstResolver;
 use Rector\PhpParser\Comparing\NodeComparator;
@@ -93,9 +94,16 @@ final class ArrowFunctionAndClosureFirstClassCallableGuard
         if ($reflection === null) {
             return \true;
         }
-        // exists, but by @method annotation
-        if ($reflection instanceof AnnotationMethodReflection && !$reflection->getDeclaringClass()->hasNativeMethod($reflection->getName())) {
+        // phpstan reports first class callables that are not native methods
+        if ($reflection instanceof MethodReflection && !$reflection->getDeclaringClass()->hasNativeMethod($reflection->getName())) {
             return \true;
+        }
+        // check if args require by reference
+        $parameters = ParametersAcceptorSelectorVariantsWrapper::select($reflection, $callLike, $scope)->getParameters();
+        foreach ($parameters as $parameter) {
+            if ($parameter->passedByReference()->yes()) {
+                return \true;
+            }
         }
         $functionLike = $this->astResolver->resolveClassMethodOrFunctionFromCall($callLike);
         if (!$functionLike instanceof FunctionLike) {

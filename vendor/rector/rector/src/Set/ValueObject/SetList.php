@@ -40,7 +40,6 @@ final class SetList
     public const NAMING = __DIR__ . '/../../../config/set/naming.php';
     /**
      * Opinionated rules that match rector coding standard
-     *
      * @var string
      */
     public const RECTOR_PRESET = __DIR__ . '/../../../config/set/rector-preset.php';
@@ -111,6 +110,10 @@ final class SetList
     /**
      * @var string
      */
+    public const PHP_86 = __DIR__ . '/../../../config/set/php86.php';
+    /**
+     * @var string
+     */
     public const PRIVATIZATION = __DIR__ . '/../../../config/set/privatization.php';
     /**
      * @var string
@@ -138,7 +141,6 @@ final class SetList
     public const BEHAT_ANNOTATIONS_TO_ATTRIBUTES = __DIR__ . '/../../../config/set/behat-annotations-to-attributes.php';
     /**
      * @experimental Check generic types in runtime with assert. Generics for impatient people.
-     *
      * @var string
      */
     public const ASSERT = __DIR__ . '/../../../config/set/assert.php';

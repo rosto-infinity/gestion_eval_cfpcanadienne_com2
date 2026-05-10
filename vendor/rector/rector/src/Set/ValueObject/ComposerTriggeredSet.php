@@ -3,10 +3,10 @@
 declare (strict_types=1);
 namespace Rector\Set\ValueObject;
 
-use RectorPrefix202512\Composer\Semver\Semver;
+use RectorPrefix202604\Composer\Semver\Semver;
 use Rector\Composer\ValueObject\InstalledPackage;
 use Rector\Set\Contract\SetInterface;
-use RectorPrefix202512\Webmozart\Assert\Assert;
+use RectorPrefix202604\Webmozart\Assert\Assert;
 /**
  * @api used by extensions
  */
@@ -29,8 +29,8 @@ final class ComposerTriggeredSet implements SetInterface
      */
     private string $setFilePath;
     /**
-     * @var string
      * @see https://regex101.com/r/ioYomu/1
+     * @var string
      */
     private const PACKAGE_REGEX = '#^[a-z0-9-]+\/([a-z0-9-_]+|\*)$#';
     public function __construct(string $groupName, string $packageName, string $version, string $setFilePath)
@@ -51,17 +51,15 @@ final class ComposerTriggeredSet implements SetInterface
         return $this->setFilePath;
     }
     /**
-     * @param InstalledPackage[] $installedPackages
+     * @param array<string, InstalledPackage> $installedPackages
      */
     public function matchInstalledPackages(array $installedPackages): bool
     {
-        foreach ($installedPackages as $installedPackage) {
-            if ($installedPackage->getName() !== $this->packageName) {
-                continue;
-            }
-            return Semver::satisfies($installedPackage->getVersion(), '^' . $this->version);
+        $package = $installedPackages[$this->packageName] ?? null;
+        if (!$package instanceof InstalledPackage) {
+            return \false;
         }
-        return \false;
+        return Semver::satisfies($package->getVersion(), '^' . $this->version);
     }
     public function getName(): string
     {

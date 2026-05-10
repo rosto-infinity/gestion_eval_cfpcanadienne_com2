@@ -8,10 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace RectorPrefix202512\Symfony\Component\String;
+namespace RectorPrefix202604\Symfony\Component\String;
 
-use RectorPrefix202512\Symfony\Component\String\Exception\ExceptionInterface;
-use RectorPrefix202512\Symfony\Component\String\Exception\InvalidArgumentException;
+use RectorPrefix202604\Symfony\Component\String\Exception\ExceptionInterface;
+use RectorPrefix202604\Symfony\Component\String\Exception\InvalidArgumentException;
 /**
  * Represents a string of Unicode grapheme clusters encoded as UTF-8.
  *
@@ -93,7 +93,9 @@ class UnicodeString extends AbstractUnicodeString
         if ('' === $suffix || \false === $suffix) {
             return \false;
         }
-        $grapheme = grapheme_extract($this->string, \strlen($suffix), \GRAPHEME_EXTR_MAXBYTES, \strlen($this->string) - \strlen($suffix)) ?: '';
+        if (\false === $grapheme = grapheme_extract($this->string, \strlen($suffix), \GRAPHEME_EXTR_MAXBYTES, \strlen($this->string) - \strlen($suffix))) {
+            $grapheme = '';
+        }
         if ($this->ignoreCase) {
             return 0 === mb_stripos($grapheme, $suffix, 0, 'UTF-8');
         }
@@ -317,7 +319,9 @@ class UnicodeString extends AbstractUnicodeString
         if ('' === $prefix || \false === $prefix) {
             return \false;
         }
-        $grapheme = grapheme_extract($this->string, \strlen($prefix), \GRAPHEME_EXTR_MAXBYTES) ?: '';
+        if (\false === $grapheme = grapheme_extract($this->string, \strlen($prefix), \GRAPHEME_EXTR_MAXBYTES)) {
+            $grapheme = '';
+        }
         if ($this->ignoreCase) {
             return 0 === mb_stripos($grapheme, $prefix, 0, 'UTF-8');
         }

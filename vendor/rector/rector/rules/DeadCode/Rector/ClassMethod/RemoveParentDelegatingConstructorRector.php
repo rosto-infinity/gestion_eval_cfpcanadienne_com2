@@ -92,6 +92,12 @@ CODE_SAMPLE
         if ($node->stmts === null || count($node->stmts) !== 1) {
             return null;
         }
+        if ($node->isFinal()) {
+            return null;
+        }
+        if (!$node->isPublic()) {
+            return null;
+        }
         $parentMethodReflection = $this->matchParentConstructorReflection($node);
         if (!$parentMethodReflection instanceof ExtendedMethodReflection) {
             return null;
@@ -107,6 +113,9 @@ CODE_SAMPLE
         }
         // match parameter types and parent constructor types
         if (!$this->areConstructorAndParentParameterTypesMatching($node, $parentMethodReflection)) {
+            return null;
+        }
+        if ($this->doAttributeDecoratedParametersExist($node)) {
             return null;
         }
         return NodeVisitor::REMOVE_NODE;
@@ -181,9 +190,15 @@ CODE_SAMPLE
     private function areConstructorAndParentParameterTypesMatching(ClassMethod $classMethod, ExtendedMethodReflection $extendedMethodReflection): bool
     {
         foreach ($classMethod->getParams() as $position => $param) {
+            if ($param->isPromoted() && $param->isPrivate()) {
+                return \false;
+            }
             $parameterType = $param->type;
             // no type override
             if ($parameterType === null) {
+                if ($param->default instanceof Expr && $this->isDifferentDefaultValue($param->default, $extendedMethodReflection, $position)) {
+                    return \false;
+                }
                 continue;
             }
             $parametersSelector = $extendedMethodReflection->getOnlyVariant();
@@ -215,9 +230,26 @@ CODE_SAMPLE
             if (!$nativeParentParameterReflection instanceof ReflectionParameter) {
                 return \false;
             }
+            // when child has default value, but parent does not have default value,
+            // mark as different
+            if (!$nativeParentParameterReflection->isDefaultValueAvailable()) {
+                return \true;
+            }
             $parentDefault = $nativeParentParameterReflection->getDefaultValue();
             if (!$this->valueResolver->isValue($defaultExpr, $parentDefault)) {
                 return \true;
+            }
+        }
+        return \false;
+    }
+    private function doAttributeDecoratedParametersExist(ClassMethod $classMethod): bool
+    {
+        $constructorParams = $classMethod->getParams();
+        foreach ($constructorParams as $constructorParam) {
+            foreach ($constructorParam->attrGroups as $attrGroup) {
+                if ($attrGroup->attrs !== []) {
+                    return \true;
+                }
             }
         }
         return \false;

@@ -14,6 +14,7 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Scalar\Int_;
 use PhpParser\Node\Scalar\InterpolatedString;
 use PhpParser\Node\Scalar\String_;
+use PHPStan\Analyser\Fiber\FiberScope;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\Native\ExtendedNativeParameterReflection;
 use PHPStan\Reflection\ParametersAcceptor;
@@ -173,6 +174,9 @@ final class NullToStrictStringIntConverter
             return \true;
         }
         $parentScope = $scope->getParentScope();
+        if ($parentScope instanceof FiberScope) {
+            $parentScope = $parentScope->toMutatingScope();
+        }
         if ($parentScope instanceof Scope) {
             return $parentScope->getType($expr) instanceof ErrorType;
         }
