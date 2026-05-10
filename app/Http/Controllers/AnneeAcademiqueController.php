@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\Academia\CloseAcademicYearAction;
 use App\Models\AnneeAcademique;
 use App\Models\Specialite;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\View\View;
 
+#[Middleware('auth')]
+#[Middleware('verified')]
+#[Middleware('role:admin,superadmin')]
 class AnneeAcademiqueController extends Controller
 {
     public function index(): View
     {
-        // $annees = AnneeAcademique::withCount('users')
-        $annees = AnneeAcademique::paginate(15);
+        $annees = AnneeAcademique::paginate(5);
 
         return view('annees.index-annee', compact('annees'));
     }
@@ -29,7 +32,7 @@ class AnneeAcademiqueController extends Controller
         return view('annees.create-annee', compact('specialites', 'anneesAcademiques'));
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, CloseAcademicYearAction $closeYear): RedirectResponse
     {
         $validated = $request->validate([
             'libelle' => 'required|string|max:20|unique:annees_academiques,libelle',
@@ -39,22 +42,16 @@ class AnneeAcademiqueController extends Controller
         ]);
 
         try {
-            DB::beginTransaction();
-
             $annee = AnneeAcademique::create($validated);
 
             if ($request->boolean('is_active')) {
-                $annee->activate();
+                $closeYear->execute($annee);
             }
-
-            DB::commit();
 
             return redirect()
                 ->route('annees.index')
                 ->with('success', 'Année académique créée avec succès.');
         } catch (\Exception $e) {
-            DB::rollBack();
-
             return back()
                 ->withInput()
                 ->with('error', 'Erreur lors de la création: '.$e->getMessage());
@@ -65,13 +62,7 @@ class AnneeAcademiqueController extends Controller
     {
         $annee->loadCount(['users', 'evaluations', 'bilansCompetences']);
 
-        $stats = [
-            'total_etudiants' => $annee->users_count,
-            'total_evaluations' => $annee->evaluations_count,
-            'total_bilans' => $annee->bilans_competences_count,
-        ];
-
-        return view('annees.show-annee', compact('annee', 'stats'));
+        return view('annees.show-annee', compact('annee'));
     }
 
     public function edit(AnneeAcademique $annee): View
@@ -79,7 +70,7 @@ class AnneeAcademiqueController extends Controller
         return view('annees.edit-annee', compact('annee'));
     }
 
-    public function update(Request $request, AnneeAcademique $annee): RedirectResponse
+    public function update(Request $request, AnneeAcademique $annee, CloseAcademicYearAction $closeYear): RedirectResponse
     {
         $validated = $request->validate([
             'libelle' => 'required|string|max:20|unique:annees_academiques,libelle,'.$annee->id,
@@ -89,27 +80,22 @@ class AnneeAcademiqueController extends Controller
         ]);
 
         try {
-            DB::beginTransaction();
-
             $annee->update($validated);
 
             if ($request->boolean('is_active')) {
-                $annee->activate();
+                $closeYear->execute($annee);
             }
-
-            DB::commit();
 
             return redirect()
                 ->route('annees.index')
                 ->with('success', 'Année académique mise à jour avec succès.');
         } catch (\Exception $e) {
-            DB::rollBack();
-
             return back()
                 ->withInput()
                 ->with('error', 'Erreur lors de la mise à jour: '.$e->getMessage());
         }
     }
+
 
     public function destroy(AnneeAcademique $annee): RedirectResponse
     {
@@ -132,10 +118,10 @@ class AnneeAcademiqueController extends Controller
         }
     }
 
-    public function activate(AnneeAcademique $annee): RedirectResponse
+    public function activate(AnneeAcademique $annee, CloseAcademicYearAction $closeYear): RedirectResponse
     {
         try {
-            $annee->activate();
+            $closeYear->execute($annee);
 
             return back()->with('success', 'Année académique activée avec succès.');
         } catch (\Exception $e) {

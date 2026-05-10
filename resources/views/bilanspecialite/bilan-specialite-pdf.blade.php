@@ -1,7 +1,7 @@
 @extends('layouts.pdf')
 
-@section('title', 'Bilan par Spécialité - ' . ($annee ? $annee->libelle : 'Toutes les années'))
 
+@section('title', 'Bilan par Spécialité - ' . ($annee ? $annee->libelle : 'Toutes les années'))
 @section('content')
 <div class="w-full min-h-screen bg-background p-8">
     <!-- En-tête du document -->

@@ -7,8 +7,12 @@ namespace App\Http\Controllers;
 use App\Models\Specialite;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\View\View;
 
+#[Middleware('auth')]
+#[Middleware('verified')]
+#[Middleware('role:admin,superadmin')]
 class SpecialiteController extends Controller
 {
     public function index(Request $request): View

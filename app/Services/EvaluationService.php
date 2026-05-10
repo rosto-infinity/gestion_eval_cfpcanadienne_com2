@@ -137,7 +137,7 @@ class EvaluationService
         // Optimisation Laravel 13 (Phase 4) : Éradication du N+1 via jointure latérale corrélée
         return User::studentsOnly()
             ->select('users.*', 'eval.note as eval_note', 'eval.id as eval_id')
-            ->where('specialite_id', $specialiteId)
+            ->where('users.specialite_id', $specialiteId)
             ->where('users.annee_academique_id', $anneeAcademiqueId)
             ->leftJoinLateral(
                 Evaluation::query()

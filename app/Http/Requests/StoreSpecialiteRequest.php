@@ -40,21 +40,18 @@ class StoreSpecialiteRequest extends FormRequest
     public function messages(): array
     {
         return [
-            // Messages pour le code
-            'code.required' => '❌ Le code de la spécialité est obligatoire.',
-            'code.string' => '❌ Le code doit être une chaîne de caractères.',
-            'code.max' => '❌ Le code ne doit pas dépasser 20 caractères.',
-            'code.unique' => '❌ Ce code de spécialité est déjà utilisé. Veuillez choisir un autre code.',
+            'code.required' => 'Le code de la spécialité est obligatoire.',
+            'code.string' => 'Le code doit être une chaîne de caractères.',
+            'code.max' => 'Le code ne doit pas dépasser 20 caractères.',
+            'code.unique' => 'Ce code de spécialité est déjà utilisé. Veuillez choisir un autre code.',
 
-            // Messages pour l'intitulé
-            'intitule.required' => '❌ L\'intitulé de la spécialité est obligatoire.',
-            'intitule.string' => '❌ L\'intitulé doit être une chaîne de caractères.',
-            'intitule.max' => '❌ L\'intitulé ne doit pas dépasser 100 caractères.',
-            'intitule.unique' => '❌ Cette spécialité existe déjà. Veuillez choisir un autre intitulé.',
+            'intitule.required' => 'L\'intitulé de la spécialité est obligatoire.',
+            'intitule.string' => 'L\'intitulé doit être une chaîne de caractères.',
+            'intitule.max' => 'L\'intitulé ne doit pas dépasser 100 caractères.',
+            'intitule.unique' => 'Cette spécialité existe déjà. Veuillez choisir un autre intitulé.',
 
-            // Messages pour la description
-            'description.string' => '❌ La description doit être une chaîne de caractères.',
-            'description.max' => '❌ La description ne doit pas dépasser 500 caractères.',
+            'description.string' => 'La description doit être une chaîne de caractères.',
+            'description.max' => 'La description ne doit pas dépasser 500 caractères.',
         ];
     }
 }

@@ -74,7 +74,7 @@ class StoreEvaluationRequest extends FormRequest
             'note.numeric' => 'La note doit être un nombre.',
             'note.min' => 'La note ne peut pas être inférieure à 0.',
             'note.max' => 'La note ne peut pas dépasser 20.',
-            'note.unique' => '⚠️ Une évaluation existe déjà pour cet étudiant dans ce module pour ce semestre et cette année.',
+            'note.unique' => 'Une évaluation existe déjà pour cet étudiant, ce module, ce semestre et cette année.',
         ];
     }
 

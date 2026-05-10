@@ -3,7 +3,7 @@
         <!-- Logo et Description -->
         <div>
             <div class="flex items-center gap-2 font-bold text-lg mb-4">
-                <div class="flex items-center justify-center w-9 h-9 bg-primary text-primary-foreground rounded-lg shadow-md shadow-primary/10 overflow-hidden">
+                <div class="flex items-center justify-center w-9 h-9 bg-white text-primary-foreground rounded-lg shadow-md shadow-primary/10 overflow-hidden">
                     <img src="/android-chrome-192x192.png" alt="logo-eval" class="w-7 h-7 object-contain">
                 </div>
                 <span>Gestion<span class="text-primary">Eval</span></span>

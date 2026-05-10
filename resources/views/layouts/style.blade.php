@@ -38,7 +38,7 @@
         position: fixed;
         top: 0;
         left: 0;
-        width: 200px;
+        width: 280px;
         height: 100%;
         background: var(--light);
         z-index: 2000;
@@ -226,8 +226,8 @@
     /* ==================== */
     #content {
         position: relative;
-        width: calc(100% - 200px);
-        left: 200px;
+        width: calc(100% - 280px);
+        left: 280px;
         transition: all 0.3s ease;
         min-height: 100vh;
     }
@@ -579,12 +579,12 @@
     /* Tablets and below */
     @media screen and (max-width: 1024px) {
         #sidebar {
-            width: 200px;
+            width: 280px;
         }
 
         #content {
-            width: calc(100% - 200px);
-            left: 200px;
+            width: calc(100% - 280px);
+            left: 280px;
         }
 
         #content main .table-data {

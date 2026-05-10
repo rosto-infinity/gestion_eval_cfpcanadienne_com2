@@ -5,13 +5,33 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
+use App\Http\Resources\EvaluationResource;
 
+#[UseResource(EvaluationResource::class)]
 class Evaluation extends Model
 {
     use HasFactory;
+
+    protected function appreciation(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->note !== null
+                ? match (true) {
+                    $this->note >= 18 => 'Excellent',
+                    $this->note >= 16 => 'Très bien',
+                    $this->note >= 14 => 'Bien',
+                    $this->note >= 12 => 'Assez bien',
+                    $this->note >= 10 => 'Passable',
+                    default => 'Insuffisant',
+                }
+                : null,
+        );
+    }
 
     protected $table = 'evaluations';
 
@@ -82,16 +102,9 @@ class Evaluation extends Model
         return $this->note >= 0 && $this->note <= 20;
     }
 
-    public function getAppreciation(): string
+    public function getAppreciation(): ?string
     {
-        return match (true) {
-            $this->note >= 18 => 'Excellent',
-            $this->note >= 16 => 'Très bien',
-            $this->note >= 14 => 'Bien',
-            $this->note >= 12 => 'Assez bien',
-            $this->note >= 10 => 'Passable',
-            default => 'Insuffisant',
-        };
+        return $this->appreciation;
     }
 
     public static function calculateMoyenneSemestre(int $userId, int $semestre, int $anneeId): ?float

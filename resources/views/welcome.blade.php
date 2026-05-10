@@ -515,7 +515,7 @@
         <!-- =======================
              TECH STACK
              ======================= -->
-        <section id="tech" class="py-16 border-t border-border">
+        {{-- <section id="tech" class="py-16 border-t border-border">
             <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
                 <p class="text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-8">Propulsé par des
                     technologies modernes</p>
@@ -543,7 +543,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> --}}
 
        <!-- =======================
              CTA / FOOTER

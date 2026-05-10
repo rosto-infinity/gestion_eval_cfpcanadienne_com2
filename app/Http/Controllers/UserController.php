@@ -270,8 +270,8 @@ class UserController extends Controller
     public function exportAll(Request $request)
     {
         try {
-            $specialiteId = $request->input('specialite_id');
-            $anneeId = $request->input('annee_id');
+            $specialiteId = $request->filled('specialite_id') ? (int) $request->input('specialite_id') : null;
+            $anneeId = $request->filled('annee_id') ? (int) $request->input('annee_id') : null;
 
             $filename = 'utilisateurs';
 

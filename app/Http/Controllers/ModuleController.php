@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\Academia\SyncModuleSpecialtyAction;
 use App\Models\Module;
 use App\Models\Specialite;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\View\View;
 
+#[Middleware('auth')]
+#[Middleware('verified')]
+#[Middleware('role:admin,superadmin')]
 class ModuleController extends Controller
 {
     public function index(Request $request): View
@@ -38,7 +43,7 @@ class ModuleController extends Controller
         return view('modules.create-modules', compact('specialites'));
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, SyncModuleSpecialtyAction $syncAction): RedirectResponse
     {
         $validated = $request->validate([
             'specialite_id' => 'required|exists:specialites,id',
@@ -57,6 +62,16 @@ class ModuleController extends Controller
             return back()
                 ->withInput()
                 ->withErrors(['code' => 'Ce code existe déjà pour cette spécialité.']);
+        }
+
+        $specialite = Specialite::findOrFail($validated['specialite_id']);
+
+        $weightCheck = $syncAction->validateWeights($specialite, (float) $validated['coefficient']);
+
+        if (! $weightCheck['valid']) {
+            return back()
+                ->withInput()
+                ->withErrors(['coefficient' => $weightCheck['message']]);
         }
 
         try {
@@ -92,7 +107,7 @@ class ModuleController extends Controller
         return view('modules.edit-modules', compact('module', 'specialites'));
     }
 
-    public function update(Request $request, Module $module): RedirectResponse
+    public function update(Request $request, Module $module, SyncModuleSpecialtyAction $syncAction): RedirectResponse
     {
         $validated = $request->validate([
             'specialite_id' => 'required|exists:specialites,id',
@@ -112,6 +127,19 @@ class ModuleController extends Controller
             return back()
                 ->withInput()
                 ->withErrors(['code' => 'Ce code existe déjà pour cette spécialité.']);
+        }
+
+        if ((float) $validated['coefficient'] !== (float) $module->coefficient
+            || (int) $validated['specialite_id'] !== $module->specialite_id) {
+
+            $specialite = Specialite::findOrFail($validated['specialite_id']);
+            $weightCheck = $syncAction->validateWeights($specialite, (float) $validated['coefficient'], $module->id);
+
+            if (! $weightCheck['valid']) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['coefficient' => $weightCheck['message']]);
+            }
         }
 
         try {

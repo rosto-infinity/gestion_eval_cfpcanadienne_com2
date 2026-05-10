@@ -362,6 +362,8 @@ namespace App\Models {
      * @property int $id
      * @property-read \App\Models\User $user
      * @property-read \App\Models\AnneeAcademique $anneeAcademique
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Evaluation> $evaluations
+     * @property-read int|null $evaluations_count
      * @method static \Illuminate\Database\Eloquent\Builder<BilanCompetence>|BilanCompetence whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<BilanCompetence>|BilanCompetence whereUserId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<BilanCompetence>|BilanCompetence whereAnneeAcademiqueId($value)
@@ -706,6 +708,7 @@ namespace App\Models {
      * @property int $module_id
      * @property int $user_id
      * @property int $id
+     * @property-read mixed $appreciation
      * @property-read \App\Models\User $user
      * @property-read \App\Models\Module $module
      * @property-read \App\Models\Specialite $specialite
@@ -1739,7 +1742,7 @@ namespace App\Models {
      * @property string|null $telephone
      * @property string $nationalite
      * @property string|null $lieu_naissance
-     * @property string|null $date_naissance
+     * @property \Illuminate\Support\Carbon|null $date_naissance
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string|null $remember_token

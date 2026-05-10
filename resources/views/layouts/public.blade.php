@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -70,7 +71,7 @@
     <header class="relative z-50 w-full max-w-7xl mx-auto px-6 lg:px-8 py-6 flex justify-between items-center">
         <!-- Logo -->
         <a href="{{ route('welcome') }}" class="flex items-center gap-2 font-bold text-xl tracking-tight hover:opacity-90 transition-opacity">
-            <div class="flex items-center justify-center w-10 h-10 bg-primary text-primary-foreground rounded-xl shadow-lg shadow-primary/20">
+            <div class="flex items-center justify-center w-10 h-10 bg-white text-primary-foreground rounded-xl shadow-lg shadow-primary/20">
                 <img src="/android-chrome-192x192.png" alt="logo-cfpc" class="w-7 h-7">
             </div>
             <span>Gestion<span class="text-primary">Eval</span></span>

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class BilanCompetence extends Model
 {
@@ -43,6 +44,11 @@ class BilanCompetence extends Model
     public function anneeAcademique(): BelongsTo
     {
         return $this->belongsTo(AnneeAcademique::class, 'annee_academique_id');
+    }
+
+    public function evaluations(): HasManyThrough
+    {
+        return $this->hasManyThrough(Evaluation::class, User::class, 'id', 'user_id', 'user_id', 'id');
     }
 
     // Scopes

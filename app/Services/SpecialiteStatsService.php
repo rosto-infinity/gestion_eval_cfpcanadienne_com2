@@ -26,7 +26,12 @@ class SpecialiteStatsService
         }
 
         return $query->with(['users' => function ($q) use ($anneeId): void {
-            $q->studentsOnly()->where('annee_academique_id', $anneeId)->with(['bilanCompetence']);
+            $q->studentsOnly()
+                ->where('annee_academique_id', $anneeId)
+                ->with([
+                    'bilanCompetence',
+                    'evaluations' => fn ($q) => $q->where('annee_academique_id', $anneeId),
+                ]);
         }])
             ->get()
             ->map(fn ($specialite) => $this->calculateSpecialiteStats($specialite))
@@ -48,12 +53,11 @@ class SpecialiteStatsService
 
         $admis = $etudiants->filter(fn ($e) => $e->bilanCompetence?->isAdmis())->count();
 
-        $moyS1 = $etudiants->avg(fn ($e) => $e->getMoyenneSemestre(1));
-        $moyS2 = $etudiants->avg(fn ($e) => $e->getMoyenneSemestre(2));
+        $moyS1 = $etudiants->avg(fn ($e) => $e->evaluations->where('semestre', 1)->avg('note'));
+        $moyS2 = $etudiants->avg(fn ($e) => $e->evaluations->where('semestre', 2)->avg('note'));
         $moyComp = $etudiants->avg(fn ($e) => $e->bilanCompetence?->moy_competences);
         $moyGen = $etudiants->avg(fn ($e) => $e->bilanCompetence?->moyenne_generale);
 
-        // CORRECTION : Ajout du calcul du Max et Min pour le tableau comparatif
         $meilleureMoyenne = $etudiants->max(fn ($e) => $e->bilanCompetence?->moyenne_generale);
         $moyennePlusBasse = $etudiants->min(fn ($e) => $e->bilanCompetence?->moyenne_generale);
 
@@ -136,27 +140,22 @@ class SpecialiteStatsService
     {
         $bilan = $etudiant->bilanCompetence;
 
-        // DÉBOGAGE : S'assurer que le bilan existe
-        if (! $bilan) {
-            // Créer un bilan vide si inexistant
-            $moyCompetences = 0;
-            $moyenneGenerale = 0;
-        } else {
-            $moyCompetences = $bilan->moy_competences ?? 0;
-            $moyenneGenerale = $bilan->moyenne_generale ?? 0;
-        }
+        $moyCompetences = $bilan?->moy_competences ?? 0;
+        $moyenneGenerale = $bilan?->moyenne_generale ?? 0;
+
+        $evaluations = $etudiant->evaluations;
+        $s1 = $evaluations->where('semestre', 1)->sortBy('module.ordre');
+        $s2 = $evaluations->where('semestre', 2)->sortBy('module.ordre');
 
         return (object) [
             'etudiant' => $etudiant,
-            'moy_semestre1' => (float) ($etudiant->getMoyenneSemestre(1) ?? 0),
-            'moy_semestre2' => (float) ($etudiant->getMoyenneSemestre(2) ?? 0),
-            // Cast en float explicite pour éviter les erreurs d'affichage
+            'moy_semestre1' => (float) ($s1->avg('note') ?? 0),
+            'moy_semestre2' => (float) ($s2->avg('note') ?? 0),
             'moy_competences' => (float) $moyCompetences,
             'moyenne_generale' => (float) $moyenneGenerale,
-            // Vérification sécurisée : si la moyenne existe et est >= 10, c'est vrai.
-            'is_admis' => isset($moyenneGenerale) && $moyenneGenerale >= 10,
-            'evaluations_s1' => $etudiant->getEvaluationsBySemestre(1),
-            'evaluations_s2' => $etudiant->getEvaluationsBySemestre(2),
+            'is_admis' => $moyenneGenerale >= 10,
+            'evaluations_s1' => $s1,
+            'evaluations_s2' => $s2,
         ];
     }
 

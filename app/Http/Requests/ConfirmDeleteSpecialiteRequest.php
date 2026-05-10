@@ -36,15 +36,15 @@ class ConfirmDeleteSpecialiteRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'action.required' => '❌ Veuillez sélectionner une action à effectuer.',
-            'action.in' => '❌ Action non valide. Veuillez choisir une action valide.',
+            'action.required' => 'Veuillez sélectionner une action à effectuer.',
+            'action.in' => 'Action non valide. Veuillez choisir une action valide.',
 
-            'new_specialite_id.required_if' => '❌ Veuillez sélectionner une spécialité de destination pour le transfert.',
-            'new_specialite_id.exists' => '❌ La spécialité sélectionnée n\'existe pas.',
-            'new_specialite_id.different' => '❌ Vous ne pouvez pas transférer vers la même spécialité.',
+            'new_specialite_id.required_if' => 'Veuillez sélectionner une spécialité de destination pour le transfert.',
+            'new_specialite_id.exists' => 'La spécialité sélectionnée n\'existe pas.',
+            'new_specialite_id.different' => 'Vous ne pouvez pas transférer vers la même spécialité.',
 
-            'confirm_delete_all.required_if' => '❌ Veuillez cocher la case de confirmation pour supprimer TOUTES les données associées.',
-            'confirm_delete_all.accepted' => '❌ Vous devez confirmer que vous voulez supprimer TOUTES les données associées.',
+            'confirm_delete_all.required_if' => 'Veuillez cocher la case de confirmation pour supprimer toutes les données associées.',
+            'confirm_delete_all.accepted' => 'Vous devez confirmer la suppression de toutes les données associées.',
         ];
     }
 }

@@ -28,7 +28,7 @@ class StoreUserRequest extends FormRequest
             'matricule' => 'nullable|string|max:20|unique:users,matricule',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required', 'confirmed', Password::defaults(),
+            'password' => ['required', 'confirmed', Password::defaults()],
             'sexe' => 'required|in:M,F,Autre',
             'niveau' => 'required|in:'.implode(',', Niveau::values()),
             'specialite_id' => 'required|exists:specialites,id',
