@@ -15,6 +15,7 @@ use App\Services\PdfService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Concurrency;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
@@ -451,6 +452,13 @@ class EvaluationController extends Controller
                 $validated['evaluations'],
                 (int) $validated['semestre']
             );
+
+            // Déchargement post-réponse (Laravel 13 Phase 2) pour ne pas ralentir l'utilisateur
+            Concurrency::defer(fn () => Log::info("Audit: {$count} évaluations multiples enregistrées", [
+                'user_id' => $user->id,
+                'semestre' => (int) $validated['semestre'],
+                'timestamp' => now()->toDateTimeString(),
+            ]));
 
             return redirect()
                 ->route('evaluations.saisir-multiple', [

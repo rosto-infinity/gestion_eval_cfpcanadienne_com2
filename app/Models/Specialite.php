@@ -40,10 +40,7 @@ class Specialite extends Model
 
     public function scopeSearch(Builder $query, string $search): Builder
     {
-        return $query->where(function ($q) use ($search): void {
-            $q->where('code', 'like', "%{$search}%")
-                ->orWhere('intitule', 'like', "%{$search}%");
-        });
+        return $query->whereAny(['code', 'intitule'], 'like', "%{$search}%");
     }
 
     // Methods

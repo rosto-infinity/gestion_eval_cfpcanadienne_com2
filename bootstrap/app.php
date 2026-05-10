@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->prepend(\App\Http\Middleware\InitializeRequestContext::class);
         $middleware->alias([
             'role' => RoleMiddleware::class,
         ]);

@@ -134,25 +134,30 @@ class EvaluationService
         int $semestre,
         int $anneeAcademiqueId
     ): Collection {
-        $users = User::studentsOnly()->where('specialite_id', $specialiteId)
-            ->where('annee_academique_id', $anneeAcademiqueId)
+        // Optimisation Laravel 13 (Phase 4) : Éradication du N+1 via jointure latérale corrélée
+        return User::studentsOnly()
+            ->select('users.*', 'eval.note as eval_note', 'eval.id as eval_id')
+            ->where('specialite_id', $specialiteId)
+            ->where('users.annee_academique_id', $anneeAcademiqueId)
+            ->leftJoinLateral(
+                Evaluation::query()
+                    ->whereColumn('evaluations.user_id', 'users.id')
+                    ->where('module_id', $moduleId)
+                    ->where('semestre', $semestre)
+                    ->where('annee_academique_id', $anneeAcademiqueId)
+                    ->limit(1),
+                'eval'
+            )
             ->ordered()
-            ->get();
-
-        return $users->map(function ($user) use ($moduleId, $semestre, $anneeAcademiqueId) {
-            $evaluation = Evaluation::where('user_id', $user->id)
-                ->where('module_id', $moduleId)
-                ->where('semestre', $semestre)
-                ->where('annee_academique_id', $anneeAcademiqueId)
-                ->first();
-
-            return (object) [
-                'user' => $user,
-                'evaluation' => $evaluation,
-                'note' => $evaluation?->note,
-                'has_evaluation' => $evaluation !== null,
-            ];
-        });
+            ->get()
+            ->map(function ($user) {
+                return (object) [
+                    'user' => $user,
+                    'evaluation' => $user->eval_id ? (object) ['note' => $user->eval_note] : null,
+                    'note' => $user->eval_note,
+                    'has_evaluation' => ! is_null($user->eval_note),
+                ];
+            });
     }
 
     /**

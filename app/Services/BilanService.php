@@ -76,7 +76,7 @@ class BilanService
                 $query->where('specialite_id', $specialiteId);
             }
 
-            $users = $query->get();
+            $users = $query->lazyById(100);
             $count = 0;
 
             foreach ($users as $user) {

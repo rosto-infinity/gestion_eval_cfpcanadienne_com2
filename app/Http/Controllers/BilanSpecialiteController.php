@@ -10,6 +10,7 @@ use App\Models\Specialite;
 use App\Services\PdfService;
 use App\Services\SpecialiteStatsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Concurrency;
 use Illuminate\View\View;
 
 class BilanSpecialiteController extends Controller
@@ -169,10 +170,12 @@ class BilanSpecialiteController extends Controller
             $specialiteIds = Specialite::pluck('id')->map(fn ($id) => (int) $id)->toArray();
         }
 
-        $bilanParSpecialite = $this->statsService->getBilanParSpecialite($anneeId, $specialiteIds);
-
-        $annees = AnneeAcademique::ordered()->get();
-        $specialites = Specialite::ordered()->get();
+        // Parallélisation des requêtes pour booster les temps de réponse en production (Phase 2)
+        [$bilanParSpecialite, $annees, $specialites] = Concurrency::run([
+            fn () => app(SpecialiteStatsService::class)->getBilanParSpecialite($anneeId, $specialiteIds),
+            fn () => AnneeAcademique::ordered()->get(),
+            fn () => Specialite::ordered()->get(),
+        ]);
 
         return view('bilanspecialite.comparaison-specialites', compact(
             'bilanParSpecialite',

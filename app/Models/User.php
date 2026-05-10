@@ -228,11 +228,12 @@ class User extends Authenticatable
 
     public function scopeSearch(Builder $query, string $search): Builder
     {
-        return $query->where(function ($q) use ($search): void {
-            $q->where('name', 'like', "%{$search}%")
-                ->orWhere('matricule', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
-        });
+        // Modernisation Laravel 13 (Phase 4) : Remplace l'imbrication de closures complexes.
+        return $query->whereAny(
+            ['name', 'matricule', 'email'],
+            'like',
+            "%{$search}%"
+        );
     }
 
     public function scopeBySpecialite(Builder $query, int $specialiteId): Builder
@@ -302,7 +303,7 @@ class User extends Authenticatable
 
         // Compter le nombre d'utilisateurs pour cette année (sans dépendre de la base)
         $count = self::whereNotNull('matricule')
-            ->where('matricule', 'like', "CFPC-{$lastTwoDigits}%")
+            ->whereLike('matricule', "CFPC-{$lastTwoDigits}%")
             ->count();
 
         // 🔍 Debug : Vérifier le comptage

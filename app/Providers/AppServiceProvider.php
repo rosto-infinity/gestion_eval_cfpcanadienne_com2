@@ -21,6 +21,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Propage la locale courante aux files d'attente via Context (Laravel 13 Phase 3)
+        \Illuminate\Support\Facades\Context::dehydrating(function ($context): void {
+            $context->addHidden('locale', config('app.locale'));
+        });
+
+        \Illuminate\Support\Facades\Context::hydrated(function ($context): void {
+            if ($context->hasHidden('locale')) {
+                config(['app.locale' => $context->getHidden('locale')]);
+            }
+        });
     }
 }
