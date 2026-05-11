@@ -1,24 +1,25 @@
-# 📚 Système de Gestion des Évaluations Académiques
+# Système de Gestion des Évaluations Académiques
 
-Application web Laravel 12 pour la gestion complète des évaluations semestrielles, calcul automatique des moyennes et suivi des compétences des étudiants.
+Application web Laravel 13 pour la gestion complète des évaluations semestrielles, calcul automatique des moyennes et suivi des compétences des étudiants du CFPC.
 
-## ✨ Fonctionnalités Principales
+## Fonctionnalités Principales
 
-### 🎓 Gestion Académique
+### Gestion Académique
 - **Années Académiques**: Création et activation des périodes scolaires avec système d'année active
 - **Spécialités**: Gestion des filières et programmes avec codes et intitulés
 - **Modules**: Configuration des modules M1-M10 (2 semestres) avec coefficients
-- **Utilisateurs**: Gestion complète avec rôles (administrateurs, enseignants, étudiants)
-- **Étudiants**: Inscription et suivi des étudiants par spécialité/année
+- **Utilisateurs**: Gestion complète avec rôles (SuperAdmin, Admin, Manager, User)
+- **Étudiants**: Inscription et suivi des étudiants par spécialité/année avec matricule auto-généré
 
-### 📝 Évaluations
+### Évaluations
 - **Saisie Simple**: Ajout d'une note pour un module/étudiant
 - **Saisie Multiple**: Formulaire intelligent pour saisir toutes les notes d'un semestre
+- **Saisie par Spécialité**: Saisie groupée filtrée par spécialité avec chargement AJAX
 - **Relevé de Notes**: Génération automatique de bulletins imprimables
-- **Export PDF**: Génération de relevés de notes au format PDF
-- **Calcul Automatique**: Moyennes semestrielles calculées en temps réel
+- **Export PDF**: Génération de relevés de notes au format PDF sécurisé
+- **Calcul Automatique**: Moyennes semestrielles pondérées calculées en temps réel
 
-### 📊 Bilans de Compétences
+### Bilans de Compétences
 - **Calcul Pondéré**: 30% Évaluations + 70% Compétences = Moyenne Générale
 - **Génération Massive**: Création automatique de bilans pour une cohorte entière
 - **Tableau Récapitulatif**: Classement général avec statistiques par spécialité
@@ -26,30 +27,41 @@ Application web Laravel 12 pour la gestion complète des évaluations semestriel
 - **Export PDF**: Bilans individuels et tableaux récapitulatifs exportables en PDF
 - **Bilan par Spécialité**: Vue d'ensemble des performances par filière
 
-### 📈 Reporting Avancé
-- **Dashboard** avec statistiques globales et graphiques Chart.js
+### Architecture & Performance
+- **Couche Actions**: Logique métier extraite dans des Actions dédiées (CloseAcademicYear, ComputeMasteryMatrix, GenerateSpecialtyReport, SyncModuleSpecialty)
+- **API Resources**: Standardisation des transformations avec Laravel Resources et chargement conditionnel
+- **Concurrency**: Parallélisation des requêtes statistiques via `Concurrency::run()` (Laravel 13)
+- **Observabilité**: Traçabilité des requêtes avec `trace_id` contextuel et logging structuré
+- **Itérations paresseuses**: `lazyById()` pour le traitement de masse économique en mémoire
+
+### Reporting Avancé
+- **Dashboard** avec statistiques globales et graphiques Chart.js (requêtes parallélisées)
 - **Tableaux de classement** par spécialité et année
+- **Matrice de maîtrise**: Paliers d'acquisition par compétence
 - **Comparaison** entre spécialités
 - **Filtres avancés** (année, spécialité, semestre)
 - **Mode sombre/clair** avec persistance des préférences
 - **Impression optimisée** pour les documents officiels
+- **Notifications toast** avec animation Alpine.js et auto-disparition
 
-### 🔐 Sécurité & Administration
-- **Authentification** sécurisée avec Laravel Breeze
-- **Gestion des rôles** et permissions
-- **Audit** des modifications importantes
-- **Backup** automatique de la base de données
+### Sécurité & Administration
+- **Authentification** sécurisée avec Laravel Breeze (vérification email, reset mot de passe)
+- **Gestion des rôles** et permissions avec middleware `role:` via attributs PHP 8
+- **Audit** des modifications importantes (changements de rôle)
+- **Backup** automatique de la base de données (tâche planifiée quotidienne)
 - **HTTPS** forcé en production
+- **Google reCAPTCHA** sur les formulaires
+- **Protection SuperAdmin**: Impossible de modifier le dernier SuperAdmin
 
 ---
 
 ## 🚀 Installation Rapide
 
 ### Prérequis
-- PHP 8.3+
+- PHP 8.4+
 - Composer 2.5+
 - MySQL 8.0+ ou PostgreSQL 15+
-- Node.js 18+ & NPM
+- Node.js 20+ & NPM
 - Extension PHP : `gd`, `zip`, `mbstring`, `xml`, `bcmath`
 
 ### Étapes
@@ -81,37 +93,84 @@ Accédez à: `http://localhost:8000`
 
 ```
 app/
-├── Http/Controllers/
-│   ├── AnneeAcademiqueController.php
-│   ├── SpecialiteController.php
-│   ├── ModuleController.php
-│   ├── UserController.php
-│   ├── EvaluationController.php
-│   ├── BilanCompetenceController.php
-│   └── BilanSpecialiteController.php
+├── Actions/Academia/
+│   ├── CloseAcademicYearAction.php
+│   ├── ComputeMasteryMatrixAction.php
+│   ├── GenerateSpecialtyReportAction.php
+│   └── SyncModuleSpecialtyAction.php
+├── Enums/
+│   ├── Niveau.php
+│   ├── Role.php
+│   └── Traits/EnumHelpers.php
+├── Exports/
+│   ├── MultiSheetUsersExport.php
+│   ├── UsersBySpecialiteExport.php
+│   ├── UsersExport.php
+│   └── UserTemplateExport.php
+├── Http/
+│   ├── Controllers/
+│   │   ├── AnneeAcademiqueController.php
+│   │   ├── BilanCompetenceController.php
+│   │   ├── BilanSpecialiteController.php
+│   │   ├── DashboardController.php (invokable)
+│   │   ├── EvaluationController.php
+│   │   ├── ModuleController.php
+│   │   ├── SpecialiteController.php
+│   │   ├── UserController.php
+│   │   └── ProfileController.php
+│   ├── Middleware/
+│   │   ├── InitializeRequestContext.php
+│   │   └── RoleMiddleware.php
+│   ├── Requests/
+│   │   └── (StoreEvaluation, StoreBilan, StoreUser, etc.)
+│   └── Resources/
+│       ├── AnneeAcademiqueResource.php
+│       ├── BilanResource.php
+│       ├── DashboardStatsResource.php
+│       ├── EvaluationResource.php
+│       ├── MasteryMatrixResource.php
+│       ├── ModuleResource.php
+│       └── SpecialiteResource.php
+├── Imports/
+│   └── UsersImport.php
 ├── Models/
 │   ├── AnneeAcademique.php
-│   ├── Specialite.php
-│   ├── Module.php
-│   ├── User.php
+│   ├── BilanCompetence.php
 │   ├── Evaluation.php
-│   └── BilanCompetence.php
-│
+│   ├── Module.php
+│   ├── Specialite.php
+│   └── User.php
+├── Policies/
+│   └── UserPolicy.php
+├── Rules/
+│   └── ReCaptcha.php
+├── Services/
+│   ├── BilanService.php
+│   ├── EvaluationService.php
+│   ├── PdfService.php
+│   └── SpecialiteStatsService.php
+└── View/Components/
+    ├── AppLayout.php
+    └── GuestLayout.php
+
 resources/views/
 ├── layouts/
 │   ├── app.blade.php
 │   └── pdf.blade.php
-├── dashboard.blade.php
-├── specialites/
-├── modules/
-├── evaluations/
-│   ├── saisir-multiple.blade.php
-│   └── releve-notes.blade.php
+├── auth/
 ├── bilans/
-│   ├── tableau-recapitulatif.blade.php
-│   └── bilan-specialite-pdf.blade.php
+├── bilanspecialite/
+├── components/
+├── dashboard/
+├── evaluations/
+├── modules/
+├── pages/
+├── profile/
+├── specialites/
+├── users/
 ├── annees/
-└── profile/
+├── changelog.blade.php
+└── dashboard.blade.php
 ```
 
 ---
@@ -332,39 +391,46 @@ MAIL_PASSWORD=mail_password
 
 ---
 
-## 🔧 Technologies Utilisées
+## Technologies Utilisees
 
 ### Backend
-- **Laravel 12** - Framework PHP moderne
-- **MySQL** - Base de données relationnelle
+- **Laravel 13** - Framework PHP moderne (v13.6+)
+- **PHP 8.4** - Langage avec enums, proprietes readonly, attributs
+- **MySQL 8.0+** - Base de donnees relationnelle
 - **Redis** - Cache et file d'attente
-- **DomPDF** - Génération de documents PDF
-- **Laravel Excel** - Exportation vers Excel
+- **DomPDF** - Generation de documents PDF
+- **Laravel Excel** - Import/Export Excel (v3.1)
+- **Intervention Image** - Traitement d'images (v3.11)
 
 ### Frontend
-- **Tailwind CSS** - Framework CSS utility-first
-- **Alpine.js** - JavaScript léger pour les interactions
-- **Chart.js** - Visualisation des données
-- **Boxicons** - Icônes modernes
-- **Vite** - Build tool moderne
+- **Tailwind CSS 4** - Framework CSS utility-first
+- **Alpine.js 3** - JavaScript leger pour les interactions
+- **Chart.js** - Visualisation des donnees
+- **Boxicons** - Icones modernes
+- **Vite 7** - Build tool moderne avec hot reload
 
-### Outils de Développement
-- **Laravel Pint** - Formateur de code
-- **PHPStan** - Analyse statique
-- **Pest** - Framework de tests
-- **Laravel Debugbar** - Débogage en développement
-- **Concurrently** - Exécution parallèle de processus
+### Outils de Developpement
+- **Laravel Pint** - Formateur de code (PSR-12, strict types)
+- **PHPStan / Larastan** - Analyse statique (niveau 7)
+- **Pest** - Framework de tests (v4.1)
+- **Rector** - Refactoring automatise (v2.2)
+- **Laravel Debugbar** - Debugage en developpement
+- **Laravel Pail** - Logs en temps reel
+- **Concurrently** - Execution parallele de processus
 
 ---
 
-## 📝 Améliorations Futures
+## Ameliorations Futures
 
 ### Court terme (prochaines versions)
-- [x] Export PDF des bilans et relevés de notes
-- [x] Génération massive des bilans
+- [x] Export PDF des bilans et releves de notes
+- [x] Generation massive des bilans
 - [x] Tableau de bord avec statistiques
-- [ ] Import/Export Excel des notes
-- [ ] Notifications par email aux étudiants
+- [x] Import/Export Excel des utilisateurs
+- [x] Architecture Actions & Resources (v1.4)
+- [x] Observabilite et tracabilite (v1.3)
+- [x] Parallellisation des requetes Concurrency (v1.3)
+- [ ] Notifications par email aux etudiants
 
 ### Moyen terme
 - [ ] Application mobile (React Native)
@@ -382,11 +448,13 @@ MAIL_PASSWORD=mail_password
 
 ---
 
-##  Maintenance
+## Maintenance
 
 ### Journal des Modifications
-- **v1.2.0** (2025-03-15): Ajout des exports PDF, génération massive de bilans
-- **v1.1.0** (2025-02-20): Interface sombre/clair, tableau de bord amélioré
+- **v1.4.0** (2026-05-11): Architecture Actions & Resources, separation des couches metier et presentation, Dashboard invokable avec Concurrency, notifications toast, nettoyage des emojis
+- **v1.3.0** (2026-05): Mise a niveau Laravel 13 / PHP 8.4, Concurrency API, jointures laterales SQL, observabilite avec trace_id contextuel, iterations paresseuses lazyById()
+- **v1.2.0** (2025-03-15): Ajout des exports PDF, generation massive de bilans, refonte des modules
+- **v1.1.0** (2025-02-20): Interface sombre/clair, tableau de bord ameliore
 - **v1.0.0** (2025-01-10): Version initiale stable
 
 ### Support Technique
@@ -428,5 +496,5 @@ Pour toute question ou problème:
 
 ---
 
-**Fait avec ❤️ pour l'éducation** 🎓  
-*Version 1.2.0 - Mise à jour: 23 Novembre 2025*
+**Fait avec pour l'education**  
+*Version 1.4.0 - Mise a jour: 11 Mai 2026*
