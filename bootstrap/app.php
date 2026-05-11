@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\InitializeRequestContext;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->prepend(\App\Http\Middleware\InitializeRequestContext::class);
+        $middleware->prepend(InitializeRequestContext::class);
         $middleware->alias([
             'role' => RoleMiddleware::class,
         ]);

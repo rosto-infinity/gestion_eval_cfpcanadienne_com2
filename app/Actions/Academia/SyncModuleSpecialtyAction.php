@@ -30,7 +30,7 @@ class SyncModuleSpecialtyAction
         if (($total + $newCoefficient) > $maxCoefficient) {
             return [
                 'valid' => false,
-                'message' => "La somme des coefficients ($total + $newCoefficient = " . ($total + $newCoefficient) . ") dépasse le maximum autorisé ($maxCoefficient).",
+                'message' => "La somme des coefficients ($total + $newCoefficient = ".($total + $newCoefficient).") dépasse le maximum autorisé ($maxCoefficient).",
                 'total_actuel' => $total,
                 'max_autorise' => $maxCoefficient,
             ];

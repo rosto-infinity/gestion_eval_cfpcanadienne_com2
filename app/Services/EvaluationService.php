@@ -150,14 +150,12 @@ class EvaluationService
             )
             ->ordered()
             ->get()
-            ->map(function ($user) {
-                return (object) [
-                    'user' => $user,
-                    'evaluation' => $user->eval_id ? (object) ['note' => $user->eval_note] : null,
-                    'note' => $user->eval_note,
-                    'has_evaluation' => ! is_null($user->eval_note),
-                ];
-            });
+            ->map(fn ($user) => (object) [
+                'user' => $user,
+                'evaluation' => $user->eval_id ? (object) ['note' => $user->eval_note] : null,
+                'note' => $user->eval_note,
+                'has_evaluation' => ! is_null($user->eval_note),
+            ]);
     }
 
     /**

@@ -68,9 +68,16 @@ class DashboardController extends Controller
         ]);
 
         return view('dashboard.admin', compact(
-            'user', 'stats',
-            'totalStudents', 'totalEvaluations', 'totalSpecialites', 'totalModules',
-            'studentsPerYear', 'studentsPerSpeciality', 'recentEvaluations', 'roleStats'
+            'user',
+            'stats',
+            'totalStudents',
+            'totalEvaluations',
+            'totalSpecialites',
+            'totalModules',
+            'studentsPerYear',
+            'studentsPerSpeciality',
+            'recentEvaluations',
+            'roleStats'
         ));
     }
 
@@ -118,10 +125,18 @@ class DashboardController extends Controller
         ]);
 
         return view('dashboard.student', compact(
-            'user', 'stats',
-            'totalEvaluations', 'moyenneGenerale', 'modulesCount',
-            'notesBySemestre', 'notesByModule', 'recentEvaluations',
-            'modulesSemestre1', 'modulesSemestre2', 'moyenneSemestre1', 'moyenneSemestre2'
+            'user',
+            'stats',
+            'totalEvaluations',
+            'moyenneGenerale',
+            'modulesCount',
+            'notesBySemestre',
+            'notesByModule',
+            'recentEvaluations',
+            'modulesSemestre1',
+            'modulesSemestre2',
+            'moyenneSemestre1',
+            'moyenneSemestre2'
         ));
     }
 }

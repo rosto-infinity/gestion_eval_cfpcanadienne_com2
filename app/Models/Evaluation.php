@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Http\Resources\EvaluationResource;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Attributes\UseResource;
-use App\Http\Resources\EvaluationResource;
 
 #[UseResource(EvaluationResource::class)]
 class Evaluation extends Model
@@ -29,7 +29,7 @@ class Evaluation extends Model
                     $this->note >= 10 => 'Passable',
                     default => 'Insuffisant',
                 }
-                : null,
+            : null,
         );
     }
 

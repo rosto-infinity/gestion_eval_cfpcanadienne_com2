@@ -96,7 +96,6 @@ class AnneeAcademiqueController extends Controller
         }
     }
 
-
     public function destroy(AnneeAcademique $annee): RedirectResponse
     {
         try {
