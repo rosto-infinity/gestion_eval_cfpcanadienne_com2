@@ -17,7 +17,7 @@
                 </p>
                 <a href="{{ route('changelog') }}" class="text-xs font-bold text-primary hover:underline flex items-center gap-1 mt-1">
                     <i class="bx bxs-rocket"></i>
-                    Version stable 1.3.0
+                    Version stable 1.4.0
                 </a>
             </div>
         </div>
