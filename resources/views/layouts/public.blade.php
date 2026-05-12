@@ -117,43 +117,45 @@
     <div class="fixed top-0 right-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
 
     <!-- HEADER / NAVIGATION PUBLIC -->
-    <header class="relative z-50 w-full max-w-7xl mx-auto px-6 lg:px-8 py-6 flex justify-between items-center">
-        <!-- Logo -->
-        <a href="{{ route('welcome') }}" class="flex items-center gap-2 font-bold text-xl tracking-tight hover:opacity-90 transition-opacity">
-            <div class="flex items-center justify-center w-10 h-10 bg-white text-primary-foreground rounded-xl shadow-lg shadow-primary/20">
-                <img src="/android-chrome-192x192.png" alt="logo-cfpc" class="w-7 h-7">
-            </div>
-            <span>Gestion<span class="text-primary">Eval</span></span>
-        </a>
+    <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-background/80 border-b border-border/40">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="{{ route('welcome') }}" class="flex items-center gap-2 font-bold text-xl tracking-tight hover:opacity-90 transition-opacity">
+                <div class="flex items-center justify-center w-10 h-10 bg-white text-primary-foreground rounded-xl shadow-lg shadow-primary/20">
+                    <img src="/android-chrome-192x192.png" alt="logo-cfpc" class="w-7 h-7">
+                </div>
+                <span>Gestion<span class="text-primary">Eval</span></span>
+            </a>
 
-        <!-- Liens Desktop -->
-        <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-muted-foreground">
-            <!-- Theme Toggle -->
-            <button @click="toggleTheme($event)" type="button"
-                    class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
-                    aria-label="Toggle dark mode">
-                <i class="bx bx-sun text-yellow-500 text-xl dark:hidden"></i>
-                <i class="bx bx-moon text-blue-400 text-xl hidden dark:block"></i>
-            </button>
-            @if(request()->routeIs('welcome'))
-                <a href="#features" class="hover:text-foreground transition-colors">Fonctionnalités</a>
-                <a href="#methodology" class="hover:text-foreground transition-colors">Méthodologie</a>
-                <a href="#tech" class="hover:text-foreground transition-colors">Technologie</a>
-            @else
-                <a href="{{ route('welcome') }}" class="hover:text-foreground transition-colors">Accueil</a>
-            @endif
-            <a href="{{ route('changelog') }}" class="hover:text-foreground transition-colors {{ request()->routeIs('changelog') ? 'text-primary' : '' }}">Changelog</a>
-            
-            @auth
-                <a href="{{ route('dashboard') }}" class="px-5 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all shadow-sm">
-                    Tableau de Bord
-                </a>
-            @else
-                <a href="{{ route('login') }}" class="px-5 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all shadow-sm">
-                    Connexion
-                </a>
-            @endauth
-        </nav>
+            <!-- Liens Desktop -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-muted-foreground">
+                <!-- Theme Toggle -->
+                <button @click="toggleTheme($event)" type="button"
+                        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+                        aria-label="Toggle dark mode">
+                    <i class="bx bx-sun text-yellow-500 text-xl dark:hidden"></i>
+                    <i class="bx bx-moon text-blue-400 text-xl hidden dark:block"></i>
+                </button>
+                @if(request()->routeIs('welcome'))
+                    <a href="#features" class="hover:text-foreground transition-colors">Fonctionnalités</a>
+                    <a href="#methodology" class="hover:text-foreground transition-colors">Méthodologie</a>
+                    <a href="#tech" class="hover:text-foreground transition-colors">Technologie</a>
+                @else
+                    <a href="{{ route('welcome') }}" class="hover:text-foreground transition-colors">Accueil</a>
+                @endif
+                <a href="{{ route('changelog') }}" class="hover:text-foreground transition-colors {{ request()->routeIs('changelog') ? 'text-primary' : '' }}">Changelog</a>
+                
+                @auth
+                    <a href="{{ route('dashboard') }}" class="px-5 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all shadow-sm">
+                        Tableau de Bord
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="px-5 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all shadow-sm">
+                        Connexion
+                    </a>
+                @endauth
+            </nav>
+        </div>
     </header>
 
     <!-- MAIN CONTENT -->

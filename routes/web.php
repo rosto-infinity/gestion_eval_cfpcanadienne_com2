@@ -23,6 +23,9 @@ Route::get('/changelog', fn () => view('changelog'))
     ->middleware(['auth', 'verified'])
     ->name('changelog');
 
+Route::get('/privacy', fn () => view('pages.privacy'))->name('privacy');
+Route::get('/legal', fn () => view('pages.legal'))->name('legal');
+
 // Routes pour les ressources protégées par authentification
 Route::middleware(['auth', 'verified'])->group(function (): void {
 

@@ -51,12 +51,13 @@
         <div>
             <h4 class="font-bold text-foreground mb-4">Informations</h4>
             <ul class="space-y-2 text-muted-foreground">
-                <li><a href="#" class="hover:text-primary transition-colors">Confidentialité</a></li>
-                <li><a href="#" class="hover:text-primary transition-colors">Mentions légales</a></li>
-                <li class="pt-2 border-t border-border/50">
-                    <span class="text-muted-foreground flex items-center gap-1.5">
-                        <i class="bx bxs-heart text-primary"></i>
-                        Par WAFFO LELE Rostand
+                <li><a href="{{ route('privacy') }}" class="hover:text-primary transition-colors">Confidentialité</a></li>
+                <li><a href="{{ route('legal') }}" class="hover:text-primary transition-colors">Mentions légales</a></li>
+                <li class="pt-4 border-t border-border/50">
+                    <span class="text-xs text-muted-foreground block leading-tight">
+                        <i class="bx bxs-heart text-primary mr-1"></i>
+                        Code maintenu exclusivement par<br>
+                        <strong class="text-foreground">WAFFO LELE Rostand</strong>
                     </span>
                 </li>
             </ul>
