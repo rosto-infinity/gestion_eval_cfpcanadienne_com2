@@ -58,7 +58,46 @@
 </head>
 
 <body class="bg-background text-foreground antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen relative overflow-x-hidden"
-      x-data="{ darkMode: JSON.parse(localStorage.getItem('darkMode') || JSON.stringify(window.matchMedia('(prefers-color-scheme: dark)').matches)) }"
+      x-data="{ 
+          darkMode: JSON.parse(localStorage.getItem('darkMode') || JSON.stringify(window.matchMedia('(prefers-color-scheme: dark)').matches)),
+          async toggleTheme(event) {
+              const isDark = !this.darkMode;
+              
+              if (!document.startViewTransition) {
+                  this.darkMode = isDark;
+                  return;
+              }
+              
+              const x = event.clientX;
+              const y = event.clientY;
+              
+              const endRadius = Math.hypot(
+                  Math.max(x, window.innerWidth - x),
+                  Math.max(y, window.innerHeight - y)
+              );
+              
+              const transition = document.startViewTransition(async () => {
+                  this.darkMode = isDark;
+                  await this.$nextTick();
+              });
+              
+              await transition.ready;
+              
+              document.documentElement.animate(
+                  {
+                      clipPath: [
+                          `circle(0px at ${x}px ${y}px)`,
+                          `circle(${endRadius}px at ${x}px ${y}px)`
+                      ],
+                  },
+                  {
+                      duration: 500,
+                      easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                      pseudoElement: '::view-transition-new(root)',
+                  }
+              );
+          }
+      }"
       x-init="$watch('darkMode', value => { localStorage.setItem('darkMode', JSON.stringify(value)); document.documentElement.classList.toggle('dark', value); }); $nextTick(() => document.documentElement.classList.remove('no-transition'))"
       :class="{ 'dark': darkMode }">
 
@@ -80,7 +119,7 @@
         <!-- Liens Desktop -->
         <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-muted-foreground">
             <!-- Theme Toggle -->
-            <button @click="darkMode = !darkMode" type="button"
+            <button @click="toggleTheme($event)" type="button"
                     class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
                     aria-label="Toggle dark mode">
                 <i class="bx bx-sun text-yellow-500 text-xl dark:hidden"></i>

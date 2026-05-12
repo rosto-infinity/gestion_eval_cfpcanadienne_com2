@@ -35,10 +35,50 @@
 <body class="font-sans antialiased" x-data="{ 
     darkMode: JSON.parse(localStorage.getItem('darkMode') || JSON.stringify(window.matchMedia('(prefers-color-scheme: dark)').matches)),
     mobileMenuOpen: false,
-    toasts: []
+    toasts: [],
+    async toggleTheme(event) {
+        const isDark = !this.darkMode;
+        
+        if (!document.startViewTransition) {
+            this.darkMode = isDark;
+            return;
+        }
+        
+        const x = event.clientX;
+        const y = event.clientY;
+        
+        const endRadius = Math.hypot(
+            Math.max(x, window.innerWidth - x),
+            Math.max(y, window.innerHeight - y)
+        );
+        
+        const transition = document.startViewTransition(async () => {
+            this.darkMode = isDark;
+            await this.$nextTick();
+        });
+        
+        await transition.ready;
+        
+        document.documentElement.animate(
+            {
+                clipPath: [
+                    `circle(0px at ${x}px ${y}px)`,
+                    `circle(${endRadius}px at ${x}px ${y}px)`
+                ],
+            },
+            {
+                duration: 500,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                pseudoElement: '::view-transition-new(root)',
+            }
+        );
+    }
 }"
 x-init="
-    $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)));
+    $watch('darkMode', value => {
+        localStorage.setItem('darkMode', JSON.stringify(value));
+        document.documentElement.classList.toggle('dark', value);
+    });
     $watch('mobileMenuOpen', value => {
         if (value) {
             document.body.style.overflow = 'hidden';
@@ -122,7 +162,7 @@ x-init="
                 <!-- Dark Mode Toggler -->
                 <label :class="darkMode ? 'bg-primary' : 'bg-gray-600'"
                     class="relative m-0 block h-7.5 w-14 rounded-full">
-                    <input type="checkbox" :value="darkMode" @change="darkMode = !darkMode"
+                    <input type="checkbox" :checked="darkMode" @click.prevent="toggleTheme($event)"
                         class="absolute top-0 z-50 m-0 h-7.5 w-14 cursor-pointer opacity-0" />
                     <span :class="darkMode && 'right-1! translate-x-full!'"
                         class="absolute left-1 top-1/2 flex h-6 w-6 -translate-y-1/2 translate-x-0 items-center justify-center rounded-full bg-gray-100 shadow-switcher duration-75 ease-linear">

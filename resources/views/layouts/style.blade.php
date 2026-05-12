@@ -43,7 +43,7 @@
         background: var(--light);
         z-index: 2000;
         font-family: var(--lato);
-        transition: all 0.3s ease;
+        transition: width 0.3s ease, transform 0.3s ease;
         overflow-x: hidden;
         scrollbar-width: none;
     }
@@ -228,7 +228,7 @@
         position: relative;
         width: calc(100% - 280px);
         left: 280px;
-        transition: all 0.3s ease;
+        transition: width 0.3s ease, left 0.3s ease;
         min-height: 100vh;
     }
 
