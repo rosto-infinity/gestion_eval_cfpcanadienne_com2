@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    {{-- Inline script to detect saved or system dark mode preference and apply it immediately to prevent flash --}}
+    {{-- Inline script and style to detect dark preference and apply immediately to prevent FOUC/White Flash --}}
     <script>
         (function() {
             const stored = localStorage.getItem('darkMode');
@@ -19,6 +19,16 @@
             document.documentElement.classList.add('no-transition');
         })();
     </script>
+    <style>
+        /* Immediate canvas matching before main stylesheet parses */
+        html.dark {
+            color-scheme: dark;
+            background-color: #0C0C1E;
+        }
+        html.no-transition * {
+            transition: none !important;
+        }
+    </style>
 
     <title>{{ config('app.name', 'CFPC--Gestion Évaluation') }}</title>
     <!-- Fonts -->
@@ -29,7 +39,7 @@
     {{-- <link rel="stylesheet" href="/resources/css/style.css"> --}}
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    @include('layouts.style')
 </head>
 
 <body class="font-sans antialiased" x-data="{ 
@@ -133,7 +143,6 @@ x-init="
         </div>
     </div>
 
-    @include('layouts.style')
     
     <!-- Desktop Sidebar -->
     <div class="hidden lg:block">

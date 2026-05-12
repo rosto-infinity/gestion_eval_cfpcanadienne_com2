@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -111,6 +112,7 @@
 body,
 
 :root {
+  color-scheme: light;
   --background: #eee;
   --foreground: hsl(223.8136 0.0000% 3.9388%);
   --card: hsl(223.8136 -172.5242% 100.0000%);
@@ -166,6 +168,7 @@ body,
 }
 
 .dark {
+  color-scheme: dark;
   --background: hsl(223.8136 0.0000% 3.9388%);
   --foreground: hsl(223.8136 0.0004% 98.0256%);
   --card: hsl(223.8136 0.0000% 9.0527%);

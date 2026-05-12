@@ -3,609 +3,270 @@
 @section('title', 'Tableau de Bord Administrateur')
 
 @section('content')
-<div class="py-12">
-    <!-- En-tête Admin -->
-    <div class="head-title">
-        <div class="left">
-            <h1>Dashboard Administrateur</h1>
-            <ul class="breadcrumb">
-                <li>
-                    <a href="{{ route('dashboard') }}">Accueil</a>
-                </li>
-                <li><i class='bx bx-chevron-right'></i></li>
-                <li class="active">Administration</li>
-            </ul>
-        </div>
-        <div class="user-profile-header">
-            @if($user->profile)
-                <img src="{{ Storage::url($user->profile) }}" alt="Photo de profil" class="profile-header-avatar">
-            @else
-                <div class="profile-header-avatar-placeholder">
-                    {{ strtoupper(substr($user->name, 0, 1)) }}
+    <div class="py-12">
+        <!-- En-tête Admin -->
+        <div class="flex flex-col lg:flex-row justify-between items-stretch lg:items-start mb-6 md:mb-8 flex-wrap gap-5">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-foreground mb-0">Dashboard Administrateur</h1>
+                <ul class="flex items-center text-muted-foreground list-none p-0 mt-2 mb-0">
+                    <li class="flex items-center">
+                        <a href="{{ route('dashboard') }}"
+                            class="no-underline text-muted-foreground transition-colors duration-200 hover:text-primary">Accueil</a>
+                    </li>
+                    <li class="flex items-center"><i class='bx bx-chevron-right px-1'></i></li>
+                    <li class="flex items-center text-primary">Administration</li>
+                </ul>
+            </div>
+            <div
+                class="flex flex-col md:flex-row items-center text-center md:text-left gap-3 md:gap-4 p-4 md:p-5 bg-card rounded-xl shadow border border-border order-first lg:order-none">
+                @if ($user->profile)
+                    <img src="{{ Storage::url($user->profile) }}" alt="Photo de profil"
+                        class="w-16 h-16 rounded-full object-cover border-[3px] border-primary">
+                @else
+                    <div
+                        class="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold border-[3px] border-primary">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </div>
+                @endif
+                <div>
+                    <h3 class="m-0 mb-1 text-lg font-semibold text-foreground">{{ $user->name }}</h3>
+                    <p class="m-0 mb-2 text-sm text-muted-foreground">{{ $user->email }}</p>
+                    <span
+                        class="bg-gradient-to-br from-[#667eea] to-[#764ba2] text-white px-3 py-1 rounded-full text-xs font-semibold">{{ ucfirst($user->role->value) }}</span>
                 </div>
-            @endif
-            <div class="profile-header-info">
-                <h3>{{ $user->name }}</h3>
-                <p>{{ $user->email }}</p>
-                <span class="role-badge admin">{{ ucfirst($user->role->value) }}</span>
             </div>
         </div>
+
+        <!-- KPIs Globaux -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-card p-4 rounded-xl border border-border/50 shadow-xs flex items-center justify-between transition-all duration-200 hover:border-primary/30">
+                <div>
+                    <p class="text-[11px] font-semibold uppercase  text-muted-foreground">Étudiants</p>
+                    <h3 class="text-xl md:text-2xl font-bold text-foreground mt-1">{{ $totalStudents }}</h3>
+                </div>
+                <div class="w-9 h-9 rounded-lg bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
+                    <i class='bx bxs-group text-base text-indigo-600 dark:text-indigo-400'></i>
+                </div>
+            </div>
+            <div class="bg-card p-4 rounded-xl border border-border/50 shadow-xs flex items-center justify-between transition-all duration-200 hover:border-primary/30">
+                <div>
+                    <p class="text-[11px] font-semibold uppercase  text-muted-foreground">Évaluations</p>
+                    <h3 class="text-xl md:text-2xl font-bold text-foreground mt-1">{{ $totalEvaluations }}</h3>
+                </div>
+                <div class="w-9 h-9 rounded-lg bg-rose-500/10 flex items-center justify-center flex-shrink-0">
+                    <i class='bx bxs-note text-base text-rose-600 dark:text-rose-400'></i>
+                </div>
+            </div>
+            <div class="bg-card p-4 rounded-xl border border-border/50 shadow-xs flex items-center justify-between transition-all duration-200 hover:border-primary/30">
+                <div>
+                    <p class="text-[11px] font-semibold uppercase  text-muted-foreground">Spécialités</p>
+                    <h3 class="text-xl md:text-2xl font-bold text-foreground mt-1">{{ $totalSpecialites }}</h3>
+                </div>
+                <div class="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                    <i class='bx bxs-book-bookmark text-base text-amber-600 dark:text-amber-400'></i>
+                </div>
+            </div>
+            <div class="bg-card p-4 rounded-xl border border-border/50 shadow-xs flex items-center justify-between transition-all duration-200 hover:border-primary/30">
+                <div>
+                    <p class="text-[11px] font-semibold uppercase  text-muted-foreground">Modules</p>
+                    <h3 class="text-xl md:text-2xl font-bold text-foreground mt-1">{{ $totalModules }}</h3>
+                </div>
+                <div class="w-9 h-9 rounded-lg bg-teal-500/10 flex items-center justify-center flex-shrink-0">
+                    <i class='bx bxs-book text-base text-teal-600 dark:text-teal-400'></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques des Rôles -->
+        <div class="bg-card p-5 rounded-xl border border-border/50 shadow-xs mb-7">
+            <h3 class="text-[11px] font-bold uppercase  text-muted-foreground/85 flex items-center gap-2 mb-4 pb-3 border-b border-border/30">
+                <i class='bx bx-shield-quarter text-base text-primary/70'></i> Répartition des Rôles
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 divide-border/40 md:divide-x">
+                <div class="flex flex-col px-1 md:px-6">
+                    <span class="text-[13px] text-muted-foreground font-medium">Super Admin</span>
+                    <span class="text-2xl font-bold text-foreground mt-0.5 tracking-tight">{{ $roleStats['superadmin'] }}</span>
+                </div>
+                <div class="flex flex-col px-1 md:px-6">
+                    <span class="text-[13px] text-muted-foreground font-medium">Admin</span>
+                    <span class="text-2xl font-bold text-foreground mt-0.5 tracking-tight">{{ $roleStats['admin'] }}</span>
+                </div>
+                <div class="flex flex-col px-1 md:px-6 mt-3 md:mt-0 pt-3 md:pt-0 border-t md:border-t-0 border-border/30">
+                    <span class="text-[13px] text-muted-foreground font-medium">Manager</span>
+                    <span class="text-2xl font-bold text-foreground mt-0.5 tracking-tight">{{ $roleStats['manager'] }}</span>
+                </div>
+                <div class="flex flex-col px-1 md:px-6 mt-3 md:mt-0 pt-3 md:pt-0 border-t md:border-t-0 border-border/30">
+                    <span class="text-[13px] text-muted-foreground font-medium">Étudiants</span>
+                    <span class="text-2xl font-bold text-foreground mt-0.5 tracking-tight">{{ $roleStats['student'] }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Principale -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Graphique Linéaire : Évolution des Étudiants -->
+            <div class="lg:col-span-2 bg-card rounded-xl p-6 shadow border border-border mb-6 lg:mb-0">
+                <div class="flex flex-col md:flex-row justify-between md:items-center mb-5 gap-2 md:gap-0">
+                    <h3 class="m-0 text-lg font-semibold text-foreground">Évolution des Étudiants par Année</h3>
+                    <a href="{{ route('users.index') }}"
+                        class="text-primary no-underline text-sm font-medium hover:underline">Voir tout</a>
+                </div>
+                <div class="relative h-[300px]">
+                    <canvas id="studentsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Graphique Barres : Étudiants par Spécialité -->
+            <div class="lg:col-span-1 bg-card rounded-xl p-6 shadow border border-border mb-6 lg:mb-0">
+                <div class="flex flex-col md:flex-row justify-between md:items-center mb-5 gap-2 md:gap-0">
+                    <h3 class="m-0 text-lg font-semibold text-foreground">Étudiants par Spécialité</h3>
+                    <a href="{{ route('specialites.index') }}"
+                        class="text-primary no-underline text-sm font-medium hover:underline">Détails</a>
+                </div>
+                <div class="relative h-[300px]">
+                    <canvas id="specialityChart"></canvas>
+                </div>
+            </div>
+
+           
+        </div>
+         <!-- Tableau : Activité Récente -->
+            <div class="lg:col-span-2 bg-card rounded-xl p-6 mt-7 shadow border border-border">
+                <div class="flex flex-col md:flex-row justify-between md:items-center mb-5 gap-2 md:gap-0">
+                    <h3 class="m-0 text-lg font-semibold text-foreground">Activité Récente</h3>
+                    <a href="{{ route('evaluations.index') }}"
+                        class="text-primary no-underline text-sm font-medium hover:underline">Voir tout</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-[13px] md:text-sm">
+                        <thead>
+                            <tr>
+                                <th
+                                    class="text-left p-2 md:p-3 border-b border-border font-semibold text-foreground text-xs md:text-sm">
+                                    Étudiant</th>
+                                <th
+                                    class="text-left p-2 md:p-3 border-b border-border font-semibold text-foreground text-xs md:text-sm">
+                                    Module</th>
+                                <th
+                                    class="text-left p-2 md:p-3 border-b border-border font-semibold text-foreground text-xs md:text-sm">
+                                    Note</th>
+                                <th
+                                    class="text-left p-2 md:p-3 border-b border-border font-semibold text-foreground text-xs md:text-sm">
+                                    Semestre</th>
+                                <th
+                                    class="text-left p-2 md:p-3 border-b border-border font-semibold text-foreground text-xs md:text-sm">
+                                    Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($recentEvaluations as $evaluation)
+                                <tr class="hover:bg-accent transition-colors duration-150">
+                                    <td class="p-2 md:p-3 border-b border-border text-xs md:text-sm text-foreground">
+                                        {{ $evaluation->user->name }}</td>
+                                    <td class="p-2 md:p-3 border-b border-border text-xs md:text-sm text-foreground">
+                                        {{ $evaluation->module->intitule }}</td>
+                                    <td class="p-2 md:p-3 border-b border-border text-xs md:text-sm text-foreground">
+                                        <span
+                                            class="px-2 py-1 rounded-full text-xs font-semibold {{ $evaluation->note >= 10 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' }}">
+                                            {{ number_format($evaluation->note, 2) }}
+                                        </span>
+                                    </td>
+                                    <td class="p-2 md:p-3 border-b border-border text-xs md:text-sm text-foreground">
+                                        S{{ $evaluation->semestre }}</td>
+                                    <td class="p-2 md:p-3 border-b border-border text-xs md:text-sm text-foreground">
+                                        {{ $evaluation->created_at->format('d/m/Y') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="p-4 text-center border-b border-border text-muted-foreground">
+                                        Aucune évaluation récente</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
     </div>
 
-    <!-- KPIs Globaux -->
-    <ul class="box-info">
-        <li>
-            <i class='bx bxs-group'></i>
-            <span class="text">
-                <h3>{{ $totalStudents }}</h3>
-                <p>Étudiants</p>
-            </span>
-        </li>
-        <li>
-            <i class='bx bxs-note'></i>
-            <span class="text">
-                <h3>{{ $totalEvaluations }}</h3>
-                <p>Évaluations</p>
-            </span>
-        </li>
-        <li>
-            <i class='bx bxs-book-bookmark'></i>
-            <span class="text">
-                <h3>{{ $totalSpecialites }}</h3>
-                <p>Spécialités</p>
-            </span>
-        </li>
-        <li>
-            <i class='bx bxs-book'></i>
-            <span class="text">
-                <h3>{{ $totalModules }}</h3>
-                <p>Modules</p>
-            </span>
-        </li>
-    </ul>
-
-    <!-- Statistiques des Rôles -->
-    <div class="order mb-6">
-        <div class="head">
-            <h3>Répartition des Rôles</h3>
-        </div>
-        <div class="role-stats-grid">
-            <div class="role-stat-card">
-                <div class="role-icon superadmin">👑</div>
-                <div class="role-info">
-                    <h4>Super Admin</h4>
-                    <p>{{ $roleStats['superadmin'] }}</p>
-                </div>
-            </div>
-            <div class="role-stat-card">
-                <div class="role-icon admin"><i class='bx bx-shield-quarter'></i></div>
-                <div class="role-info">
-                    <h4>Admin</h4>
-                    <p>{{ $roleStats['admin'] }}</p>
-                </div>
-            </div>
-            <div class="role-stat-card">
-                <div class="role-icon manager">📋</div>
-                <div class="role-info">
-                    <h4>Manager</h4>
-                    <p>{{ $roleStats['manager'] }}</p>
-                </div>
-            </div>
-            <div class="role-stat-card">
-                <div class="role-icon student">🎓</div>
-                <div class="role-info">
-                    <h4>Étudiants</h4>
-                    <p>{{ $roleStats['student'] }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Section Principale -->
-    <div class="table-data">
-        <!-- Graphique Linéaire : Évolution des Étudiants -->
-        <div class="order mb-6">
-            <div class="head">
-                <h3>Évolution des Étudiants par Année</h3>
-                <a href="{{ route('users.index') }}">Voir tout</a>
-            </div>
-            <div class="chart-container" style="height: 300px;">
-                <canvas id="studentsChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Graphique Barres : Étudiants par Spécialité -->
-        <div class="order mb-6">
-            <div class="head">
-                <h3>Étudiants par Spécialité</h3>
-                <a href="{{ route('specialites.index') }}">Détails</a>
-            </div>
-            <div class="chart-container" style="height: 300px;">
-                <canvas id="specialityChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Tableau : Activité Récente -->
-        <div class="order">
-            <div class="head">
-                <h3>Activité Récente</h3>
-                <a href="{{ route('evaluations.index') }}">Voir tout</a>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Étudiant</th>
-                        <th>Module</th>
-                        <th>Note</th>
-                        <th>Semestre</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($recentEvaluations as $evaluation)
-                        <tr>
-                            <td>{{ $evaluation->user->name }}</td>
-                            <td>{{ $evaluation->module->intitule }}</td>
-                            <td>
-                                <span class="note-badge {{ $evaluation->note >= 10 ? 'success' : 'danger' }}">
-                                    {{ number_format($evaluation->note, 2) }}
-                                </span>
-                            </td>
-                            <td>S{{ $evaluation->semestre }}</td>
-                            <td>{{ $evaluation->created_at->format('d/m/Y') }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center">Aucune évaluation récente</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<style>
-/* Box Info (Stats) */
-.box-info {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 24px;
-    margin-bottom: 30px;
-}
-
-.box-info li {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    background: var(--card);
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--border);
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.box-info li:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.15);
-}
-
-.box-info li i {
-    font-size: 32px;
-    color: var(--primary);
-    margin-right: 15px;
-}
-
-.box-info li h3 {
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0;
-    color: var(--foreground);
-}
-
-.box-info li p {
-    font-size: 13px;
-    color: var(--muted-foreground);
-    margin: 0;
-}
-
-/* Layout principal */
-.table-data {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 24px;
-}
-
-.order {
-    background: var(--card);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--border);
-}
-
-.order .head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.order .head h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--foreground);
-}
-
-.order .head a {
-    color: var(--primary);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.order .head a:hover {
-    text-decoration: underline;
-}
-
-.chart-container {
-    position: relative;
-    height: 300px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-table th {
-    text-align: left;
-    padding: 12px;
-    border-bottom: 1px solid var(--border);
-    font-weight: 600;
-    color: var(--foreground);
-    font-size: 14px;
-}
-
-table td {
-    padding: 12px;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-    color: var(--foreground);
-}
-
-table tr:hover {
-    background: var(--accent);
-}
-
-.text-center {
-    text-align: center;
-}
-
-/* Styles spécifiques au dashboard admin */
-.head-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.head-title .left h1 {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--foreground);
-    margin-bottom: 0;
-}
-
-.head-title .left .breadcrumb {
-    display: flex;
-    align-items: center;
-    color: var(--muted-foreground);
-    list-style: none;
-    padding: 0;
-    margin: 8px 0 0 0;
-}
-
-.head-title .left .breadcrumb li {
-    display: flex;
-    align-items: center;
-}
-
-.head-title .left .breadcrumb a {
-    text-decoration: none;
-    color: var(--muted-foreground);
-    transition: color 0.2s;
-}
-
-.head-title .left .breadcrumb a:hover, .head-title .left .breadcrumb li.active {
-    color: var(--primary);
-}
-
-.user-profile-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px 20px;
-    background: var(--card);
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--border);
-}
-
-.profile-header-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--primary);
-}
-
-.profile-header-avatar-placeholder {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: var(--primary);
-    color: var(--primary-foreground);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: bold;
-    border: 3px solid var(--primary);
-}
-
-.profile-header-info h3 {
-    margin: 0 0 5px 0;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--foreground);
-}
-
-.profile-header-info p {
-    margin: 0 0 8px 0;
-    font-size: 14px;
-    color: var(--muted-foreground);
-}
-
-.role-badge.admin {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.role-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.role-stat-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.role-stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-}
-
-.role-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-}
-
-.role-icon.superadmin {
-    background: linear-gradient(135deg, #ff6b6b, #c92a2a);
-}
-
-.role-icon.admin {
-    background: linear-gradient(135deg, #4dabf7, #1864ab);
-}
-
-.role-icon.manager {
-    background: linear-gradient(135deg, #69db7c, #2f9e44);
-}
-
-.role-icon.student {
-    background: linear-gradient(135deg, #ffd43b, #fab005);
-}
-
-.role-info h4 {
-    margin: 0 0 0.25rem 0;
-    font-size: 0.875rem;
-    color: #64748b;
-}
-
-.role-info p {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1e293b;
-}
-
-.note-badge {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.875rem;
-    font-weight: 600;
-}
-
-.note-badge.success {
-    background: #d4edda;
-    color: #155724;
-}
-
-.note-badge.danger {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-    .table-data {
-        grid-template-columns: 1fr;
-    }
-    
-    .role-stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .head-title {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .user-profile-header {
-        order: -1;
-    }
-}
-
-@media (max-width: 768px) {
-    .role-stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .role-stat-card {
-        padding: 1rem;
-    }
-    
-    .role-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 1.25rem;
-    }
-    
-    .head-title {
-        margin-bottom: 20px;
-    }
-    
-    .head-title .left h1 {
-        font-size: 24px;
-    }
-    
-    .user-profile-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 12px;
-    }
-    
-    .profile-header-info {
-        text-align: center;
-    }
-    
-    .order .head {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-    
-    table {
-        font-size: 13px;
-    }
-    
-    table th, table td {
-        padding: 8px 10px;
-    }
-}
-</style>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-// Graphique Linéaire : Évolution des Étudiants
-const studentsCtx = document.getElementById('studentsChart').getContext('2d');
-new Chart(studentsCtx, {
-    type: 'line',
-    data: {
-        labels: @json($studentsPerYear->pluck('anneeAcademique.libelle')),
-        datasets: [{
-            label: 'Nombre d\'étudiants',
-            data: @json($studentsPerYear->pluck('total')),
-            borderColor: 'rgb(75, 192, 192)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            tension: 0.1
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: true,
-                position: 'top'
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    stepSize: 1
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Graphique Linéaire : Évolution des Étudiants
+        const studentsCtx = document.getElementById('studentsChart').getContext('2d');
+        new Chart(studentsCtx, {
+            type: 'line',
+            data: {
+                labels: @json($studentsPerYear->pluck('anneeAcademique.libelle')),
+                datasets: [{
+                    label: 'Nombre d\'étudiants',
+                    data: @json($studentsPerYear->pluck('total')),
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
                 }
             }
-        }
-    }
-});
+        });
 
-// Graphique Barres : Étudiants par Spécialité
-const specialityCtx = document.getElementById('specialityChart').getContext('2d');
-new Chart(specialityCtx, {
-    type: 'bar',
-    data: {
-        labels: @json($studentsPerSpeciality->pluck('intitule')),
-        datasets: [{
-            label: 'Nombre d\'étudiants',
-            data: @json($studentsPerSpeciality->pluck('users_count')),
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.8)',
-                'rgba(54, 162, 235, 0.8)',
-                'rgba(255, 206, 86, 0.8)',
-                'rgba(75, 192, 192, 0.8)',
-                'rgba(153, 102, 255, 0.8)',
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    stepSize: 1
+        // Graphique Barres : Étudiants par Spécialité
+        const specialityCtx = document.getElementById('specialityChart').getContext('2d');
+        new Chart(specialityCtx, {
+            type: 'bar',
+            data: {
+                labels: @json($studentsPerSpeciality->pluck('intitule')),
+                datasets: [{
+                    label: 'Nombre d\'étudiants',
+                    data: @json($studentsPerSpeciality->pluck('users_count')),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(153, 102, 255, 0.8)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
                 }
             }
-        }
-    }
-});
-</script>
+        });
+    </script>
 @endsection

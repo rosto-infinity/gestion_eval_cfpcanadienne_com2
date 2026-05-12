@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    {{-- Inline script to prevent dark mode flash --}}
+    {{-- Inline script and style to detect dark preference and apply immediately to prevent FOUC/White Flash --}}
     <script>
         (function() {
             const stored = localStorage.getItem('darkMode');
@@ -19,6 +19,16 @@
             document.documentElement.classList.add('no-transition');
         })();
     </script>
+    <style>
+        /* Immediate canvas matching before main stylesheet parses */
+        html.dark {
+            color-scheme: dark;
+            background-color: #0A0A0A;
+        }
+        html.no-transition * {
+            transition: none !important;
+        }
+    </style>
 
     <title>@yield('title', config('app.name', 'CFPC--Gestion Évaluation'))</title>
 
