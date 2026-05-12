@@ -158,6 +158,32 @@ class EvaluationController extends Controller
     }
 
     /**
+     * API: Récupère tous les modules d'une spécialité
+     */
+    public function getModulesOfSpecialite(int $specialiteId): JsonResponse
+    {
+        try {
+            $modules = Module::where('specialite_id', $specialiteId)->ordered()->get();
+
+            return response()->json([
+                'success' => true,
+                'modules' => $modules->map(fn ($m) => [
+                    'id' => $m->id,
+                    'code' => $m->code,
+                    'intitule' => $m->intitule,
+                    'coefficient' => $m->coefficient,
+                    'semestre' => $m->getSemestre(),
+                ]),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * API: Récupère les modules d'une spécialité par AJAX
      */
     public function getModulesBySpecialite(int $specialiteId, int $semestre): JsonResponse
@@ -265,8 +291,9 @@ class EvaluationController extends Controller
 
         $users = User::with(['specialite', 'anneeAcademique'])->ordered()->get();
         $annees = AnneeAcademique::ordered()->get();
+        $specialites = Specialite::ordered()->get();
 
-        return view('evaluations.create-evaluations', compact('modules', 'users', 'annees', 'user'));
+        return view('evaluations.create-evaluations', compact('modules', 'users', 'annees', 'user', 'specialites'));
     }
 
     public function getUserModules(User $user): JsonResponse
@@ -406,6 +433,9 @@ class EvaluationController extends Controller
 
     public function saisirMultiple(Request $request): View
     {
+        $anneeActive = AnneeAcademique::active()->first();
+        $anneeId = $request->query('annee_id', $anneeActive?->id);
+        $specialiteId = $request->query('specialite_id');
         $userId = $request->query('user_id');
         $semestre = $request->query('semestre', 1);
 
@@ -413,24 +443,48 @@ class EvaluationController extends Controller
         $modules = collect();
         $evaluations = collect();
 
+        $annees = AnneeAcademique::ordered()->get();
+        $specialites = Specialite::ordered()->get();
+
+        $usersQuery = User::with(['specialite', 'anneeAcademique'])->studentsOnly()->ordered();
+
+        if ($anneeId) {
+            $usersQuery->where('annee_academique_id', (int) $anneeId);
+        }
+        if ($specialiteId) {
+            $usersQuery->where('specialite_id', (int) $specialiteId);
+        }
+
+        $users = $usersQuery->get();
+
         if ($userId) {
-            $selectedUser = User::with(['specialite', 'anneeAcademique'])->findOrFail($userId);
+            $selectedUser = User::with(['specialite', 'anneeAcademique'])->find($userId);
 
-            if ($selectedUser->specialite_id) {
-                $modulesQuery = Module::where('specialite_id', $selectedUser->specialite_id);
-                $modules = $semestre == 1
-                    ? $modulesQuery->semestre1()->ordered()->get()
-                    : $modulesQuery->semestre2()->ordered()->get();
-            }
+            if ($selectedUser) {
+                if ($selectedUser->specialite_id) {
+                    $modulesQuery = Module::where('specialite_id', $selectedUser->specialite_id);
+                    $modules = $semestre == 1
+                        ? $modulesQuery->semestre1()->ordered()->get()
+                        : $modulesQuery->semestre2()->ordered()->get();
+                }
 
-            if ($selectedUser->annee_academique_id) {
-                $evaluations = $this->evaluationService->getEvaluationsBySemestre($selectedUser, (int) $semestre);
+                if ($selectedUser->annee_academique_id) {
+                    $evaluations = $this->evaluationService->getEvaluationsBySemestre($selectedUser, (int) $semestre);
+                }
             }
         }
 
-        $users = User::with(['specialite', 'anneeAcademique'])->ordered()->get();
-
-        return view('evaluations.saisir-multiple', compact('selectedUser', 'modules', 'evaluations', 'users', 'semestre'));
+        return view('evaluations.saisir-multiple', compact(
+            'selectedUser',
+            'modules',
+            'evaluations',
+            'users',
+            'semestre',
+            'annees',
+            'specialites',
+            'anneeId',
+            'specialiteId'
+        ));
     }
 
     public function storeMultiple(Request $request): RedirectResponse
@@ -464,6 +518,8 @@ class EvaluationController extends Controller
                 ->route('evaluations.saisir-multiple', [
                     'user_id' => $user->id,
                     'semestre' => $validated['semestre'],
+                    'annee_id' => $user->annee_academique_id,
+                    'specialite_id' => $user->specialite_id,
                 ])
                 ->with('success', 'Évaluations enregistrées avec succès.');
         } catch (\InvalidArgumentException $e) {

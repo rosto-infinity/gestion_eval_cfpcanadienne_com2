@@ -44,6 +44,23 @@
                                 Informations Générales
                             </h2>
 
+                            <!-- Sélection de la spécialité (Nouveau) -->
+                            <div>
+                                <label for="specialite_select" class="block text-sm font-semibold text-foreground mb-2">
+                                    <span class="text-destructive">*</span> Spécialité
+                                </label>
+                                <select id="specialite_select"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                                    onchange="filterDataBySpecialite()">
+                                    <option value="">-- Sélectionner une spécialité --</option>
+                                    @foreach ($specialites as $s)
+                                        <option value="{{ $s->id }}" {{ ($user && $user->specialite_id == $s->id) ? 'selected' : '' }}>
+                                            {{ $s->intitule }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <!-- Sélection de l'étudiant -->
                             <div>
                                 <label for="user_id" class="block text-sm font-semibold text-foreground mb-2">
@@ -51,16 +68,18 @@
                                 </label>
                                 <select name="user_id" id="user_id"
                                     class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('user_id') border-destructive ring-2 ring-destructive/20 @enderror"
-                                    required onchange="loadUserModules()">
+                                    required onchange="loadUserModules()" {{ !$user ? 'disabled' : '' }}>
                                     <option value="">-- Sélectionner un étudiant --</option>
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}"
-                                            data-specialite="{{ $user->specialite?->intitule }}"
-                                            data-annee="{{ $user->anneeAcademique?->libelle }}"
-                                            data-annee-id="{{ $user->annee_academique_id }}"
-                                            {{ old('user_id', $user?->id) == request('user_id') ? 'selected' : '' }}>
-                                            {{ $user->matricule }} - {{ $user->getFullName() }}
-                                            ({{ $user->specialite?->intitule ?? 'N/A' }})
+                                    @foreach ($users as $userOption)
+                                        <option value="{{ $userOption->id }}"
+                                            data-specialite-id="{{ $userOption->specialite_id }}"
+                                            data-specialite="{{ $userOption->specialite?->intitule }}"
+                                            data-annee="{{ $userOption->anneeAcademique?->libelle }}"
+                                            data-annee-id="{{ $userOption->annee_academique_id }}"
+                                            {{ old('user_id', $user?->id) == $userOption->id ? 'selected' : '' }}
+                                            style="{{ (!$user || $userOption->specialite_id == $user->specialite_id) ? '' : 'display:none;' }}">
+                                            {{ $userOption->matricule }} - {{ $userOption->getFullName() }}
+                                            ({{ $userOption->specialite?->intitule ?? 'N/A' }})
                                         </option>
                                     @endforeach
                                 </select>
@@ -100,7 +119,7 @@
                                     required onchange="updateModuleInfo()" {{ !$user ? 'disabled' : '' }}>
                                     {{-- Le contenu ci-dessous est le contenu initial rendu par PHP --}}
                                     <option value="">
-                                        {{ $user ? '-- Sélectionner un module --' : '-- Sélectionner d\'abord un étudiant --' }}
+                                        {{ $user ? '-- Sélectionner un module --' : '-- Sélectionner d\'abord une spécialité --' }}
                                     </option>
                                     @if ($user && $modules->isNotEmpty())
                                         @foreach ($modules as $module)
@@ -425,6 +444,7 @@
     </style>
 @endpush
 
+@push('scripts')
  <script>
     // ============================================
     // FONCTIONS UTILITAIRES
@@ -520,54 +540,119 @@
     // ============================================
 
     /**
-     * <i class="bx bx-check-circle"></i> Charge les modules pour un utilisateur sélectionné
+     * Filtre les étudiants et charge les modules selon la spécialité sélectionnée
      */
-    function loadUserModules() {
-        const select = document.getElementById('user_id');
-        const userId = select.value;
+    function filterDataBySpecialite() {
+        const specialiteId = document.getElementById('specialite_select').value;
+        const userSelect = document.getElementById('user_id');
         const moduleSelect = document.getElementById('module_id');
         const userInfo = document.getElementById('userInfo');
         const moduleInfo = document.getElementById('moduleInfo');
         const spinner = document.getElementById('loadingSpinner');
 
-        if (!userId) {
+        // Réinitialiser et désactiver si aucune spécialité
+        if (!specialiteId) {
+            userSelect.value = '';
+            userSelect.disabled = true;
+            moduleSelect.value = '';
             moduleSelect.disabled = true;
-            moduleSelect.innerHTML = '<option value="">-- Sélectionner d\'abord un étudiant --</option>';
+            moduleSelect.innerHTML = '<option value="">-- Sélectionner d\'abord une spécialité --</option>';
+            window.allModules = [];
             if (userInfo) userInfo.classList.add('hidden');
             if (moduleInfo) moduleInfo.classList.add('hidden');
-            if (spinner) spinner.classList.add('hidden');
+            
+            // Cacher toutes les options sauf le placeholder
+            Array.from(userSelect.options).forEach(opt => {
+                if (opt.value !== "") opt.style.display = 'none';
+            });
             return;
         }
 
+        // Activer le sélecteur d'utilisateur
+        userSelect.disabled = false;
+        userSelect.value = ''; // Réinitialiser l'utilisateur choisi
+        if (userInfo) userInfo.classList.add('hidden');
+        
+        // Filtrer visuellement les étudiants dans le select
+        let countStudents = 0;
+        Array.from(userSelect.options).forEach(opt => {
+            if (opt.value === "") {
+                opt.style.display = '';
+                return;
+            }
+            
+            if (opt.dataset.specialiteId == specialiteId) {
+                opt.style.display = '';
+                opt.hidden = false;
+                opt.disabled = false;
+                countStudents++;
+            } else {
+                opt.style.display = 'none';
+                opt.hidden = true;
+                opt.disabled = true;
+            }
+        });
+
+        if (countStudents === 0) {
+            showWarning('Aucun étudiant trouvé dans cette spécialité.');
+        }
+
+        // Charger les modules de la spécialité
         if (spinner) spinner.classList.remove('hidden');
         moduleSelect.disabled = true;
+        moduleSelect.innerHTML = '<option value="">Chargement...</option>';
 
-        fetch(`/evaluations/get-user-modules/${userId}`)
+        fetch(`/api/evaluations/modules/${specialiteId}`)
             .then(response => {
                 if (!response.ok) throw new Error(`Erreur HTTP ${response.status}`);
                 return response.json();
             })
             .then(data => {
-                console.log('<i class="bx bx-check-circle"></i> Données utilisateur reçues:', data);
-
-                updateUserInfoDisplay(data.user);
-                document.getElementById('annee_academique_id').value = data.user.annee_id;
-
-                // <i class="bx bx-check-circle"></i> Stocker tous les modules pour le filtrage
-                window.allModules = data.modules;
-
+                if (!data.success) throw new Error(data.message || "Erreur de chargement");
+                
+                console.log('<i class="bx bx-check-circle"></i> Modules spécialité reçus:', data);
+                window.allModules = data.modules || [];
+                
                 // Filtrer par semestre sélectionné
                 filterModulesBySemestre();
-
+                
                 if (spinner) spinner.classList.add('hidden');
             })
             .catch(error => {
                 console.error('<i class="bx bx-x-circle"></i> Erreur AJAX:', error);
-                showError(`Erreur lors du chargement: ${error.message}`);
+                showError(`Erreur modules: ${error.message}`);
                 moduleSelect.innerHTML = '<option value="">Erreur de chargement</option>';
                 moduleSelect.disabled = true;
                 if (spinner) spinner.classList.add('hidden');
             });
+    }
+
+    /**
+     * <i class="bx bx-check-circle"></i> Charge les infos de l'utilisateur sélectionné
+     */
+    function loadUserModules() {
+        const select = document.getElementById('user_id');
+        const userId = select.value;
+        const option = select.options[select.selectedIndex];
+        const userInfo = document.getElementById('userInfo');
+
+        if (!userId) {
+            if (userInfo) userInfo.classList.add('hidden');
+            return;
+        }
+
+        // Les infos utilisateur sont maintenant déjà dans le DOM dans les data-* attributs !
+        // Plus besoin d'AJAX pour recharger les modules si on les a déjà via filterDataBySpecialite()
+        const userData = {
+            specialite: option.dataset.specialite || 'N/A',
+            annee: option.dataset.annee || 'N/A',
+            annee_id: option.dataset.anneeId
+        };
+
+        updateUserInfoDisplay(userData);
+        if (userData.annee_id) {
+            document.getElementById('annee_academique_id').value = userData.annee_id;
+        }
     }
 
     /**
@@ -704,10 +789,32 @@
         const noteInput = document.getElementById('note');
         const semestreRadios = document.querySelectorAll('input[name="semestre"]');
 
-        // Charger les modules si un utilisateur est pré-sélectionné
-        if (userSelect && userSelect.value) {
-            console.log(`<i class="bx bx-check-circle"></i> Utilisateur pré-sélectionné: ${userSelect.value}`);
-            loadUserModules();
+        const specSelect = document.getElementById('specialite_select');
+        
+        // Charger les données si une spécialité est pré-sélectionnée
+        if (specSelect && specSelect.value) {
+            console.log('<i class="bx bx-check-circle"></i> Spécialité pré-sélectionnée:', specSelect.value);
+            
+            // On récupère les modules pour cette spécialité
+            const specialiteId = specSelect.value;
+            const moduleSelect = document.getElementById('module_id');
+            const spinner = document.getElementById('loadingSpinner');
+            
+            if (spinner) spinner.classList.remove('hidden');
+            
+            fetch(`/api/evaluations/modules/${specialiteId}`)
+                .then(response => response.json())
+                .then(data => {
+                    window.allModules = data.modules || [];
+                    filterModulesBySemestre();
+                    if (spinner) spinner.classList.add('hidden');
+                })
+                .catch(e => console.error(e));
+
+            // Mettre à jour les infos utilisateur si déjà sélectionné
+            if (userSelect && userSelect.value) {
+                loadUserModules();
+            }
         } else {
             if (userInfo) userInfo.classList.add('hidden');
             if (moduleInfo) moduleInfo.classList.add('hidden');
@@ -738,5 +845,6 @@
         }
     });
 </script>
+@endpush
 
 

@@ -313,6 +313,7 @@ x-init="
         // Listen for resize
         window.addEventListener('resize', handleResponsive);
     </script>
+    @stack('scripts')
 </body>
 
 </html>

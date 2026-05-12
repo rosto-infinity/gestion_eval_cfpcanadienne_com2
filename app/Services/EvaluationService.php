@@ -39,7 +39,12 @@ class EvaluationService
     {
         $module = Module::findOrFail($data['module_id']);
 
-        if (! $this->validateModuleForSpecialite($module, $data['specialite_id'])) {
+        // Si la spécialité n'est pas fournie, on la déduit du module
+        if (!isset($data['specialite_id'])) {
+            $data['specialite_id'] = $module->specialite_id;
+        }
+
+        if (! $this->validateModuleForSpecialite($module, (int) $data['specialite_id'])) {
             throw new \InvalidArgumentException('Ce module n\'appartient pas à cette spécialité.');
         }
 

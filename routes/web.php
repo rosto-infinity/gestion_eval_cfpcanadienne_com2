@@ -70,6 +70,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
 
         // Routes API pour AJAX
         Route::prefix('api/evaluations')->name('api.evaluations.')->group(function (): void {
+            Route::get('/modules/{specialiteId}', [EvaluationController::class, 'getModulesOfSpecialite'])->name('modules-by-specialite-all');
             Route::get('/modules/{specialiteId}/{semestre}', [EvaluationController::class, 'getModulesBySpecialite'])->name('modules-by-specialite');
             Route::post('/students', [EvaluationController::class, 'getStudentsBySpecialite'])->name('students-by-specialite');
             Route::post('/statistics', [EvaluationController::class, 'getModuleStatistics'])->name('module-statistics');

@@ -44,23 +44,56 @@
 
         <!-- Filtres -->
         <div class="bg-card border border-border rounded-lg p-4 mb-6">
-            <form method="GET" action="{{ route('evaluations.saisir-multiple') }}"
-                class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div class="md:col-span-2">
+            <form id="filterForm" method="GET" action="{{ route('evaluations.saisir-multiple') }}"
+                class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                
+                <!-- Année Académique -->
+                <div>
+                    <label class="block text-xs font-semibold text-foreground mb-1.5">Année Académique</label>
+                    <select name="annee_id" 
+                        class="w-full px-3 py-2 rounded-md border border-border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                        onchange="resetDependentInputs(); this.form.submit()">
+                        <option value="">Toutes les années</option>
+                        @foreach ($annees as $annee)
+                            <option value="{{ $annee->id }}" {{ $anneeId == $annee->id ? 'selected' : '' }}>
+                                {{ $annee->libelle }} {{ $annee->is_active ? '(Actuelle)' : '' }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Spécialité -->
+                <div>
+                    <label class="block text-xs font-semibold text-foreground mb-1.5">Spécialité</label>
+                    <select name="specialite_id" 
+                        class="w-full px-3 py-2 rounded-md border border-border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                        onchange="resetStudentInput(); this.form.submit()">
+                        <option value="">Toutes les spécialités</option>
+                        @foreach ($specialites as $specialite)
+                            <option value="{{ $specialite->id }}" {{ $specialiteId == $specialite->id ? 'selected' : '' }}>
+                                {{ $specialite->intitule }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Étudiant -->
+                <div>
                     <label class="block text-xs font-semibold text-foreground mb-1.5">Étudiant <span
                             class="text-destructive">*</span></label>
-                    <select name="user_id" required
+                    <select name="user_id" required id="studentSelect"
                         class="w-full px-3 py-2 rounded-md border border-border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary"
                         onchange="this.form.submit()">
                         <option value="">Choisir un étudiant...</option>
                         @foreach ($users as $user)
                             <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
                                 {{ $user->matricule }} - {{ $user->getFullName() }}
-                                ({{ $user->specialite?->intitule ?? 'N/A' }})
                             </option>
                         @endforeach
                     </select>
                 </div>
+
+                <!-- Semestre -->
                 <div>
                     <label class="block text-xs font-semibold text-foreground mb-1.5">Semestre <span
                             class="text-destructive">*</span></label>
@@ -73,6 +106,19 @@
                 </div>
             </form>
         </div>
+
+        <script>
+            function resetDependentInputs() {
+                const specSelect = document.querySelector('select[name="specialite_id"]');
+                const studSelect = document.getElementById('studentSelect');
+                if(specSelect) specSelect.value = '';
+                if(studSelect) studSelect.value = '';
+            }
+            function resetStudentInput() {
+                const studSelect = document.getElementById('studentSelect');
+                if(studSelect) studSelect.value = '';
+            }
+        </script>
 
         @if ($selectedUser && $modules->isNotEmpty())
 
@@ -276,7 +322,7 @@
                     </div>
                 </div>
             @endif
-        @elseif($user && $modules->isEmpty())
+        @elseif($selectedUser && $modules->isEmpty())
             <div
                 class="bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 text-center">
                 <svg class="w-12 h-12 mx-auto text-yellow-600 mb-3" fill="none" stroke="currentColor"
@@ -286,7 +332,7 @@
                 </svg>
                 <h3 class="text-lg font-bold text-yellow-900 dark:text-yellow-100 mb-1">Aucun module disponible</h3>
                 <p class="text-sm text-yellow-800 dark:text-yellow-200">
-                    Aucun module trouvé pour <strong>{{ $user->specialite?->intitule ?? 'cette spécialité' }}</strong> au
+                    Aucun module trouvé pour <strong>{{ $selectedUser->specialite?->intitule ?? 'cette spécialité' }}</strong> au
                     semestre {{ $semestre }}.
                 </p>
                 <p class="text-xs text-yellow-700 dark:text-yellow-300 mt-2">
