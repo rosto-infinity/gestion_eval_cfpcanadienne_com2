@@ -22,7 +22,7 @@
     <!-- Ligne de temps (Timeline) -->
     <div class="relative border-l-2 border-dashed border-gray-900/30 dark:border-gray-300/40 ml-3 sm:ml-6 space-y-16">
 
-        <!-- VERSION 1.4 : ACTUELLE -->
+        <!-- VERSION 1.5 : ACTUELLE -->
         <div class="relative pl-8 sm:pl-12 group">
             <span class="absolute -left-[6px] top-1 flex h-3 w-3">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
@@ -34,10 +34,91 @@
                     {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
                 </time>
                 <span class="px-2.5 py-0.5 text-xs font-bold bg-primary text-primary-foreground rounded-md">
-                    v1.4.0
+                    v1.5.0
                 </span>
-                <span class="px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider bg-accent text-accent-foreground rounded-full shadow-sm">
+                <span class="px-2.5 py-0.5 text-[10px] font-extrabold uppercase bg-accent text-accent-foreground rounded-full shadow-sm">
                     Actuel
+                </span>
+            </div>
+
+            <h2 class="text-3xl font-black text-foreground mb-6 leading-snug">
+                Composants Laravel 13 & Expérience Utilisateur Épurée
+            </h2>
+
+            <div class="text-foreground/90 max-w-none">
+                <p class="text-lg leading-relaxed mb-6">
+                    Optimisation globale de l'interface : modernisation du système de mise en page vers les Composants Laravel 13, correction définitive des flashs de lumière en thème sombre et refonte visuelle minimaliste des tableaux de bord.
+                </p>
+
+                <div class="grid gap-6 mt-8">
+
+                    <!-- A. Laravel 13 Layouts -->
+                    <div class="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                        <h3 class="flex items-center gap-2 text-lg font-bold text-card-foreground mb-3">
+                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg>
+                            Modernisation Blade -- Composants Layouts
+                        </h3>
+                        <ul class="space-y-2 list-disc list-inside text-sm leading-relaxed text-muted-foreground">
+                            <li>Remplacement de l'héritage rigide <code class="text-xs bg-muted px-1 py-0.5 rounded text-foreground">@@extends</code> par les balises sémantiques <code class="text-xs bg-muted px-1 py-0.5 rounded text-foreground">&lt;x-app-layout&gt;</code>.</li>
+                            <li>Support complet des Slots avec injection implicite de variables de titre <code class="text-xs bg-muted px-1 py-0.5 rounded text-foreground">:title</code>.</li>
+                            <li>Mise à niveau des vues d'administration et étudiant pour utiliser la nouvelle syntaxe modulaire.</li>
+                            <li>Création de composants dédiés (<code class="text-xs bg-muted px-1 py-0.5 rounded text-foreground">AppLayout</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded text-foreground">PublicLayout</code>) assurant une portabilité maximale.</li>
+                        </ul>
+                    </div>
+
+                    <!-- B. Performance & FOUC -->
+                    <div class="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                        <h3 class="flex items-center gap-2 text-lg font-bold text-card-foreground mb-3">
+                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            Performance & Résolution FOUC
+                        </h3>
+                        <ul class="space-y-2 list-disc list-inside text-sm leading-relaxed text-muted-foreground">
+                            <li>Élimination du flash blanc de démarrage (FOUC) en thème sombre grâce à l'injection immédiate d'un micro-script bloquant de détection système.</li>
+                            <li>Ajout de CSS d'arrière-plan inline ultra-rapide appliqué au parsing du document (<code class="text-xs bg-muted px-1 py-0.5 rounded text-foreground">color-scheme: dark</code>).</li>
+                            <li>Suppression des glitchs visuels de chargement en désactivant temporairement les transitions CSS au chargement initial.</li>
+                        </ul>
+                    </div>
+
+                    <!-- C. Design System -->
+                    <div class="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                        <h3 class="flex items-center gap-2 text-lg font-bold text-card-foreground mb-3">
+                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                            Refonte Dashboards Minimaliste
+                        </h3>
+                        <ul class="space-y-2 list-disc list-inside text-sm leading-relaxed text-muted-foreground">
+                            <li>Micro-cartes de KPIs épurées : réduction de l'épaisseur des ombres et introduction de pastilles d'icônes semi-transparentes délicates.</li>
+                            <li>Amélioration de la densité d'informations et du confort visuel grâce à l'éradication des espacements excessifs.</li>
+                            <li>Ajustement mobile : Affichage des compteurs sur 2 colonnes réduisant le besoin de défilement vertical.</li>
+                        </ul>
+                    </div>
+
+                    <!-- D. SPA & Navigation Turbo -->
+                    <div class="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                        <h3 class="flex items-center gap-2 text-lg font-bold text-card-foreground mb-3">
+                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            SPA & Navigation Turbo
+                        </h3>
+                        <ul class="space-y-2 list-disc list-inside text-sm leading-relaxed text-muted-foreground">
+                            <li>Transformation de l'application en SPA (Single Page Application) ultra-fluide via le package <code class="text-xs bg-muted px-1 py-0.5 rounded text-foreground">@@hotwired/turbo</code>.</li>
+                            <li>Navigation instantanée sans rechargement des assets (CSS/JS) ou de la page complète (seul le corps change).</li>
+                            <li>Optimisation des scripts du Layout principal avec écoute de l'évènement <code class="text-xs bg-muted px-1 py-0.5 rounded text-foreground">turbo:load</code> et gestion préventive des fuites mémoire.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- VERSION 1.4 -->
+        <div class="relative pl-8 sm:pl-12">
+            <span class="absolute -left-[6px] top-1 rounded-full h-3 w-3 bg-primary border border-border shadow-sm"></span>
+            
+            <div class="flex items-center gap-3 mb-3">
+                <time class="text-sm font-semibold text-muted-foreground">
+                    Mai 2026
+                </time>
+                <span class="px-2.5 py-0.5 text-xs font-bold bg-primary text-primary-foreground rounded-md">
+                    v1.4.0
                 </span>
             </div>
 

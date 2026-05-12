@@ -304,64 +304,72 @@ x-init="
     <!-- CONTENT -->
 
     <script>
-        // Desktop sidebar toggle functionality
-        const sidebar = document.querySelector('#sidebar');
-        const sidebarToggle = document.querySelector('.bx-dock-left');
-        const content = document.querySelector('#content');
+        document.addEventListener('turbo:load', () => {
+            // Desktop sidebar toggle functionality
+            const sidebar = document.querySelector('#sidebar');
+            const sidebarToggle = document.querySelector('.bx-dock-left');
+            const content = document.querySelector('#content');
 
-        if (sidebarToggle && sidebar) {
-            sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('hide');
-            });
-        }
+            if (sidebarToggle && sidebar) {
+                // Use clone or remove existing listener approach to avoid duplicates if necessary
+                // But in SPA body replace, elements are new so standard addEventListener is perfect
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('hide');
+                });
+            }
 
-        // Search functionality
-        const searchForm = document.querySelector('#content nav form');
-        const searchButton = document.querySelector('#content nav form button');
-        const searchButtonIcon = document.querySelector('#content nav form button .bx');
+            // Search functionality
+            const searchForm = document.querySelector('#content nav form');
+            const searchButton = document.querySelector('#content nav form button');
+            const searchButtonIcon = document.querySelector('#content nav form button .bx');
 
-        if (searchButton) {
-            searchButton.addEventListener('click', function(e) {
-                if (window.innerWidth < 576) {
-                    e.preventDefault();
-                    searchForm.classList.toggle('show');
-                    if (searchForm.classList.contains('show')) {
-                        searchButtonIcon.classList.replace('bx-search', 'bx-x');
-                    } else {
-                        searchButtonIcon.classList.replace('bx-x', 'bx-search');
+            if (searchButton) {
+                searchButton.addEventListener('click', function(e) {
+                    if (window.innerWidth < 576) {
+                        e.preventDefault();
+                        searchForm.classList.toggle('show');
+                        if (searchForm.classList.contains('show')) {
+                            searchButtonIcon.classList.replace('bx-search', 'bx-x');
+                        } else {
+                            searchButtonIcon.classList.replace('bx-x', 'bx-search');
+                        }
+                    }
+                });
+            }
+
+            // Handle responsive behavior
+            function handleResponsive() {
+                const innerSidebar = document.querySelector('#sidebar');
+                if (window.innerWidth < 768) {
+                    // Mobile: hide desktop sidebar
+                    if (innerSidebar) {
+                        innerSidebar.classList.add('hide');
+                    }
+                } else {
+                    // Desktop: show sidebar by default
+                    if (innerSidebar) {
+                        innerSidebar.classList.remove('hide');
                     }
                 }
-            });
-        }
-
-        // Handle responsive behavior
-        function handleResponsive() {
-            if (window.innerWidth < 768) {
-                // Mobile: hide desktop sidebar
-                if (sidebar) {
-                    sidebar.classList.add('hide');
-                }
-            } else {
-                // Desktop: show sidebar by default
-                if (sidebar) {
-                    sidebar.classList.remove('hide');
+                
+                const innerSearchForm = document.querySelector('#content nav form');
+                const innerSearchButtonIcon = document.querySelector('#content nav form button .bx');
+                if (window.innerWidth > 576) {
+                    // Reset search form on larger screens
+                    if (innerSearchForm && innerSearchButtonIcon) {
+                        innerSearchForm.classList.remove('show');
+                        innerSearchButtonIcon.classList.replace('bx-x', 'bx-search');
+                    }
                 }
             }
+
+            // Initial check on load
+            handleResponsive();
             
-            if (window.innerWidth > 576) {
-                // Reset search form on larger screens
-                if (searchForm && searchButtonIcon) {
-                    searchForm.classList.remove('show');
-                    searchButtonIcon.classList.replace('bx-x', 'bx-search');
-                }
-            }
-        }
-
-        // Initial check
-        handleResponsive();
-        
-        // Listen for resize
-        window.addEventListener('resize', handleResponsive);
+            // Ensure only a single listener on global window
+            window.removeEventListener('resize', handleResponsive);
+            window.addEventListener('resize', handleResponsive);
+        });
     </script>
     @stack('scripts')
 </body>
