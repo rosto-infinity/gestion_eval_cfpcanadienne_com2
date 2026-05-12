@@ -9,7 +9,6 @@
         <h1 class="text-2xl font-bold text-foreground">Créer un Module</h1>
         <p class="mt-1 text-xs text-muted-foreground">Ajouter un nouveau module d'enseignement</p>
     </div>
-
     <div class="bg-card border border-border rounded-lg p-6">
         <form action="{{ route('modules.store') }}" method="POST" class="space-y-5">
             @csrf
@@ -84,7 +83,7 @@
                     Coefficient <span class="text-destructive">*</span>
                 </label>
                 <input type="number" name="coefficient" id="coefficient" value="{{ old('coefficient', 1.00) }}" 
-                     min="0.1" max="10" step="0.01"
+                     min="0.1" max="150" step="0.01"
                     class="w-full px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors @error('coefficient') border-destructive focus:ring-destructive/50 @enderror">
                 @error('coefficient')
                     <p class="mt-1 text-xs text-destructive">{{ $message }}</p>

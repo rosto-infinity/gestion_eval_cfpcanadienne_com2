@@ -17,7 +17,7 @@ class SyncModuleSpecialtyAction
      */
     public function validateWeights(Specialite $specialite, float $newCoefficient, ?int $excludeModuleId = null): array
     {
-        $maxCoefficient = 10.0;
+        $maxCoefficient = 150.0;
 
         $query = Module::where('specialite_id', $specialite->id);
 

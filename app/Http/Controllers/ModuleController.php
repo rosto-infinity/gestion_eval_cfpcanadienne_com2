@@ -49,7 +49,7 @@ class ModuleController extends Controller
             'specialite_id' => 'required|exists:specialites,id',
             'code' => 'required|string|max:10',
             'intitule' => 'required|string|max:100',
-            'coefficient' => 'required|numeric|min:0.1|max:10',
+            'coefficient' => 'required|numeric|min:0.1|max:150',
             'ordre' => 'required|integer|min:1|max:100',
         ]);
 
@@ -113,7 +113,7 @@ class ModuleController extends Controller
             'specialite_id' => 'required|exists:specialites,id',
             'code' => 'required|string|max:10',
             'intitule' => 'required|string|max:100',
-            'coefficient' => 'required|numeric|min:0.1|max:10',
+            'coefficient' => 'required|numeric|min:0.1|max:150',
             'ordre' => 'required|integer|min:1|max:100',
         ]);
 
