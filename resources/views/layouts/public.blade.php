@@ -30,7 +30,7 @@
         }
     </style>
 
-    <title>@yield('title', config('app.name', 'CFPC--Gestion Évaluation'))</title>
+    <title>@yield('title', $title ?? config('app.name', 'CFPC--Gestion Évaluation'))</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -158,6 +158,7 @@
 
     <!-- MAIN CONTENT -->
     <main class="flex-grow relative z-10">
+        {{ $slot ?? '' }}
         @yield('content')
     </main>
 

@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Mon Tableau de Bord')
-
-@section('content')
+<x-app-layout title="Mon Tableau de Bord">
 <div class="py-12">
     <!-- En-tête Étudiant -->
     <div class="head-title">
@@ -672,4 +668,4 @@ document.querySelectorAll('.semester-tab').forEach(tab => {
     });
 });
 </script>
-@endsection
+</x-app-layout>

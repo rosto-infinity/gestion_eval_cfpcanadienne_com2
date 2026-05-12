@@ -30,7 +30,7 @@
         }
     </style>
 
-    <title>{{ config('app.name', 'CFPC--Gestion Évaluation') }}</title>
+    <title>{{ $title ?? config('app.name', 'CFPC--Gestion Évaluation') }}</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -296,6 +296,7 @@ x-init="
 
         <!-- MAIN -->
         <main class="bg-background">
+            {{ $slot ?? '' }}
             @yield('content')
         </main>
         <!-- MAIN -->

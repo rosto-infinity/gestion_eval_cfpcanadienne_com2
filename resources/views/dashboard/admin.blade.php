@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Tableau de Bord Administrateur')
-
-@section('content')
+<x-app-layout title="Tableau de Bord Administrateur">
     <div class="py-12">
         <!-- En-tête Admin -->
         <div class="flex flex-col lg:flex-row justify-between items-stretch lg:items-start mb-6 md:mb-8 flex-wrap gap-5">
@@ -76,6 +72,7 @@
                 </div>
             </div>
         </div>
+
 
         <!-- Statistiques des Rôles -->
         <div class="bg-card p-5 rounded-xl border border-border/50 shadow-xs mb-7">
@@ -269,4 +266,4 @@
             }
         });
     </script>
-@endsection
+</x-app-layout>
