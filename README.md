@@ -28,6 +28,9 @@ Application web Laravel 13 pour la gestion complète des évaluations semestriel
 - **Bilan par Spécialité**: Vue d'ensemble des performances par filière
 
 ### Architecture & Performance
+- **Composants Blade**: Migration totale vers les composants Laravel (`<x-app-layout>`) pour toutes les vues, améliorant l'uniformité de l'UI.
+- **Gestion Thématique Centralisée**: Store Alpine.js global (`$store.theme`) avec support des animations d'API native `document.startViewTransition`.
+- **Composant Réutilisable**: `<x-theme-toggle />` hautement configurable (type "pill" ou "icon") pour harmoniser le basculement jour/nuit.
 - **Couche Actions**: Logique métier extraite dans des Actions dédiées (CloseAcademicYear, ComputeMasteryMatrix, GenerateSpecialtyReport, SyncModuleSpecialty)
 - **API Resources**: Standardisation des transformations avec Laravel Resources et chargement conditionnel
 - **Concurrency**: Parallélisation des requêtes statistiques via `Concurrency::run()` (Laravel 13)
@@ -451,8 +454,9 @@ MAIL_PASSWORD=mail_password
 ## Maintenance
 
 ### Journal des Modifications
+- **v1.5.0** (2026-05-13): Harmonisation de l'interface via les Composants Blade (`<x-app-layout>`), centralisation de la logique du Dark Mode dans un Store Alpine.js global et déploiement du composant standardisé `<x-theme-toggle />` (pill/icon) avec API View Transitions native.
 - **v1.4.0** (2026-05-11): Architecture Actions & Resources, separation des couches metier et presentation, Dashboard invokable avec Concurrency, notifications toast, nettoyage des emojis
-- **v1.3.0** (2026-05): Mise a niveau Laravel 13 / PHP 8.4, Concurrency API, jointures laterales SQL, observabilite avec trace_id contextuel, iterations paresseuses lazyById()
+- **v1.3.0** (2026-05-05): Mise a niveau Laravel 13 / PHP 8.4, Concurrency API, jointures laterales SQL, observabilite avec trace_id contextuel, iterations paresseuses lazyById()
 - **v1.2.0** (2025-03-15): Ajout des exports PDF, generation massive de bilans, refonte des modules
 - **v1.1.0** (2025-02-20): Interface sombre/clair, tableau de bord ameliore
 - **v1.0.0** (2025-01-10): Version initiale stable
@@ -496,5 +500,5 @@ Pour toute question ou problème:
 
 ---
 
-**Fait avec pour l'education**  
-*Version 1.4.0 - Mise a jour: 11 Mai 2026*
+**Fait avec ❤️ pour l'éducation**  
+*Version 1.5.0 - Mise à jour : 13 Mai 2026*
