@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Tableau de Bord Global')
-
-@section('content')
+<x-app-layout title="Tableau de Bord Global">
 <div class="py-12">
     <!-- En-tête -->
     <div class="head-title">
@@ -155,7 +151,7 @@
         </ul>
     </div>
 </div>
-@endsection
+</x-app-layout>
 
 
 {{-- Import Chart.js --}}

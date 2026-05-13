@@ -1,8 +1,6 @@
-@extends('layouts.app')
-
 @section('title', 'Détails de l\'étudiant')
 
-@section('content')
+<x-app-layout>
 <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <!-- En-tête avec navigation -->
@@ -490,7 +488,7 @@
 
 </div>
 
-@endsection
+</x-app-layout>
 
 @push('styles')
 <style>

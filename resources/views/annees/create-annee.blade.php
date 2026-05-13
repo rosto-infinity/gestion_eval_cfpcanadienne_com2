@@ -1,8 +1,6 @@
-@extends('layouts.app')
-
 @section('title', isset($annee) ? 'Modifier l\'Année Académique' : 'Créer une Année Académique')
 
-@section('content')
+<x-app-layout>
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- En-tête -->
     <div class="mb-8">
@@ -205,7 +203,7 @@
     </div>
 </div>
 
-@endsection
+</x-app-layout>
 
 @push('scripts')
 <script>

@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Tableau Récapitulatif des Résultats')
-
-@section('content')
+<x-app-layout title="Tableau Récapitulatif des Résultats">
 <div class=" mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     <!-- En-tête -->
@@ -277,7 +273,7 @@
     </div>
 
 </div>
-@endsection
+</x-app-layout>
 
 @push('styles')
 <style>

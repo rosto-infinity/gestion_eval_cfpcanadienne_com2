@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Erreur Serveur - 500')
-
-@section('content')
+<x-app-layout title="Erreur Serveur - 500">
 <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
         <!-- Logo et Titre -->
@@ -56,7 +52,7 @@
         </div>
     </div>
 </div>
-@endsection
+</x-app-layout>
 
 @section('footer')
 <!-- Footer pour la page 500 -->

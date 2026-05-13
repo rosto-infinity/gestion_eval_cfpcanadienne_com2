@@ -1,8 +1,6 @@
-@extends('layouts.app')
-
 @section('title', 'Modifier l\'Utilisateur')
 
-@section('content')
+<x-app-layout>
     <div class=" mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- En-tête -->
         <div class="mb-8">
@@ -959,4 +957,4 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Formulaire de modification utilisateur chargé avec gestion avancée des images');
 });
 </script>
-@endsection
+</x-app-layout>

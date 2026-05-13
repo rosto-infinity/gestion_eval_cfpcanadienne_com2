@@ -1,9 +1,5 @@
 
-@extends('layouts.app')
-
-@section('title', 'Créer un bilan de compétences')
-
-@section('content')
+<x-app-layout title="Créer un bilan de compétences">
 <div class="mb-6">
     <a href="{{ route('bilans.index') }}" class="text-primary hover:text-primary/80 inline-flex items-center font-medium transition-colors">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -193,7 +189,7 @@
         </form>
     </div>
 </div>
-@endsection
+</x-app-layout>
 
 
 <script>

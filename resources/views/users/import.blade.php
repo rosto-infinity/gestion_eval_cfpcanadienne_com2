@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Importation des Utilisateurs')
-
-@section('content')
+<x-app-layout title="Importation des Utilisateurs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
         <!-- En-tête -->
@@ -310,4 +306,4 @@
             clearBtn.classList.add('hidden');
         }
     </script>
-@endsection
+</x-app-layout>

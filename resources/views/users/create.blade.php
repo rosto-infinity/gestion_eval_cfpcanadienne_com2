@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Créer un Utilisateur')
-
-@section('content')
+<x-app-layout title="Créer un Utilisateur">
     <div class=" mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <!-- En-tête -->
@@ -817,7 +813,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Formulaire de création utilisateur chargé avec gestion avancée des images');
 });
 </script>
-@endsection
+</x-app-layout>
 
 @push('styles')
     <style>

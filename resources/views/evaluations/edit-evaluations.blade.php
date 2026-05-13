@@ -1,8 +1,6 @@
-@extends('layouts.app')
-
 @section('title', 'Modifier l\'Évaluation')
 
-@section('content')
+<x-app-layout>
 <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
 
@@ -311,7 +309,7 @@
 
 </div>
 
-@endsection
+</x-app-layout>
 
 @push('styles')
 <style>

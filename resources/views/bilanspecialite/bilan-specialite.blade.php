@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Bilan par Spécialité')
-
-@section('content')
+<x-app-layout title="Bilan par Spécialité">
 <!-- En-tête avec accent primary -->
 <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 no-print bg-primary/5 rounded-lg p-6 border border-border/50">
     <div>
@@ -373,7 +369,7 @@
     });
 </script>
 
-@endsection
+</x-app-layout>
 
 
 

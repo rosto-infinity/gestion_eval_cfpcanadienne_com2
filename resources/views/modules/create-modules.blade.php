@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Créer un Module')
-
-@section('content')
+<x-app-layout title="Créer un Module">
 <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     <div class="mb-6">
@@ -103,4 +99,4 @@
     </div>
 
 </div>
-@endsection
+</x-app-layout>

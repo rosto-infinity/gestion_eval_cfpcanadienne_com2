@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight " style="color: var(--foreground)">
             {{ __('Mon Profil') }}
@@ -414,4 +412,4 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Page de profil chargée avec gestion avancée des images');
 });
 </script>
-@endsection
+</x-app-layout>

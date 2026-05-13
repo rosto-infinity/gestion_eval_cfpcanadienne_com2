@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Étudiants')
-
-@section('content')
+<x-app-layout title="Étudiants">
     <div class=" mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
         <!-- En-tête -->
@@ -278,4 +274,4 @@
         </div>
 
     </div>
-@endsection
+</x-app-layout>

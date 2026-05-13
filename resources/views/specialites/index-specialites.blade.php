@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Spécialités')
-
-@section('content')
+<x-app-layout title="Spécialités">
 <div class=" mx-auto px-4 sm:px-6 lg:px-8">
     <!-- En-tête -->
     <div class="sm:flex sm:items-center sm:justify-between mb-6">
@@ -125,4 +121,4 @@
         {{ $specialites->links() }}
     </div>
 </div>
-@endsection
+</x-app-layout>

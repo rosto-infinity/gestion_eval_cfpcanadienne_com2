@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Comparaison des Spécialités')
-
-@section('content')
+<x-app-layout title="Comparaison des Spécialités">
     <div class="min-h-screen" >
         <!-- En-tête avec navigation -->
         <div class="mb-8 flex justify-between items-center no-print">
@@ -619,7 +615,7 @@
     @endif
     </script>
 
-@endsection
+</x-app-layout>
 
 
 

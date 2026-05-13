@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Modifier une Spécialité')
-
-@section('content')
+<x-app-layout title="Modifier une Spécialité">
 <div class="min-h-screen" style="background-color: var(--background)">
     <div class=" mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
@@ -337,4 +333,4 @@
         overflow: hidden;
     }
 </style>
-@endsection
+</x-app-layout>

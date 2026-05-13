@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Détails de la spécialité')
-
-@section('content')
+<x-app-layout title="Détails de la spécialité">
 <div class="min-h-screen" style="background-color: var(--background)">
     <!-- En-tête avec navigation -->
     <div class="mb-8 flex justify-between items-center">
@@ -336,4 +332,4 @@
         animation: slideIn 0.3s ease-out;
     }
 </style>
-@endsection
+</x-app-layout>

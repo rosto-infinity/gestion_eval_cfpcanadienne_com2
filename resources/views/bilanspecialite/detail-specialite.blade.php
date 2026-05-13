@@ -1,8 +1,6 @@
-@extends('layouts.app')
-
 @section('title', 'Détail de la spécialité - ' . $specialite->code)
 
-@section('content')
+<x-app-layout>
     <!-- En-tête avec navigation -->
     <div
         class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 no-print bg-primary/5 rounded-lg p-6 border border-border/50">
@@ -426,7 +424,7 @@
         </div>
     </div>
 
-@endsection
+</x-app-layout>
 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

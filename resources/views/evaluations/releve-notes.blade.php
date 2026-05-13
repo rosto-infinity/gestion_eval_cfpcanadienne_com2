@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Relevé de notes')
-
-@section('content')
+<x-app-layout title="Relevé de notes">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 
         <!-- Actions -->
@@ -490,4 +486,4 @@
 
         </div>
     </div>
-@endsection
+</x-app-layout>

@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Saisie Multiple des Évaluations')
-
-@section('content')
+<x-app-layout title="Saisie Multiple des Évaluations">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
         <!-- En-tête -->
@@ -355,7 +351,7 @@
 
     </div>
 
-@endsection
+</x-app-layout>
 
 @push('styles')
     <style>
