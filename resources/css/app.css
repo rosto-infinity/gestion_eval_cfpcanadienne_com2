@@ -263,3 +263,9 @@ html.no-transition * {
 [x-cloak] {
     display: none !important;
 }
+
+/* Turbo SPA Progress Bar en rouge */
+.turbo-progress-bar {
+    background-color: #ef4444 !important;
+    height: 3px !important;
+}
