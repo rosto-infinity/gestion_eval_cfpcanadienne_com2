@@ -81,7 +81,7 @@ class PdfService
      */
     public function generateReleveNotesPdf(array $data): Response
     {
-        $matricule = $data['user']->matricule ?? 'user_'.$data['user']->id;
+        $matricule = !empty($data['user']->matricule) ? $data['user']->matricule : 'user_'.$data['user']->id;
 
         $filename = $this->generateTimestampedFilename(
             'releve_notes',
@@ -101,7 +101,7 @@ class PdfService
      */
     public function generateBilanPdf(array $data): Response
     {
-        $matricule = $data['bilan']->user->matricule ?? 'user_'.$data['bilan']->user->id;
+        $matricule = !empty($data['bilan']->user->matricule) ? $data['bilan']->user->matricule : 'user_'.$data['bilan']->user->id;
 
         $filename = $this->generateTimestampedFilename(
             'bilan_competences',

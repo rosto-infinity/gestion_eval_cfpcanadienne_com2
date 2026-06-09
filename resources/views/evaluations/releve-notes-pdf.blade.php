@@ -6,14 +6,14 @@
     <title>Relevé de Notes - {{ $user->matricule }}</title>
     <style>
         @page {
-            margin: 0.5cm 1cm;
+            margin: 0.8cm 1.2cm;
         }
 
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 10px;
+            font-size: 11px;
             color: #333;
-            line-height: 1.3;
+            line-height: 1.35;
         }
 
         /* --- COLORS --- */
@@ -32,32 +32,32 @@
         /* --- LAYOUT --- */
         .header-table {
             width: 100%;
-            border-bottom: 2px solid #D32F2F;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
+            border-bottom: 2.5px solid #D32F2F;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
         }
 
         .header-text {
             text-align: center;
-            font-size: 9px;
+            font-size: 9.5px;
             line-height: 1.2;
         }
 
         .header-title {
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 10px;
+            font-size: 11px;
             color: #D32F2F;
         }
 
         /* --- INFO CARD --- */
         .info-card {
             border: 1px solid #E5E7EB;
-            border-left: 4px solid #D32F2F;
+            border-left: 4.5px solid #D32F2F;
             width: 100%;
-            padding: 10px 15px;
+            padding: 10px 14px;
             background-color: #F9FAFB;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             border-radius: 4px;
         }
 
@@ -68,7 +68,7 @@
         .info-label {
             font-weight: bold;
             color: #6B7280;
-            width: 110px;
+            width: 120px;
         }
 
         .info-value {
@@ -83,8 +83,8 @@
             font-weight: bold;
             text-transform: uppercase;
             border-bottom: 1px solid #D32F2F;
-            padding-bottom: 4px;
-            margin: 20px 0 10px 0;
+            padding-bottom: 2px;
+            margin: 2px 0 8px 0;
             letter-spacing: 0.5px;
         }
 
@@ -92,13 +92,13 @@
         table.grades-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 4px;
         }
 
         table.grades-table th {
             text-align: left;
-            padding: 8px;
-            font-size: 9px;
+            padding: 6px 8px;
+            font-size: 9.5px;
             font-weight: bold;
             text-transform: uppercase;
             color: #FFFFFF;
@@ -107,9 +107,9 @@
         }
 
         table.grades-table td {
-            padding: 6px 8px;
+            padding: 5px 8px;
             border-bottom: 1px solid #E5E7EB;
-            font-size: 10px;
+            font-size: 10.5px;
         }
 
         table.grades-table tr:last-child td {
@@ -128,8 +128,8 @@
 
         /* --- SUMMARY TABLE --- */
         .summary-container {
-            width: 60%;
-            margin-top: 20px;
+            width: 75%;
+            margin-top: 2px;
             border: 1px solid #E5E7EB;
             border-radius: 6px;
             overflow: hidden;
@@ -144,14 +144,14 @@
         .summary-table th {
             background-color: #D32F2F;
             color: #fff;
-            padding: 8px;
-            font-size: 9px;
+            padding: 8px 10px;
+            font-size: 9.5px;
             text-transform: uppercase;
         }
 
         .summary-table td {
             text-align: center;
-            padding: 10px;
+            padding: 8px 10px;
             font-size: 11px;
             font-weight: bold;
             border-right: 1px solid #E5E7EB;
@@ -178,12 +178,12 @@
 
         .signature-box {
             display: inline-block;
-            width: 200px;
+            width: 220px;
             text-align: center;
         }
 
         .signature-line {
-            margin-top: 60px;
+            margin-top: 35px;
             border-top: 1px solid #9CA3AF;
             width: 100%;
         }
@@ -204,24 +204,45 @@
         .uppercase {
             text-transform: uppercase;
         }
+
+        /* --- WATERMARK --- */
+        .watermark {
+            position: fixed;
+            top: 42%;
+            left: 5%;
+            width: 90%;
+            text-align: center;
+            font-size: 85px;
+            font-weight: bold;
+            color: rgba(220, 220, 220, 0.18);
+            transform: rotate(-35deg);
+            transform-origin: 50% 50%;
+            z-index: -1000;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
     </style>
 </head>
 
 <body>
+    <div class="watermark">ORIGINAL</div>
 
     <!-- ENTÊTE -->
     <table class="header-table">
         <tr>
-            <!-- Ministère -->
-            <td width="30%" class="header-text" style="vertical-align: top;">
-                <div class="text-red font-bold">REPUBLIQUE DU CAMEROUN</div>
-                <div style="font-size: 8px;">Paix - Travail - Patrie</div>
-                <div style="margin-top: 5px;" class="font-bold">Ministère de l’Emploi et de la Formation Professionnelle
-                </div>
+            <!-- Ministère (Français) -->
+            <td width="38%" class="header-text" style="vertical-align: top; text-align: center;">
+               
+                <div class="font-bold" style="font-size: 9.5px; line-height: 1.2;">Ministère de l’Emploi et de la Formation Professionnelle</div>
+                <div style="border-top: 1px dotted #D32F2F; margin: 5px 0;"></div>
+                <div class="text-red font-bold" style="font-size: 9.5px; text-transform: uppercase; line-height: 1.2;">Centre de Formation Professionnelle la Canadienne</div>
+                <div style="border-top: 1px dotted #D32F2F; margin: 5px 0;"></div>
+                <div style="font-size: 9.5px; font-weight: bold;">B.P.: 837 Bafoussam</div>
+                <div style="font-size: 9.5px; font-weight: bold;">Tél: +237 695 82 92 30 / 671 33 78 29</div>
             </td>
 
             <!-- Logo -->
-            <td width="40%" class="text-center" style="vertical-align: middle;">
+            <td width="24%" class="text-center" style="vertical-align: middle; padding: 0 5px;">
                 @php
                     $path = public_path('android-chrome-512x512.png');
                     $base64 = null;
@@ -232,39 +253,39 @@
                     }
                 @endphp
                 @if ($base64)
-                    <img src="{{ $base64 }}" style="height: 60px; width: auto;">
+                    <img src="{{ $base64 }}" style="height: 60px; width: auto; display: block; margin: 0 auto;">
                 @else
                     <div
-                        style="font-weight: bold; color: #D32F2F; border: 2px solid #D32F2F; padding: 5px; display: inline-block;">
+                        style="font-weight: bold; color: #D32F2F; border: 2px solid #D32F2F; padding: 5px; display: inline-block; font-size: 8px;">
                         L O G O</div>
                 @endif
-                <div class="text-red font-bold" style="font-size: 11px; margin-top: 5px; text-transform: uppercase;">
-                    Centre de Formation Professionnelle La Canadienne
-                </div>
             </td>
 
             <!-- Anglais -->
-            <td width="30%" class="header-text" style="vertical-align: top;">
-                <div class="text-red font-bold">REPUBLIC OF CAMEROON</div>
-                <div style="font-size: 8px;">Peace - Work - Fatherland</div>
-                <div style="margin-top: 5px;" class="font-bold">Ministry of Employment and Vocational Training</div>
+            <td width="38%" class="header-text" style="vertical-align: top; text-align: center;">
+                
+                <div class="font-bold" style="font-size: 9.5px; line-height: 1.2;">Ministry of Employment and Vocational Training</div>
+                <div style="border-top: 1px dotted #D32F2F; margin: 5px 0;"></div>
+                <div class="text-red font-bold" style="font-size: 9.5px; text-transform: uppercase; line-height: 1.2;">Canadian Vocational Training Center</div>
+                <div style="border-top: 1px dotted #D32F2F; margin: 5px 0;"></div>
+                <div style="font-size: 9.5px; font-weight: bold;">contact@cfpcanadienne.com</div>
+                <div style="font-size: 9.5px; font-weight: bold;">www.cfpcanadienne.com</div>
             </td>
         </tr>
         <tr>
-            <td colspan="3" class="text-center" style="font-size: 8px; color: #666; padding-top: 8px;">
-                <em>Agrée par Arrêté Ministériel N° 000355/MINEFOP/SG/DFOP/SDGSF/CSACD/CBAC</em> | Tél: +237 695 82 92
-                30 / 671 33 78 29
+            <td colspan="3" class="text-center" style="font-size: 9.5px; color: #333; padding-top: 1px; font-weight: bold; line-height: 1.2;">
+                <div style="border-top: 1px dotted #D32F2F; margin: 6px 0;"></div>
+                <em>Créé, agréé et renouvelé par Arrêté Ministériel N° 000355/MINEFOP/SG/DFOP/SDGSF/CSACD/CBAC</em>
             </td>
         </tr>
     </table>
 
-    <div class="text-center" style="margin-bottom: 20px;">
+    <div class="text-center" style="margin-bottom: 2px;">
         <h1
-            style="color: #D32F2F; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; margin: 0; border-bottom: 1px solid #D32F2F; display: inline-block; padding-bottom: 2px;">
+            style="color: #D32F2F; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; margin: 0; border-bottom: 1px solid #D32F2F; display: inline-block; padding-bottom: 4px;">
             Relevé de Notes
         </h1>
     </div>
-
     <!-- INFORMATION ÉTUDIANT -->
     <div class="info-card">
         <table class="info-table">
@@ -273,7 +294,7 @@
                     <table style="width: 100%;">
                         <tr>
                             <td class="info-label">MATRICULE</td>
-                            <td class="info-value">: {{ $user->matricule }}</td>
+                            <td class="info-value">: {{ $user->matricule ?: \App\Models\User::generateMatricule($user->name) }}</td>
                         </tr>
                         <tr>
                             <td class="info-label">NOM & PRÉNOM</td>
@@ -348,20 +369,20 @@
                         }
                     @endphp
                     <tr>
-                        <td class="font-bold text-red" style="font-size: 8px;">{{ $evaluation->module->code ?? '-' }}
+                        <td class="font-bold text-red" style="font-size: 9.5px;">{{ $evaluation->module->code ?? '-' }}
                         </td>
                         <td>{{ $evaluation->module->intitule ?? '-' }}</td>
                         <td class="text-center">{{ $evaluation->module->coefficient ?? 1 }}</td>
                         <td class="text-center font-bold">{{ number_format($note, 2) }}</td>
-                        <td class="text-center" style="font-size: 8px; font-style: italic;">{{ $appreciation }}</td>
+                        <td class="text-center" style="font-size: 9.5px; font-style: italic;">{{ $appreciation }}</td>
                     </tr>
                 @endforeach
                 <tr class="row-total">
                     <td colspan="2" class="text-right">MOYENNE SEMESTRIELLE</td>
                     <td class="text-center">-</td>
-                    <td class="text-center" style="font-size: 11px;">{{ number_format($moyenneSemestre1 ?? 0, 2) }}
+                    <td class="text-center" style="font-size: 13px;">{{ number_format($moyenneSemestre1 ?? 0, 2) }}
                     </td>
-                    <td class="text-center" style="font-size: 9px;">
+                    <td class="text-center" style="font-size: 11px;">
                         {{ ($moyenneSemestre1 ?? 0) >= 10 ? 'VALIDÉ' : 'NON VALIDÉ' }}
                     </td>
                 </tr>
@@ -399,20 +420,20 @@
                         }
                     @endphp
                     <tr>
-                        <td class="font-bold text-red" style="font-size: 8px;">{{ $evaluation->module->code ?? '-' }}
+                        <td class="font-bold text-red" style="font-size: 9.5px;">{{ $evaluation->module->code ?? '-' }}
                         </td>
                         <td>{{ $evaluation->module->intitule ?? '-' }}</td>
                         <td class="text-center">{{ $evaluation->module->coefficient ?? 1 }}</td>
                         <td class="text-center font-bold">{{ number_format($note, 2) }}</td>
-                        <td class="text-center" style="font-size: 8px; font-style: italic;">{{ $appreciation }}</td>
+                        <td class="text-center" style="font-size: 9.5px; font-style: italic;">{{ $appreciation }}</td>
                     </tr>
                 @endforeach
                 <tr class="row-total">
                     <td colspan="2" class="text-right">MOYENNE SEMESTRIELLE</td>
                     <td class="text-center">-</td>
-                    <td class="text-center" style="font-size: 11px;">{{ number_format($moyenneSemestre2 ?? 0, 2) }}
+                    <td class="text-center" style="font-size: 13px;">{{ number_format($moyenneSemestre2 ?? 0, 2) }}
                     </td>
-                    <td class="text-center" style="font-size: 9px;">
+                    <td class="text-center" style="font-size: 11px;">
                         {{ ($moyenneSemestre2 ?? 0) >= 10 ? 'VALIDÉ' : 'NON VALIDÉ' }}
                     </td>
                 </tr>
@@ -439,7 +460,7 @@
                             <td>{{ number_format($moyenneSemestre1 ?? 0, 2) }}</td>
                             <td>{{ number_format($moyenneSemestre2 ?? 0, 2) }}</td>
                             <td class="text-red"
-                                style="font-size: 12px; border-left: 2px solid #E5E7EB; border-right: 2px solid #E5E7EB;">
+                                style="font-size: 14px; border-left: 2px solid #E5E7EB; border-right: 2px solid #E5E7EB;">
                                 {{ number_format($moyenneGenerale ?? 0, 2) }}</td>
                             <td class="{{ ($moyenneGenerale ?? 0) >= 10 ? 'decision-pass' : 'decision-fail' }}">
                                 {{ ($moyenneGenerale ?? 0) >= 10 ? 'ADMIS' : 'NON ADMIS' }}
@@ -454,14 +475,14 @@
     <!-- PIED DE PAGE / SIGNATURE -->
     <div class="signature-section">
         <div class="signature-box">
-            <div style="font-style: italic; font-size: 10px; margin-bottom: 5px;">
+            <div style="font-style: italic; font-size: 11.5px; margin-bottom: 2px;">
                 Fait à Bafoussam, le {{ now()->format('d/m/Y') }}
             </div>
-            <div class="font-bold text-red" style="margin-bottom: 40px; text-transform: uppercase; font-size: 10px;">
+            <div class="font-bold text-red" style="margin-bottom: 50px; text-transform: uppercase; font-size: 11.5px;">
                 La Directrice
             </div>
             <!-- Espace pour tampon/signature -->
-            <div style="height: 50px;"></div>
+            <div style="height: 70px;"></div>
         </div>
     </div>
 

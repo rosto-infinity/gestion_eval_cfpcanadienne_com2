@@ -1,6 +1,5 @@
 <x-app-layout title="Relevé de notes">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-
         <!-- Actions -->
         <div class="mb-4 flex justify-between items-center no-print">
             @if (auth()->user()->role->isAtLeast(\App\Enums\Role::MANAGER))
@@ -53,9 +52,9 @@
                 /* --- STYLES DU PDF PORTÉS POUR LE WEB --- */
                 #releve-notes {
                     font-family: 'Helvetica', 'Arial', sans-serif;
-                    font-size: 10px;
+                    font-size: 9px;
                     color: #333;
-                    line-height: 1.3;
+                    line-height: 1.2;
                 }
 
                 /* --- COLORS --- */
@@ -75,14 +74,14 @@
                 #releve-notes .header-table {
                     width: 100%;
                     border-bottom: 2px solid #D32F2F;
-                    margin-bottom: 20px;
-                    padding-bottom: 10px;
+                    margin-bottom: 10px;
+                    padding-bottom: 5px;
                 }
 
                 #releve-notes .header-text {
                     text-align: center;
-                    font-size: 9px;
-                    line-height: 1.2;
+                    font-size: 8px;
+                    line-height: 1.1;
                 }
 
                 /* --- INFO CARD --- */
@@ -90,9 +89,9 @@
                     border: 1px solid #E5E7EB;
                     border-left: 4px solid #D32F2F;
                     width: 100%;
-                    padding: 10px 15px;
+                    padding: 6px 10px;
                     background-color: #F9FAFB;
-                    margin-bottom: 25px;
+                    margin-bottom: 10px;
                     border-radius: 4px;
                 }
 
@@ -103,7 +102,7 @@
                 #releve-notes .info-label {
                     font-weight: bold;
                     color: #6B7280;
-                    width: 110px;
+                    width: 100px;
                 }
 
                 #releve-notes .info-value {
@@ -114,12 +113,12 @@
                 /* --- SECTION TITLES --- */
                 #releve-notes .section-title {
                     color: #D32F2F;
-                    font-size: 12px;
+                    font-size: 10px;
                     font-weight: bold;
                     text-transform: uppercase;
                     border-bottom: 1px solid #D32F2F;
-                    padding-bottom: 4px;
-                    margin: 20px 0 10px 0;
+                    padding-bottom: 2px;
+                    margin: 10px 0 5px 0;
                     letter-spacing: 0.5px;
                 }
 
@@ -127,13 +126,13 @@
                 #releve-notes table.grades-table {
                     width: 100%;
                     border-collapse: collapse;
-                    margin-bottom: 15px;
+                    margin-bottom: 8px;
                 }
 
                 #releve-notes table.grades-table th {
                     text-align: left;
-                    padding: 8px;
-                    font-size: 9px;
+                    padding: 5px 6px;
+                    font-size: 8px;
                     font-weight: bold;
                     text-transform: uppercase;
                     color: #FFFFFF;
@@ -142,9 +141,9 @@
                 }
 
                 #releve-notes table.grades-table td {
-                    padding: 6px 8px;
+                    padding: 4px 6px;
                     border-bottom: 1px solid #E5E7EB;
-                    font-size: 10px;
+                    font-size: 9px;
                 }
 
                 #releve-notes .row-total {
@@ -160,7 +159,7 @@
                 /* --- SUMMARY TABLE --- */
                 #releve-notes .summary-container {
                     width: 60%;
-                    margin-top: 20px;
+                    margin-top: 10px;
                     border: 1px solid #E5E7EB;
                     border-radius: 6px;
                     overflow: hidden;
@@ -175,15 +174,15 @@
                 #releve-notes .summary-table th {
                     background-color: #D32F2F;
                     color: #fff;
-                    padding: 8px;
-                    font-size: 9px;
+                    padding: 6px;
+                    font-size: 8px;
                     text-transform: uppercase;
                 }
 
                 #releve-notes .summary-table td {
                     text-align: center;
-                    padding: 10px;
-                    font-size: 11px;
+                    padding: 6px;
+                    font-size: 10px;
                     font-weight: bold;
                     border-right: 1px solid #E5E7EB;
                 }
@@ -245,40 +244,49 @@
             <!-- ENTÊTE -->
             <table class="header-table">
                 <tr>
-                    <td width="30%" class="header-text" style="vertical-align: top;">
-                        <div class="text-red font-bold">REPUBLIQUE DU CAMEROUN</div>
-                        <div style="font-size: 8px;">Paix - Travail - Patrie</div>
-                        <div style="margin-top: 5px;" class="font-bold">Ministère de l’Emploi et de la Formation
-                            Professionnelle</div>
+                    <!-- Ministère (Français) -->
+                    <td width="38%" class="header-text" style="vertical-align: top; text-align: center;">
+                        <div class="text-red font-bold" style="font-size: 8px;">REPUBLIQUE DU CAMEROUN</div>
+                        <div style="font-size: 7px; font-style: italic;">Paix - Travail - Patrie</div>
+                        <div style="border-top: 1px dotted #D32F2F; margin: 3px 0;"></div>
+                        <div class="font-bold" style="font-size: 8px; line-height: 1.1;">Ministère de l’Emploi et de la Formation Professionnelle</div>
+                        <div style="border-top: 1px dotted #D32F2F; margin: 3px 0;"></div>
+                        <div class="text-red font-bold" style="font-size: 8px; text-transform: uppercase; line-height: 1.1;">Centre de Formation Professionnelle la Canadienne</div>
+                        <div style="border-top: 1px dotted #D32F2F; margin: 3px 0;"></div>
+                        <div style="font-size: 8px; font-weight: bold;">B.P.: 837 Bafoussam</div>
+                        <div style="font-size: 8px; font-weight: bold;">Tél: +237 695 82 92 30 / 671 33 78 29</div>
                     </td>
-                    <td width="40%" class="text-center" style="vertical-align: middle;">
-                        @php
-                            $path = public_path('android-chrome-512x512.png');
-                        @endphp
+
+                    <!-- Logo -->
+                    <td width="24%" class="text-center" style="vertical-align: middle; padding: 0 5px;">
                         <img src="{{ asset('android-chrome-512x512.png') }}"
-                            style="height: 60px; width: auto; margin: 0 auto; display:block;">
-                        <div class="text-red font-bold"
-                            style="font-size: 11px; margin-top: 5px; text-transform: uppercase;">
-                            Centre de Formation Professionnelle La Canadienne
-                        </div>
+                            style="height: 50px; width: auto; margin: 0 auto; display:block;">
                     </td>
-                    <td width="30%" class="header-text" style="vertical-align: top;">
-                        <div class="text-red font-bold">REPUBLIC OF CAMEROON</div>
-                        <div style="font-size: 8px;">Peace - Work - Fatherland</div>
-                        <div style="margin-top: 5px;" class="font-bold">Ministry of Employment and Vocational Training</div>
+
+                    <!-- Anglais -->
+                    <td width="38%" class="header-text" style="vertical-align: top; text-align: center;">
+                        <div class="text-red font-bold" style="font-size: 8px;">REPUBLIC OF CAMEROON</div>
+                        <div style="font-size: 7px; font-style: italic;">Peace - Work - Fatherland</div>
+                        <div style="border-top: 1px dotted #D32F2F; margin: 3px 0;"></div>
+                        <div class="font-bold" style="font-size: 8px; line-height: 1.1;">Ministry of Employment and Vocational Training</div>
+                        <div style="border-top: 1px dotted #D32F2F; margin: 3px 0;"></div>
+                        <div class="text-red font-bold" style="font-size: 8px; text-transform: uppercase; line-height: 1.1;">Canadian Vocational Training Center</div>
+                        <div style="border-top: 1px dotted #D32F2F; margin: 3px 0;"></div>
+                        <div style="font-size: 8px; font-weight: bold;">contact@cfpcanadienne.com</div>
+                        <div style="font-size: 8px; font-weight: bold;">www.cfpcanadienne.com</div>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" class="text-center" style="font-size: 8px; color: #666; padding-top: 8px;">
-                        <em>Agrée par Arrêté Ministériel N° 000355/MINEFOP/SG/DFOP/SDGSF/CSACD/CBAC</em> | Tél: +237 695 82
-                        92 30 / 671 33 78 29
+                    <td colspan="3" class="text-center" style="font-size: 8px; color: #333; padding-top: 5px; font-weight: bold; line-height: 1.1;">
+                        <div style="border-top: 1px dotted #D32F2F; margin: 4px 0;"></div>
+                        <em>Créé, agréé et renouvelé par Arrêté Ministériel N° 000355/MINEFOP/SG/DFOP/SDGSF/CSACD/CBAC</em>
                     </td>
                 </tr>
             </table>
 
-            <div class="text-center" style="margin-bottom: 20px;">
+            <div class="text-center" style="margin-bottom: 8px;">
                 <h1
-                    style="color: #D32F2F; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; margin: 0; border-bottom: 1px solid #D32F2F; display: inline-block; padding-bottom: 2px;">
+                    style="color: #D32F2F; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0; border-bottom: 1px solid #D32F2F; display: inline-block; padding-bottom: 2px;">
                     Relevé de Notes
                 </h1>
             </div>
@@ -291,7 +299,7 @@
                             <table style="width: 100%;">
                                 <tr>
                                     <td class="info-label">MATRICULE</td>
-                                    <td class="info-value">: {{ $user->matricule }}</td>
+                                    <td class="info-value">: {{ $user->matricule ?: \App\Models\User::generateMatricule($user->name) }}</td>
                                 </tr>
                                 <tr>
                                     <td class="info-label">NOM & PRÉNOM</td>
