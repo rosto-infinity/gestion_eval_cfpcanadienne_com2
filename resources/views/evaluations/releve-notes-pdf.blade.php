@@ -6,14 +6,14 @@
     <title>Relevé de Notes - {{ $user->matricule }}</title>
     <style>
         @page {
-            margin: 0.8cm 1.2cm;
+            margin: 0.4cm 0.8cm;
         }
 
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 11px;
+            font-size: 9.5px;
             color: #333;
-            line-height: 1.35;
+            line-height: 1.2;
         }
 
         /* --- COLORS --- */
@@ -32,32 +32,32 @@
         /* --- LAYOUT --- */
         .header-table {
             width: 100%;
-            border-bottom: 2.5px solid #D32F2F;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
+            border-bottom: 2px solid #D32F2F;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
         }
 
         .header-text {
             text-align: center;
-            font-size: 9.5px;
-            line-height: 1.2;
+            font-size: 8px;
+            line-height: 1.15;
         }
 
         .header-title {
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 11px;
+            font-size: 9px;
             color: #D32F2F;
         }
 
         /* --- INFO CARD --- */
         .info-card {
             border: 1px solid #E5E7EB;
-            border-left: 4.5px solid #D32F2F;
+            border-left: 3.5px solid #D32F2F;
             width: 100%;
-            padding: 10px 14px;
+            padding: 5px 10px;
             background-color: #F9FAFB;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
             border-radius: 4px;
         }
 
@@ -68,23 +68,25 @@
         .info-label {
             font-weight: bold;
             color: #6B7280;
-            width: 135px;
+            width: 130px;
+            font-size: 9px;
         }
 
         .info-value {
             font-weight: bold;
             color: #111827;
+            font-size: 9px;
         }
 
         /* --- SECTION TITLES --- */
         .section-title {
             color: #D32F2F;
-            font-size: 12px;
+            font-size: 10.5px;
             font-weight: bold;
             text-transform: uppercase;
             border-bottom: 1px solid #D32F2F;
-            padding-bottom: 2px;
-            margin: 2px 0 8px 0;
+            padding-bottom: 1px;
+            margin: 1px 0 4px 0;
             letter-spacing: 0.5px;
         }
 
@@ -92,13 +94,13 @@
         table.grades-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         table.grades-table th {
             text-align: left;
-            padding: 6px 8px;
-            font-size: 9.5px;
+            padding: 4px 6px;
+            font-size: 8.5px;
             font-weight: bold;
             text-transform: uppercase;
             color: #FFFFFF;
@@ -107,9 +109,9 @@
         }
 
         table.grades-table td {
-            padding: 5px 8px;
+            padding: 3.5px 6px;
             border-bottom: 1px solid #E5E7EB;
-            font-size: 10.5px;
+            font-size: 9px;
         }
 
         table.grades-table tr:last-child td {
@@ -128,7 +130,7 @@
 
         /* --- SUMMARY TABLE --- */
         .summary-container {
-            width: 75%;
+            width: 60%;
             margin-top: 2px;
             border: 1px solid #E5E7EB;
             border-radius: 6px;
@@ -144,15 +146,15 @@
         .summary-table th {
             background-color: #D32F2F;
             color: #fff;
-            padding: 8px 10px;
-            font-size: 9.5px;
+            padding: 4px 8px;
+            font-size: 8.5px;
             text-transform: uppercase;
         }
 
         .summary-table td {
             text-align: center;
-            padding: 8px 10px;
-            font-size: 11px;
+            padding: 4px 8px;
+            font-size: 9.5px;
             font-weight: bold;
             border-right: 1px solid #E5E7EB;
         }
@@ -171,19 +173,19 @@
 
         /* --- SIGNATURE --- */
         .signature-section {
-            margin-top: 30px;
+            margin-top: 10px;
             text-align: right;
             page-break-inside: avoid;
         }
 
         .signature-box {
             display: inline-block;
-            width: 220px;
+            width: 200px;
             text-align: center;
         }
 
         .signature-line {
-            margin-top: 35px;
+            margin-top: 25px;
             border-top: 1px solid #9CA3AF;
             width: 100%;
         }
@@ -212,7 +214,7 @@
             left: 5%;
             width: 90%;
             text-align: center;
-            font-size: 125px;
+            font-size: 120px;
             font-weight: bold;
             color: rgba(220, 220, 220, 0.18);
             transform: rotate(-35deg);
@@ -233,12 +235,12 @@
             <!-- Ministère (Français) -->
             <td width="38%" class="header-text" style="vertical-align: top; text-align: center;">
                
-                <div class="font-bold" style="font-size: 9.5px; line-height: 1.2;">Ministère de l’Emploi et de la Formation Professionnelle</div>
-                <div style="border-top: 1px dotted #D32F2F; margin: 5px 0;"></div>
-                <div class="text-red font-bold" style="font-size: 9.5px; text-transform: uppercase; line-height: 1.2;">Centre de Formation Professionnelle la Canadienne</div>
-                <div style="border-top: 1px dotted #D32F2F; margin: 5px 0;"></div>
-                <div style="font-size: 9.5px; font-weight: bold;">B.P.: 837 Bafoussam</div>
-                <div style="font-size: 9.5px; font-weight: bold;">Tél: +237 695 82 92 30 / 671 33 78 29</div>
+                <div class="font-bold" style="font-size: 8px; line-height: 1.15;">Ministère de l’Emploi et de la Formation Professionnelle</div>
+                <div style="border-top: 1px dotted #D32F2F; margin: 3px 0;"></div>
+                <div class="text-red font-bold" style="font-size: 8.5px; text-transform: uppercase; line-height: 1.15;">Centre de Formation Professionnelle la Canadienne</div>
+                <div style="border-top: 1px dotted #D32F2F; margin: 3px 0;"></div>
+                <div style="font-size: 8px; font-weight: bold;">B.P.: 837 Bafoussam</div>
+                <div style="font-size: 8px; font-weight: bold;">Tél: +237 695 82 92 30 / 671 33 78 29</div>
             </td>
 
             <!-- Logo -->
@@ -253,7 +255,7 @@
                     }
                 @endphp
                 @if ($base64)
-                    <img src="{{ $base64 }}" style="height: 60px; width: auto; display: block; margin: 0 auto;">
+                    <img src="{{ $base64 }}" style="height: 45px; width: auto; display: block; margin: 0 auto;">
                 @else
                     <div
                         style="font-weight: bold; color: #D32F2F; border: 2px solid #D32F2F; padding: 5px; display: inline-block; font-size: 8px;">
@@ -264,17 +266,17 @@
             <!-- Anglais -->
             <td width="38%" class="header-text" style="vertical-align: top; text-align: center;">
                 
-                <div class="font-bold" style="font-size: 9.5px; line-height: 1.2;">Ministry of Employment and Vocational Training</div>
-                <div style="border-top: 1px dotted #D32F2F; margin: 5px 0;"></div>
-                <div class="text-red font-bold" style="font-size: 9.5px; text-transform: uppercase; line-height: 1.2;">Canadian Vocational Training Center</div>
-                <div style="border-top: 1px dotted #D32F2F; margin: 5px 0;"></div>
-                <div style="font-size: 9.5px; font-weight: bold;">contact@cfpcanadienne.com</div>
-                <div style="font-size: 9.5px; font-weight: bold;">www.cfpcanadienne.com</div>
+                <div class="font-bold" style="font-size: 8px; line-height: 1.15;">Ministry of Employment and Vocational Training</div>
+                <div style="border-top: 1px dotted #D32F2F; margin: 3px 0;"></div>
+                <div class="text-red font-bold" style="font-size: 8.5px; text-transform: uppercase; line-height: 1.15;">Canadian Vocational Training Center</div>
+                <div style="border-top: 1px dotted #D32F2F; margin: 3px 0;"></div>
+                <div style="font-size: 8px; font-weight: bold;">contact@cfpcanadienne.com</div>
+                <div style="font-size: 8px; font-weight: bold;">www.cfpcanadienne.com</div>
             </td>
         </tr>
         <tr>
-            <td colspan="3" class="text-center" style="font-size: 9.5px; color: #333; padding-top: 1px; font-weight: bold; line-height: 1.2;">
-                <div style="border-top: 1px dotted #D32F2F; margin: 6px 0;"></div>
+            <td colspan="3" class="text-center" style="font-size: 8px; color: #333; padding-top: 1px; font-weight: bold; line-height: 1.15;">
+                <div style="border-top: 1px dotted #D32F2F; margin: 4px 0;"></div>
                 <em>Créé, agréé et renouvelé par Arrêté Ministériel N° 000355/MINEFOP/SG/DFOP/SDGSF/CSACD/CBAC</em>
             </td>
         </tr>
@@ -282,7 +284,7 @@
 
     <div class="text-center" style="margin-bottom: 2px;">
         <h1
-            style="color: #D32F2F; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0; border-bottom: 1px solid #D32F2F; display: inline-block; padding-bottom: 4px;">
+            style="color: #D32F2F; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0; border-bottom: 1px solid #D32F2F; display: inline-block; padding-bottom: 2px;">
             Relevé de notes en vue de l'obtention du Diplôme de Qualification Professionnelle
         </h1>
     </div>
@@ -473,7 +475,7 @@
     @endif
 
     <!-- QR CODE & PHOTO DE PROFIL -->
-    <div style="margin-top: 10px; margin-bottom: 15px; page-break-inside: avoid;">
+    <div style="margin-top: 5px; margin-bottom: 5px; page-break-inside: avoid;">
         @php
             $profileBase64 = null;
             if ($user->profile) {
@@ -492,28 +494,28 @@
                 <td style="width: 50%; text-align: center; vertical-align: middle; border: none;">
                     @if (isset($qrCode) && $qrCode)
                         <div style="display: inline-block; padding: 4px; border: 1px solid #E5E7EB; background-color: #FFF; border-radius: 4px;">
-                            <img src="{{ $qrCode }}" style="width: 65px; height: 65px; display: block;" alt="QR Code">
+                            <img src="{{ $qrCode }}" style="width: 150px; height: 150px; display: block;" alt="QR Code">
                         </div>
-                        <div style="font-size: 8px; color: #6B7280; margin-top: 3px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Authentification</div>
+                        <div style="font-size: 7.5px; color: #6B7280; margin-top: 2px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Authentification</div>
                     @endif
                 </td>
                 <td style="width: 50%; text-align: center; vertical-align: middle; border: none;">
                     @if ($profileBase64)
                         <div style="display: inline-block; padding: 4px; border: 1px solid #E5E7EB; background-color: #FFF; border-radius: 4px;">
-                            <img src="{{ $profileBase64 }}" style="width: 65px; height: 65px; object-fit: cover; display: block; border-radius: 2px;" alt="Photo de Profil">
+                            <img src="{{ $profileBase64 }}" style="width: 80px; height: 80px; object-fit: cover; display: block; border-radius: 2px;" alt="Photo de Profil">
                         </div>
-                        <div style="font-size: 8px; color: #6B7280; margin-top: 3px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Photo de l'Étudiant</div>
+                        <div style="font-size: 7.5px; color: #6B7280; margin-top: 2px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Photo de l'Étudiant</div>
                     @else
                         <div style="display: inline-block; padding: 4px; border: 1px solid #E5E7EB; background-color: #FFF; border-radius: 4px; vertical-align: middle;">
-                            <table style="width: 65px; height: 65px; background-color: #F3F4F6; border: 1px dashed #D1D5DB; border-collapse: collapse; margin: 0 auto;">
+                            <table style="width: 80px; height: 80px; background-color: #F3F4F6; border: 1px dashed #D1D5DB; border-collapse: collapse; margin: 0 auto;">
                                 <tr>
-                                    <td style="vertical-align: middle; text-align: center; font-size: 15px; font-weight: bold; color: #9CA3AF; border: none;">
+                                    <td style="vertical-align: middle; text-align: center; font-size: 18px; font-weight: bold; color: #9CA3AF; border: none;">
                                         {{ $user->initials() }}
                                     </td>
                                 </tr>
                             </table>
                         </div>
-                        <div style="font-size: 8px; color: #6B7280; margin-top: 3px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Photo de l'Étudiant</div>
+                        <div style="font-size: 7.5px; color: #6B7280; margin-top: 2px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Photo de l'Étudiant</div>
                     @endif
                 </td>
             </tr>
@@ -521,25 +523,25 @@
     </div>
 
     <!-- PIED DE PAGE / SIGNATURE -->
-    <div class="signature-section" style="margin-top: 15px; page-break-inside: avoid; text-align: left;">
+    <div class="signature-section" style="margin-top: 5px; page-break-inside: avoid; text-align: left;">
         <table style="width: 100%; border: none; border-collapse: collapse;">
             <tr>
                 <td style="width: 65%; vertical-align: top; text-align: left; padding-right: 15px; border: none;">
-                    <div style="font-size: 8px; line-height: 1.35; color: #444; font-style: italic; text-align: justify; font-weight: normal;">
+                    <div style="font-size: 7.5px; line-height: 1.25; color: #444; font-style: italic; text-align: justify; font-weight: normal;">
                         Vu l'Arrêté n° 159/MINEFOP/SG/DFOP/SDGSF/SACD du 03 avril 2020 portant agrément du Centre de Formation Professionnelle La Canadienne ;<br>
                         Vu l'Arrêté n° 00000226/MINEFOP/SG/DFOP/SDGSF/CSACD/CBAC du 06 mai 2022 portant renouvellement d'agrément dudit Centre ;<br>
                         Vu l'Arrêté n° 000355/MINEFOP/SG/DFOP/SDGSF/CSACD/CBAC du 10 juin 2025 portant renouvellement d'agrément dudit Centre ;
                     </div>
                 </td>
                 <td style="width: 35%; vertical-align: top; text-align: center; border: none; ">
-                    <div style="font-style: italic; font-size: 11px; margin-bottom: 2px;">
+                    <div style="font-style: italic; font-size: 9.5px; margin-bottom: 2px;">
                         Fait à Bafoussam, le 
                     </div>
-                    <div class="font-bold text-red" style="margin-bottom: 35px; text-transform: uppercase; font-size: 11px;">
+                    <div class="font-bold text-red" style="margin-bottom: 15px; text-transform: uppercase; font-size: 9.5px;">
                         La Directrice
                     </div>
                     <!-- Espace pour tampon/signature -->
-                    <div style="height: 55px;"></div>
+                    <div style="height: 30px;"></div>
                 </td>
             </tr>
         </table>

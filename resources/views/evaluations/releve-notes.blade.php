@@ -484,7 +484,7 @@
                         <td style="width: 50%; text-align: center; vertical-align: middle; border: none;">
                             @if (isset($qrCode) && $qrCode)
                                 <div style="display: inline-block; padding: 4px; border: 1px solid #E5E7EB; background-color: #FFF; border-radius: 4px;">
-                                    <img src="{{ $qrCode }}" style="width: 65px; height: 65px; display: block;" alt="QR Code">
+                                    <img src="{{ $qrCode }}" style="width: 80px; height: 80px; display: block;" alt="QR Code">
                                 </div>
                                 <div style="font-size: 8px; color: #6B7280; margin-top: 3px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Authentification</div>
                             @endif
@@ -492,14 +492,14 @@
                         <td style="width: 50%; text-align: center; vertical-align: middle; border: none;">
                             @if ($user->profile)
                                 <div style="display: inline-block; padding: 4px; border: 1px solid #E5E7EB; background-color: #FFF; border-radius: 4px;">
-                                    <img src="{{ Storage::url($user->profile) }}" style="width: 65px; height: 65px; object-fit: cover; display: block; border-radius: 2px;" alt="Photo de Profil">
+                                    <img src="{{ Storage::url($user->profile) }}" style="width: 80px; height: 80px; object-fit: cover; display: block; border-radius: 2px;" alt="Photo de Profil">
                                 </div>
                                 <div style="font-size: 8px; color: #6B7280; margin-top: 3px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Photo de l'Étudiant</div>
                             @else
                                 <div style="display: inline-block; padding: 4px; border: 1px solid #E5E7EB; background-color: #FFF; border-radius: 4px; vertical-align: middle;">
-                                    <table style="width: 65px; height: 65px; background-color: #F3F4F6; border: 1px dashed #D1D5DB; border-collapse: collapse; margin: 0 auto;">
+                                    <table style="width: 80px; height: 80px; background-color: #F3F4F6; border: 1px dashed #D1D5DB; border-collapse: collapse; margin: 0 auto;">
                                         <tr>
-                                            <td style="vertical-align: middle; text-align: center; font-size: 15px; font-weight: bold; color: #9CA3AF; border: none;">
+                                            <td style="vertical-align: middle; text-align: center; font-size: 18px; font-weight: bold; color: #9CA3AF; border: none;">
                                                 {{ $user->initials() }}
                                             </td>
                                         </tr>
