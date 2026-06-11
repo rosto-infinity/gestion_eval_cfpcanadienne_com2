@@ -484,7 +484,7 @@
                         <td style="width: 50%; text-align: center; vertical-align: middle; border: none;">
                             @if (isset($qrCode) && $qrCode)
                                 <div style="display: inline-block; padding: 4px; border: 1px solid #E5E7EB; background-color: #FFF; border-radius: 4px;">
-                                    <img src="{{ $qrCode }}" style="width: 80px; height: 80px; display: block;" alt="QR Code">
+                                    <img src="{{ $qrCode }}" style="width: 150px; height: 150px; display: block;" alt="QR Code">
                                 </div>
                                 <div style="font-size: 8px; color: #6B7280; margin-top: 3px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Authentification</div>
                             @endif

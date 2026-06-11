@@ -270,7 +270,7 @@
                                 type="date" 
                                 id="date_naissance" 
                                 name="date_naissance" 
-                                value="{{ old('date_naissance', $user->date_naissance) }}"
+                                value="{{ old('date_naissance', $user->date_naissance ? $user->date_naissance->format('Y-m-d') : '') }}"
                                 class="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all @error('date_naissance') border-destructive ring-2 ring-destructive/50 @enderror"
                             >
                             @error('date_naissance')
