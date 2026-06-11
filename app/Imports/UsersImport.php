@@ -273,6 +273,13 @@ class UsersImport implements SkipsOnError, ToCollection, WithBatchInserts, WithH
             // Si l'université gère Master, il faut ajouter Master à l'Enum.
             // Pour l'instant, on mappe ce qu'on peut.
             'cep' => 'cep',
+            'gce advanced a level' => 'gce_a_level',
+            'gce advanced level' => 'gce_a_level',
+            'gce a level' => 'gce_a_level',
+            'a level' => 'gce_a_level',
+            'gce advanced a-level' => 'gce_a_level',
+            'gce a-level' => 'gce_a_level',
+            'a-level' => 'gce_a_level',
         ];
 
         $normalizedNiveau = $niveauMapping[$niveau] ?? strtoupper($niveau);

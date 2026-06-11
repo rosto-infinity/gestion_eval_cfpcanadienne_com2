@@ -68,7 +68,7 @@
         .info-label {
             font-weight: bold;
             color: #6B7280;
-            width: 120px;
+            width: 135px;
         }
 
         .info-value {
@@ -212,7 +212,7 @@
             left: 5%;
             width: 90%;
             text-align: center;
-            font-size: 85px;
+            font-size: 125px;
             font-weight: bold;
             color: rgba(220, 220, 220, 0.18);
             transform: rotate(-35deg);
@@ -244,7 +244,7 @@
             <!-- Logo -->
             <td width="24%" class="text-center" style="vertical-align: middle; padding: 0 5px;">
                 @php
-                    $path = public_path('android-chrome-512x512.png');
+                    $path = public_path('CFPCanadienne.png');
                     $base64 = null;
                     if (file_exists($path)) {
                         $type = pathinfo($path, PATHINFO_EXTENSION);
@@ -282,8 +282,8 @@
 
     <div class="text-center" style="margin-bottom: 2px;">
         <h1
-            style="color: #D32F2F; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; margin: 0; border-bottom: 1px solid #D32F2F; display: inline-block; padding-bottom: 4px;">
-            Relevé de Notes
+            style="color: #D32F2F; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0; border-bottom: 1px solid #D32F2F; display: inline-block; padding-bottom: 4px;">
+            Relevé de notes en vue de l'obtention du Diplôme de Qualification Professionnelle
         </h1>
     </div>
     <!-- INFORMATION ÉTUDIANT -->
@@ -321,8 +321,8 @@
                 <td width="50%" style="vertical-align: top;">
                     <table style="width: 100%;">
                         <tr>
-                            <td class="info-label">NIVEAU</td>
-                            <td class="info-value">: {{ $user->niveau ?? '-' }}</td>
+                            <td class="info-label">NIVEAU SCOLAIRE</td>
+                            <td class="info-value">: {{ $user->niveau ? $user->niveau->label() : '-' }}</td>
                         </tr>
                         <tr>
                             <td class="info-label">SPÉCIALITÉ</td>
@@ -472,18 +472,77 @@
         </div>
     @endif
 
+    <!-- QR CODE & PHOTO DE PROFIL -->
+    <div style="margin-top: 10px; margin-bottom: 15px; page-break-inside: avoid;">
+        @php
+            $profileBase64 = null;
+            if ($user->profile) {
+                $profilePath = storage_path('app/public/' . $user->profile);
+                if (file_exists($profilePath)) {
+                    $profileType = pathinfo($profilePath, PATHINFO_EXTENSION);
+                    $profileData = @file_get_contents($profilePath);
+                    if ($profileData) {
+                        $profileBase64 = 'data:image/' . $profileType . ';base64,' . base64_encode($profileData);
+                    }
+                }
+            }
+        @endphp
+        <table style="width: 100%; border: none; border-collapse: collapse;">
+            <tr>
+                <td style="width: 50%; text-align: center; vertical-align: middle; border: none;">
+                    @if (isset($qrCode) && $qrCode)
+                        <div style="display: inline-block; padding: 4px; border: 1px solid #E5E7EB; background-color: #FFF; border-radius: 4px;">
+                            <img src="{{ $qrCode }}" style="width: 65px; height: 65px; display: block;" alt="QR Code">
+                        </div>
+                        <div style="font-size: 8px; color: #6B7280; margin-top: 3px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Authentification</div>
+                    @endif
+                </td>
+                <td style="width: 50%; text-align: center; vertical-align: middle; border: none;">
+                    @if ($profileBase64)
+                        <div style="display: inline-block; padding: 4px; border: 1px solid #E5E7EB; background-color: #FFF; border-radius: 4px;">
+                            <img src="{{ $profileBase64 }}" style="width: 65px; height: 65px; object-fit: cover; display: block; border-radius: 2px;" alt="Photo de Profil">
+                        </div>
+                        <div style="font-size: 8px; color: #6B7280; margin-top: 3px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Photo de l'Étudiant</div>
+                    @else
+                        <div style="display: inline-block; padding: 4px; border: 1px solid #E5E7EB; background-color: #FFF; border-radius: 4px; vertical-align: middle;">
+                            <table style="width: 65px; height: 65px; background-color: #F3F4F6; border: 1px dashed #D1D5DB; border-collapse: collapse; margin: 0 auto;">
+                                <tr>
+                                    <td style="vertical-align: middle; text-align: center; font-size: 15px; font-weight: bold; color: #9CA3AF; border: none;">
+                                        {{ $user->initials() }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div style="font-size: 8px; color: #6B7280; margin-top: 3px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Photo de l'Étudiant</div>
+                    @endif
+                </td>
+            </tr>
+        </table>
+    </div>
+
     <!-- PIED DE PAGE / SIGNATURE -->
-    <div class="signature-section">
-        <div class="signature-box">
-            <div style="font-style: italic; font-size: 11.5px; margin-bottom: 2px;">
-                Fait à Bafoussam, le {{ now()->format('d/m/Y') }}
-            </div>
-            <div class="font-bold text-red" style="margin-bottom: 50px; text-transform: uppercase; font-size: 11.5px;">
-                La Directrice
-            </div>
-            <!-- Espace pour tampon/signature -->
-            <div style="height: 70px;"></div>
-        </div>
+    <div class="signature-section" style="margin-top: 15px; page-break-inside: avoid; text-align: left;">
+        <table style="width: 100%; border: none; border-collapse: collapse;">
+            <tr>
+                <td style="width: 65%; vertical-align: top; text-align: left; padding-right: 15px; border: none;">
+                    <div style="font-size: 8px; line-height: 1.35; color: #444; font-style: italic; text-align: justify; font-weight: normal;">
+                        Vu l'Arrêté n° 159/MINEFOP/SG/DFOP/SDGSF/SACD du 03 avril 2020 portant agrément du Centre de Formation Professionnelle La Canadienne ;<br>
+                        Vu l'Arrêté n° 00000226/MINEFOP/SG/DFOP/SDGSF/CSACD/CBAC du 06 mai 2022 portant renouvellement d'agrément dudit Centre ;<br>
+                        Vu l'Arrêté n° 000355/MINEFOP/SG/DFOP/SDGSF/CSACD/CBAC du 10 juin 2025 portant renouvellement d'agrément dudit Centre ;
+                    </div>
+                </td>
+                <td style="width: 35%; vertical-align: top; text-align: center; border: none; ">
+                    <div style="font-style: italic; font-size: 11px; margin-bottom: 2px;">
+                        Fait à Bafoussam, le 
+                    </div>
+                    <div class="font-bold text-red" style="margin-bottom: 35px; text-transform: uppercase; font-size: 11px;">
+                        La Directrice
+                    </div>
+                    <!-- Espace pour tampon/signature -->
+                    <div style="height: 55px;"></div>
+                </td>
+            </tr>
+        </table>
     </div>
 
 </body>

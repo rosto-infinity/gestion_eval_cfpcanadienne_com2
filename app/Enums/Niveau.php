@@ -14,6 +14,7 @@ enum Niveau: string
     case BACC = 'bacc';
     case LICENCE = 'licence';
     case CEP = 'cep';
+    case GCE_A_LEVEL = 'gce_a_level';
 
     public function label(): string
     {
@@ -26,6 +27,7 @@ enum Niveau: string
             self::BACC => 'Baccalauréat',
             self::LICENCE => 'Licence',
             self::CEP => 'CEP',
+            self::GCE_A_LEVEL => 'GCE ADVANCED A LEVEL',
         };
     }
 
@@ -40,6 +42,7 @@ enum Niveau: string
             self::BACC => 'Baccalauréat',
             self::LICENCE => 'Licence (Bac+3)',
             self::CEP => 'Certificat d\'Études Primaires',
+            self::GCE_A_LEVEL => 'GCE Advanced A Level',
         };
     }
 
@@ -75,6 +78,7 @@ enum Niveau: string
                 self::PROBATOIRE->value => self::PROBATOIRE->label(),
                 self::TERMINALE->value => self::TERMINALE->label(),
                 self::BACC->value => self::BACC->label(),
+                self::GCE_A_LEVEL->value => self::GCE_A_LEVEL->label(),
             ],
             'Supérieur' => [
                 self::LICENCE->value => self::LICENCE->label(),

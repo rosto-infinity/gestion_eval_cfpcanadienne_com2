@@ -40,7 +40,7 @@ class EvaluationService
         $module = Module::findOrFail($data['module_id']);
 
         // Si la spécialité n'est pas fournie, on la déduit du module
-        if (!isset($data['specialite_id'])) {
+        if (! isset($data['specialite_id'])) {
             $data['specialite_id'] = $module->specialite_id;
         }
 

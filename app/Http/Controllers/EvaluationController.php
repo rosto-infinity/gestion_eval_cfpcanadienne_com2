@@ -556,13 +556,16 @@ class EvaluationController extends Controller
         $moyenneSemestre2 = $user->getMoyenneSemestre(2);
         $moyenneGenerale = $this->evaluationService->calculateMoyenneGenerale($moyenneSemestre1, $moyenneSemestre2);
 
+        $qrCode = app(\App\Services\QrCodeService::class)->generateTranscriptQrCode(route('evaluations.releve-notes', $user));
+
         return view('evaluations.releve-notes', compact(
             'user',
             'evaluationsSemestre1',
             'evaluationsSemestre2',
             'moyenneSemestre1',
             'moyenneSemestre2',
-            'moyenneGenerale'
+            'moyenneGenerale',
+            'qrCode'
         ));
     }
 
@@ -578,6 +581,8 @@ class EvaluationController extends Controller
         $moyenneGenerale = $this->evaluationService->calculateMoyenneGenerale($moyenneSemestre1, $moyenneSemestre2);
         $stats = $this->evaluationService->calculateStatistiques($evaluationsSemestre1, $evaluationsSemestre2);
 
+        $qrCode = app(\App\Services\QrCodeService::class)->generateTranscriptQrCode(route('evaluations.releve-notes', $user));
+
         return $this->pdfService->generateReleveNotesPdf([
             'user' => $user,
             'evaluationsSemestre1' => $evaluationsSemestre1,
@@ -586,6 +591,7 @@ class EvaluationController extends Controller
             'moyenneSemestre2' => $moyenneSemestre2,
             'moyenneGenerale' => $moyenneGenerale,
             'stats' => $stats,
+            'qrCode' => $qrCode,
         ]);
     }
 }
