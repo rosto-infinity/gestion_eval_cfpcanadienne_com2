@@ -26,6 +26,10 @@ Route::get('/changelog', fn () => view('changelog'))
 Route::get('/privacy', fn () => view('pages.privacy'))->name('privacy');
 Route::get('/legal', fn () => view('pages.legal'))->name('legal');
 
+// Vérification publique de relevé de notes
+Route::get('/releve-note/{token}', [EvaluationController::class, 'releveNotesPublic'])->name('evaluations.releve-notes.public');
+Route::get('/releve-note/{token}/pdf', [EvaluationController::class, 'releveNotesPublicPdf'])->name('evaluations.releve-notes.public.pdf');
+
 // Routes pour les ressources protégées par authentification
 Route::middleware(['auth', 'verified'])->group(function (): void {
 

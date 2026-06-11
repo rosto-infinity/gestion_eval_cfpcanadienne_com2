@@ -50,4 +50,61 @@ class TranscriptTest extends TestCase
         // Check for QR Code presence
         $response->assertSee("data:image/png;base64,");
     }
+
+    public function test_public_transcript_verification_is_accessible_without_authentication(): void
+    {
+        // Arrange
+        $annee = AnneeAcademique::factory()->create(['is_active' => true]);
+        $specialite = Specialite::factory()->create();
+
+        $student = User::factory()->create([
+            'role' => Role::USER,
+            'niveau' => Niveau::GCE_A_LEVEL,
+            'specialite_id' => $specialite->id,
+            'annee_academique_id' => $annee->id,
+        ]);
+
+        $token = str_replace(['+', '/', '='], ['-', '_', ''], \Illuminate\Support\Facades\Crypt::encryptString((string) $student->id));
+
+        // Act (without actingAs)
+        $response = $this->get(route('evaluations.releve-notes.public', ['token' => $token]));
+
+        // Assert
+        $response->assertStatus(200);
+        $response->assertSee("Document Officiel Vérifié");
+        $response->assertSee("Relevé de notes en vue de l'obtention du Diplôme de Qualification Professionnelle(DQP)", false);
+        $response->assertSee($student->name);
+    }
+
+    public function test_public_transcript_verification_returns_404_on_invalid_token(): void
+    {
+        // Act with invalid token
+        $response = $this->get(route('evaluations.releve-notes.public', ['token' => 'invalid-token-here']));
+
+        // Assert
+        $response->assertStatus(404);
+    }
+
+    public function test_public_transcript_pdf_is_accessible_without_authentication(): void
+    {
+        // Arrange
+        $annee = AnneeAcademique::factory()->create(['is_active' => true]);
+        $specialite = Specialite::factory()->create();
+
+        $student = User::factory()->create([
+            'role' => Role::USER,
+            'niveau' => Niveau::GCE_A_LEVEL,
+            'specialite_id' => $specialite->id,
+            'annee_academique_id' => $annee->id,
+        ]);
+
+        $token = str_replace(['+', '/', '='], ['-', '_', ''], \Illuminate\Support\Facades\Crypt::encryptString((string) $student->id));
+
+        // Act (without actingAs)
+        $response = $this->get(route('evaluations.releve-notes.public.pdf', ['token' => $token]));
+
+        // Assert
+        $response->assertStatus(200);
+        $response->assertHeader('content-type', 'application/pdf');
+    }
 }

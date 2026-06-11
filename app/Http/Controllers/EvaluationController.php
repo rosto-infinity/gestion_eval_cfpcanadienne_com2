@@ -556,7 +556,8 @@ class EvaluationController extends Controller
         $moyenneSemestre2 = $user->getMoyenneSemestre(2);
         $moyenneGenerale = $this->evaluationService->calculateMoyenneGenerale($moyenneSemestre1, $moyenneSemestre2);
 
-        $qrCode = app(\App\Services\QrCodeService::class)->generateTranscriptQrCode(route('evaluations.releve-notes', $user));
+        $token = str_replace(['+', '/', '='], ['-', '_', ''], \Illuminate\Support\Facades\Crypt::encryptString((string) $user->id));
+        $qrCode = app(\App\Services\QrCodeService::class)->generateTranscriptQrCode(route('evaluations.releve-notes.public', ['token' => $token]));
 
         return view('evaluations.releve-notes', compact(
             'user',
@@ -581,7 +582,73 @@ class EvaluationController extends Controller
         $moyenneGenerale = $this->evaluationService->calculateMoyenneGenerale($moyenneSemestre1, $moyenneSemestre2);
         $stats = $this->evaluationService->calculateStatistiques($evaluationsSemestre1, $evaluationsSemestre2);
 
-        $qrCode = app(\App\Services\QrCodeService::class)->generateTranscriptQrCode(route('evaluations.releve-notes', $user));
+        $token = str_replace(['+', '/', '='], ['-', '_', ''], \Illuminate\Support\Facades\Crypt::encryptString((string) $user->id));
+        $qrCode = app(\App\Services\QrCodeService::class)->generateTranscriptQrCode(route('evaluations.releve-notes.public', ['token' => $token]));
+
+        return $this->pdfService->generateReleveNotesPdf([
+            'user' => $user,
+            'evaluationsSemestre1' => $evaluationsSemestre1,
+            'evaluationsSemestre2' => $evaluationsSemestre2,
+            'moyenneSemestre1' => $moyenneSemestre1,
+            'moyenneSemestre2' => $moyenneSemestre2,
+            'moyenneGenerale' => $moyenneGenerale,
+            'stats' => $stats,
+            'qrCode' => $qrCode,
+        ]);
+    }
+
+    private function getUserByToken(string $token): User
+    {
+        try {
+            $originalBase64 = str_replace(['-', '_'], ['+', '/'], $token);
+            $originalBase64 .= str_repeat('=', (4 - strlen($originalBase64) % 4) % 4);
+            $userId = (int) \Illuminate\Support\Facades\Crypt::decryptString($originalBase64);
+            return User::findOrFail($userId);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            abort(404, 'Code de vérification invalide.');
+        }
+    }
+
+    public function releveNotesPublic(string $token): View
+    {
+        $user = $this->getUserByToken($token);
+        $user->load(['specialite', 'anneeAcademique']);
+
+        $evaluationsSemestre1 = $user->getEvaluationsBySemestre(1);
+        $evaluationsSemestre2 = $user->getEvaluationsBySemestre(2);
+
+        $moyenneSemestre1 = $user->getMoyenneSemestre(1);
+        $moyenneSemestre2 = $user->getMoyenneSemestre(2);
+        $moyenneGenerale = $this->evaluationService->calculateMoyenneGenerale($moyenneSemestre1, $moyenneSemestre2);
+
+        $qrCode = app(\App\Services\QrCodeService::class)->generateTranscriptQrCode(route('evaluations.releve-notes.public', ['token' => $token]));
+
+        return view('evaluations.releve-notes-public', compact(
+            'user',
+            'evaluationsSemestre1',
+            'evaluationsSemestre2',
+            'moyenneSemestre1',
+            'moyenneSemestre2',
+            'moyenneGenerale',
+            'qrCode',
+            'token'
+        ));
+    }
+
+    public function releveNotesPublicPdf(string $token)
+    {
+        $user = $this->getUserByToken($token);
+        $user->load(['specialite', 'anneeAcademique']);
+
+        $evaluationsSemestre1 = $user->getEvaluationsBySemestre(1);
+        $evaluationsSemestre2 = $user->getEvaluationsBySemestre(2);
+
+        $moyenneSemestre1 = $user->getMoyenneSemestre(1);
+        $moyenneSemestre2 = $user->getMoyenneSemestre(2);
+        $moyenneGenerale = $this->evaluationService->calculateMoyenneGenerale($moyenneSemestre1, $moyenneSemestre2);
+        $stats = $this->evaluationService->calculateStatistiques($evaluationsSemestre1, $evaluationsSemestre2);
+
+        $qrCode = app(\App\Services\QrCodeService::class)->generateTranscriptQrCode(route('evaluations.releve-notes.public', ['token' => $token]));
 
         return $this->pdfService->generateReleveNotesPdf([
             'user' => $user,
