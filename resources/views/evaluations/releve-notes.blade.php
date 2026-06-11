@@ -494,7 +494,7 @@
                                 <div style="display: inline-block; padding: 4px; border: 1px solid #E5E7EB; background-color: #FFF; border-radius: 4px;">
                                     <img src="{{ Storage::url($user->profile) }}" style="width: 80px; height: 80px; object-fit: cover; display: block; border-radius: 2px;" alt="Photo de Profil">
                                 </div>
-                                <div style="font-size: 8px; color: #6B7280; margin-top: 3px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Photo de l'Étudiant</div>
+                                <div style="font-size: 8px; color: #6B7280; margin-top: 3px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Photo de L'apprenant</div>
                             @else
                                 <div style="display: inline-block; padding: 4px; border: 1px solid #E5E7EB; background-color: #FFF; border-radius: 4px; vertical-align: middle;">
                                     <table style="width: 80px; height: 80px; background-color: #F3F4F6; border: 1px dashed #D1D5DB; border-collapse: collapse; margin: 0 auto;">
@@ -505,7 +505,7 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <div style="font-size: 8px; color: #6B7280; margin-top: 3px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Photo de l'Étudiant</div>
+                                <div style="font-size: 8px; color: #6B7280; margin-top: 3px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Photo de L'apprenant</div>
                             @endif
                         </td>
                     </tr>
