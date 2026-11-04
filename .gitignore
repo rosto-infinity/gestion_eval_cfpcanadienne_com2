@@ -13,7 +13,7 @@ opencode.json
 /.vscode
 /.zed
 /Adocs
-
+/000-cfpc
 /auth.json
 /node_modules
 # public/build
