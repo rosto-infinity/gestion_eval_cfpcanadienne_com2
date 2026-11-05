@@ -183,6 +183,7 @@ test('all 10 specialties have exact modules and total hours seeded correctly', f
         'SC' => 1530,
         'WBM' => 1270,
         'SB' => 1183,
+        'PLB' => 1065,
     ];
 
     foreach ($expectedTotals as $code => $totalHours) {

@@ -220,6 +220,28 @@ class ProgrammeModuleSeeder extends Seeder
                     ['numero' => 11, 'titre' => 'Stage en entreprise', 'hebdo' => 40, 'total' => 400],
                 ],
             ],
+
+            'PLB' => [
+                'intitule' => 'PLOMBERIE',
+                'modules' => [
+                    // A - COMPETENCES GENERALES : 250h
+                    ['numero' => 1, 'titre' => 'Travailler en milieu de travail', 'hebdo' => null, 'total' => 45, 'categorie' => 'A - COMPÉTENCES GÉNÉRALES'],
+                    ['numero' => 2, 'titre' => 'Prévenir atteintes santé, sécurité, environnement', 'hebdo' => null, 'total' => 50, 'categorie' => 'A - COMPÉTENCES GÉNÉRALES'],
+                    ['numero' => 3, 'titre' => 'Utiliser les fonctions en informatique', 'hebdo' => null, 'total' => 45, 'categorie' => 'A - COMPÉTENCES GÉNÉRALES'],
+                    ['numero' => 4, 'titre' => 'Communiquer, accueil et suivi de la clientèle', 'hebdo' => null, 'total' => 40, 'categorie' => 'A - COMPÉTENCES GÉNÉRALES'],
+                    ['numero' => 5, 'titre' => 'Lire et interpréter un plan de plomberie', 'hebdo' => null, 'total' => 40, 'categorie' => 'A - COMPÉTENCES GÉNÉRALES'],
+                    ['numero' => 6, 'titre' => "S'initier à l'entrepreneuriat et gestion atelier", 'hebdo' => null, 'total' => 30, 'categorie' => 'A - COMPÉTENCES GÉNÉRALES'],
+
+                    // B - COMPETENCES PARTICULIERES : 815h
+                    ['numero' => 7, 'titre' => 'Installer tuyauterie eau froide et eau chaude', 'hebdo' => null, 'total' => 150, 'categorie' => 'B - COMPÉTENCES PARTICULIÈRES'],
+                    ['numero' => 8, 'titre' => 'Installer appareils sanitaires (WC, lavabo, douche)', 'hebdo' => null, 'total' => 150, 'categorie' => 'B - COMPÉTENCES PARTICULIÈRES'],
+                    ['numero' => 9, 'titre' => 'Installer évacuation eaux usées et fosse septique', 'hebdo' => null, 'total' => 120, 'categorie' => 'B - COMPÉTENCES PARTICULIÈRES'],
+                    ['numero' => 10, 'titre' => 'Installer chauffe-eau, pompe, surpresseur, forage', 'hebdo' => null, 'total' => 110, 'categorie' => 'B - COMPÉTENCES PARTICULIÈRES'],
+                    ['numero' => 11, 'titre' => 'Entretenir, réparer et dépanner une installation', 'hebdo' => null, 'total' => 120, 'categorie' => 'B - COMPÉTENCES PARTICULIÈRES'],
+                    ['numero' => 12, 'titre' => 'Réaliser assemblages: soudure, PVC, cuivre, PER', 'hebdo' => null, 'total' => 95, 'categorie' => 'B - COMPÉTENCES PARTICULIÈRES'],
+                    ['numero' => 13, 'titre' => 'Stage pratique en entreprise / chantier', 'hebdo' => null, 'total' => 70, 'categorie' => 'B - COMPÉTENCES PARTICULIÈRES'],
+                ],
+            ],
         ];
 
         foreach ($programmes as $code => $data) {

@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\AnneeAcademique;
-use App\Models\Attestation;
-use App\Models\InstitutionArrete;
-use App\Models\Specialite;
-use App\Models\User;
-use App\Services\AttestationService;
-use App\Services\PdfService;
 use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\View\View;
+use App\Models\Specialite;
+use App\Models\Attestation;
+use Illuminate\Support\Str;
+use App\Services\PdfService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\View\View;
+use App\Models\AnneeAcademique;
+use App\Models\InstitutionArrete;
+use App\Services\AttestationService;
 
 class AttestationController extends Controller
 {
