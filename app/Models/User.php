@@ -206,6 +206,11 @@ class User extends Authenticatable
         return $this->hasMany(Evaluation::class, 'user_id');
     }
 
+    public function attestations(): HasMany
+    {
+        return $this->hasMany(Attestation::class, 'user_id');
+    }
+
     public function bilanCompetence(): HasOne
     {
         return $this->hasOne(BilanCompetence::class, 'user_id')

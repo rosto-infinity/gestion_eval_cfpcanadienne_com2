@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AnneeAcademiqueController;
+use App\Http\Controllers\AttestationController;
 use App\Http\Controllers\BilanCompetenceController;
 use App\Http\Controllers\BilanSpecialiteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\InstitutionArreteController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SpecialiteController;
@@ -29,6 +31,9 @@ Route::get('/legal', fn () => view('pages.legal'))->name('legal');
 // Vérification publique de relevé de notes
 Route::get('/releve-note/{token}', [EvaluationController::class, 'releveNotesPublic'])->name('evaluations.releve-notes.public');
 Route::get('/releve-note/{token}/pdf', [EvaluationController::class, 'releveNotesPublicPdf'])->name('evaluations.releve-notes.public.pdf');
+
+// Vérification publique d'attestation de formation
+Route::get('/attestation/verification/{token}', [AttestationController::class, 'verifierPublique'])->name('attestations.verifier.public');
 
 // Routes pour les ressources protégées par authentification
 Route::middleware(['auth', 'verified'])->group(function (): void {
@@ -55,6 +60,10 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
 
         Route::resource('specialites', SpecialiteController::class);
         Route::resource('modules', ModuleController::class);
+
+        // Paramétrage des Arrêtés ministériels et visas
+        Route::resource('settings/arretes', InstitutionArreteController::class)->names('settings.arretes');
+        Route::get('settings/arretes/{arrete}/toggle', [InstitutionArreteController::class, 'toggle'])->name('settings.arretes.toggle');
     });
 
     // ============================================================
@@ -98,6 +107,14 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
         Route::post('bilans/{bilan}/recalculer', [BilanCompetenceController::class, 'recalculer'])->name('bilans.recalculer');
         Route::get('bilans/tableau-recapitulatif/export-pdf', [BilanCompetenceController::class, 'exportPdfTableau'])->name('bilans.tableau-recapitulatif.pdf');
         Route::resource('bilans', BilanCompetenceController::class);
+
+        // Attestations de formation par spécialité
+        Route::prefix('attestations')->name('attestations.')->group(function (): void {
+            Route::get('/par-specialite', [AttestationController::class, 'index'])->name('par-specialite');
+            Route::post('/generer-lot-pdf', [AttestationController::class, 'genererLotPdf'])->name('generer-lot-pdf');
+            Route::get('/{user}/apercu', [AttestationController::class, 'apercu'])->name('apercu');
+            Route::get('/{attestation}/pdf', [AttestationController::class, 'telechargerPdf'])->name('pdf');
+        });
     });
 
     // ============================================================

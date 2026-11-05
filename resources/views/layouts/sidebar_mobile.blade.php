@@ -74,6 +74,12 @@
             <i class='bx bxs-chart mr-3'></i>
             Bilans Spécialité
         </a>
+
+        <a href="{{ route('attestations.par-specialite') }}" 
+           class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('attestations.*') ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+            <i class='bx bxs-certification mr-3'></i>
+            Attestations
+        </a>
     @endif
 
     @if(auth()->user()->role === \App\Enums\Role::USER)

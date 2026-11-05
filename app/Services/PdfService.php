@@ -171,4 +171,30 @@ class PdfService
             $filename
         );
     }
+
+    /**
+     * PDF Attestation de formation (individuelle ou groupée par spécialité)
+     * Format A4 Paysage sans marge pour épouser le fond graphique
+     */
+    public function generateAttestationLandscapePdf(
+        string $view,
+        array $data,
+        string $filename,
+        bool $stream = false
+    ): Response {
+        $options = array_merge($this->defaultOptions, [
+            'margin_top' => 0,
+            'margin_right' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
+            'dpi' => 150,
+            'enable_font_subsetting' => true,
+        ]);
+
+        $pdf = Pdf::loadView($view, $data)
+            ->setPaper('a4', 'landscape')
+            ->setOptions($options);
+
+        return $stream ? $pdf->stream($filename) : $pdf->download($filename);
+    }
 }

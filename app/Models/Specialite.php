@@ -35,6 +35,11 @@ class Specialite extends Model
         return $this->hasMany(Module::class, 'specialite_id');
     }
 
+    public function attestations(): HasMany
+    {
+        return $this->hasMany(Attestation::class, 'specialite_id');
+    }
+
     // Scopes
     public function scopeOrdered(Builder $query): Builder
     {

@@ -82,6 +82,12 @@
                     <span class="text">Bilans Spécialité</span>
                 </a>
             </li>
+            <li class="{{ request()->routeIs('attestations.*') ? 'active' : '' }}">
+                <a href="{{ route('attestations.par-specialite') }}" title="Attestations par spécialité">
+                    <i class='bx bxs-certification'></i>
+                    <span class="text">Attestations</span>
+                </a>
+            </li>
         @endif
 
         @if(auth()->user()->role === \App\Enums\Role::USER)
