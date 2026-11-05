@@ -29,10 +29,375 @@
             height: 209.5mm;
             overflow: hidden;
             page-break-inside: avoid;
+            box-sizing: border-box;
         }
 
-        .page-break {
+        .page-recto {
             page-break-after: always;
+        }
+
+        .page-verso {
+            background-color: #ffffff;
+            box-sizing: border-box;
+            page-break-inside: avoid;
+        }
+
+        .page-break-next-student {
+            page-break-after: always;
+        }
+
+        /* ==================== CADRE ROUGE VERSO (#ff0000) ==================== */
+        .verso-cadre-exterieur {
+            position: absolute;
+            top: 4.5mm;
+            left: 5.5mm;
+            width: 286mm;
+            height: 201mm;
+            border: 2.8px solid #ff0000;
+            box-sizing: border-box;
+        }
+
+        .verso-cadre-interieur {
+            position: absolute;
+            top: 6.5mm;
+            left: 7.5mm;
+            width: 282mm;
+            height: 197mm;
+            border: 1px solid #ff0000;
+            box-sizing: border-box;
+        }
+
+        /* Coins décoratifs d'angle rouge #ff0000 */
+        .verso-corner-tl {
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            width: 14px;
+            height: 14px;
+            border-top: 3.5px solid #ff0000;
+            border-left: 3.5px solid #ff0000;
+        }
+
+        .verso-corner-tr {
+            position: absolute;
+            top: -1px;
+            right: -1px;
+            width: 14px;
+            height: 14px;
+            border-top: 3.5px solid #ff0000;
+            border-right: 3.5px solid #ff0000;
+        }
+
+        .verso-corner-bl {
+            position: absolute;
+            bottom: -1px;
+            left: -1px;
+            width: 14px;
+            height: 14px;
+            border-bottom: 3.5px solid #ff0000;
+            border-left: 3.5px solid #ff0000;
+        }
+
+        .verso-corner-br {
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            width: 14px;
+            height: 14px;
+            border-bottom: 3.5px solid #ff0000;
+            border-right: 3.5px solid #ff0000;
+        }
+
+        /* Couche de contenu du Verso éloignée des bordures */
+        .verso-content-layer {
+            position: absolute;
+            top: 9mm;
+            left: 11mm;
+            width: 275mm;
+            height: 192mm;
+            box-sizing: border-box;
+        }
+
+        /* Titre Verso */
+        .verso-header-block {
+            text-align: center;
+            margin-bottom: 2mm;
+            padding-bottom: 1.5mm;
+            border-bottom: 2px solid #ff0000;
+        }
+
+        .verso-titre-principal {
+            font-size: 14.5pt;
+            font-weight: bold;
+            color: #ff0000;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 1mm;
+        }
+
+        .verso-sub-header {
+            font-size: 9.5pt;
+            color: #222222;
+        }
+
+        .verso-specialite-label {
+            font-weight: normal;
+            color: #555555;
+        }
+
+        .verso-specialite-nom {
+            font-weight: bold;
+            color: #111111;
+            text-transform: uppercase;
+        }
+
+        .verso-sep {
+            margin: 0 4mm;
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        .verso-volume-label {
+            color: #555555;
+        }
+
+        .verso-volume-valeur {
+            font-weight: bold;
+            color: #ff0000;
+        }
+
+        /* Tableau des modules agrandi */
+        .verso-table-container {
+            width: 100%;
+        }
+
+        .verso-table-modules {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9.5pt;
+        }
+
+        .verso-table-modules.compact-table {
+            font-size: 8.5pt;
+        }
+
+        .verso-table-modules th {
+            background-color: #000000;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 9pt;
+            text-transform: uppercase;
+            padding: 5px 8px;
+            border: 0.5px solid #000000;
+            letter-spacing: 0.3px;
+        }
+
+        .compact-table th {
+            padding: 3.5px 6px;
+            font-size: 8pt;
+        }
+
+        .verso-table-modules td {
+            padding: 4px 8px;
+            border: 0.5px solid #e0e0e0;
+            color: #111111;
+        }
+
+        .compact-table td {
+            padding: 2.5px 6px;
+        }
+
+        .verso-row-even {
+            background-color: #fff8f8;
+        }
+
+        .verso-row-odd {
+            background-color: #ffffff;
+        }
+
+        .verso-cell-num {
+            width: 9%;
+            text-align: center;
+            font-weight: bold;
+            color: #ff0000;
+        }
+
+        .verso-cell-titre {
+            width: 59%;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .verso-cell-hebdo {
+            width: 16%;
+            text-align: center;
+        }
+
+        .verso-cell-total {
+            width: 16%;
+            text-align: center;
+            font-weight: bold;
+            color: #111111;
+        }
+
+        .verso-row-categorie {
+            background-color: #ffe6e6;
+        }
+
+        .verso-cell-categorie {
+            font-weight: bold;
+            color: #ff0000;
+            font-size: 8.5pt;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            letter-spacing: 0.5px;
+            border: 0.5px solid #e0e0e0;
+        }
+
+        .verso-row-total-general {
+            background-color: #000000;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .verso-cell-total-label {
+            text-align: right;
+            padding: 5px 10px;
+            font-size: 9.5pt;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 0.5px solid #000000;
+        }
+
+        .verso-cell-total-value {
+            text-align: center;
+            padding: 5px 8px;
+            font-size: 10pt;
+            font-weight: bold;
+            color: #ffffff;
+            border: 0.5px solid #000000;
+        }
+
+        /* Compétences supplémentaires après le tableau */
+        .verso-competences-block {
+            margin-top: 2mm;
+            padding: 2mm 3mm;
+            background-color: #fafafa;
+            border: 0.5px solid #e5e5e5;
+            border-left: 3px solid #ff0000;
+            font-size: 7.5pt;
+        }
+
+        .verso-competences-titre {
+            font-weight: bold;
+            color: #ff0000;
+            text-transform: uppercase;
+            font-size: 7.5pt;
+            margin-bottom: 1mm;
+            display: inline-block;
+            margin-right: 2mm;
+        }
+
+        .verso-comp-badge {
+            display: inline-block;
+            background-color: #ffffff;
+            border: 0.5px solid #dddddd;
+            border-radius: 3px;
+            padding: 1px 5px;
+            margin: 1px 3px 1px 0;
+            color: #333333;
+            font-size: 7.2pt;
+        }
+
+        /* Pied de page Verso */
+        .verso-footer-block {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-top: 1px solid #ffd6d6;
+            padding-top: 1.5mm;
+        }
+
+        .verso-table-footer {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .verso-col-legal {
+            width: 60%;
+            vertical-align: top;
+            padding-right: 4mm;
+        }
+
+        .verso-mention-titre {
+            font-size: 6.8pt;
+            font-weight: bold;
+            color: #ff0000;
+            text-transform: uppercase;
+            margin-bottom: 0.6mm;
+        }
+
+        .verso-mention-texte {
+            font-size: 6pt;
+            color: #555555;
+            line-height: 1.25;
+            margin-bottom: 1mm;
+        }
+
+        .verso-numero-ref {
+            font-size: 6.5pt;
+            color: #333333;
+        }
+
+        .verso-col-qr {
+            width: 12%;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .verso-qr-img {
+            max-width: 16mm;
+            max-height: 16mm;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .verso-qr-legende {
+            font-size: 5pt;
+            color: #777777;
+            margin-top: 0.8mm;
+        }
+
+        .verso-col-signature {
+            width: 28%;
+            text-align: center;
+            vertical-align: top;
+            padding-left: 2mm;
+        }
+
+        .verso-sig-lieu-date {
+            font-size: 7pt;
+            color: #333333;
+            margin-bottom: 0.6mm;
+        }
+
+        .verso-sig-titre {
+            font-size: 8.5pt;
+            font-weight: bold;
+            color: #ff0000;
+            text-transform: uppercase;
+        }
+
+        .verso-sig-espace {
+            height: 8mm;
+        }
+
+        .verso-sig-cachet {
+            font-size: 6pt;
+            font-style: italic;
+            color: #888888;
         }
 
         .background-image {
@@ -348,7 +713,7 @@
     @endphp
 
     @foreach($attestationsList as $index => $item)
-        <div class="page-container {{ !$loop->last ? 'page-break' : '' }}">
+        <div class="page-container page-recto">
             <!-- FOND GRAPHIQUE D'EXCELLENCE A4 PAYSAGE -->
             @if(!empty($backgroundImageBase64))
                 <img src="{{ $backgroundImageBase64 }}" class="background-image" alt="Fond Attestation">
@@ -468,6 +833,120 @@
                         </td>
                     </tr>
                 </table>
+            </div>
+        </div>
+
+        <!-- PAGE 2 : VERSO (SYNTHÈSE DU PROGRAMME DE FORMATION) -->
+        <div class="page-container page-verso {{ !$loop->last ? 'page-break-next-student' : '' }}">
+            <!-- CADRE ROUGE EXTÉRIEUR ET COINS DÉCORATIFS -->
+            <div class="verso-cadre-exterieur">
+                <div class="verso-corner-tl"></div>
+                <div class="verso-corner-tr"></div>
+                <div class="verso-corner-bl"></div>
+                <div class="verso-corner-br"></div>
+            </div>
+            <!-- CADRE ROUGE INTÉRIEUR -->
+            <div class="verso-cadre-interieur"></div>
+
+            <!-- COUCHE DE CONTENU -->
+            <div class="verso-content-layer">
+                <!-- TITRE DIRECT DU PROGRAMME SANS EN-TÊTE INSTITUTIONNEL -->
+                <div class="verso-header-block">
+                    <div class="verso-titre-principal">SYNTHÈSE DU PROGRAMME DE FORMATION</div>
+                    <div class="verso-sub-header">
+                        <span class="verso-specialite-label">Spécialité :</span>
+                        <span class="verso-specialite-nom">{{ $item['specialite_libelle'] }}</span>
+                        @if(!empty($item['total_heures_programme']))
+                            <span class="verso-sep">|</span>
+                            <span class="verso-volume-label">Volume horaire global :</span>
+                            <span class="verso-volume-valeur">{{ number_format($item['total_heures_programme'], 0, ',', ' ') }} heures</span>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- TABLEAU DES MODULES AGRANDI -->
+                <div class="verso-table-container">
+                    @php
+                        $nbMods = count($item['programme_modules']);
+                        $isCompact = $nbMods >= 18;
+                    @endphp
+                    <table class="verso-table-modules {{ $isCompact ? 'compact-table' : '' }}">
+                        <thead>
+                            <tr>
+                                <th style="width: 9%;">N°</th>
+                                <th style="width: 59%;">Titre du module</th>
+                                <th style="width: 16%;">Nombre d’heures hebdomadaires</th>
+                                <th style="width: 16%;">Nombre d’heures total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php $currentCategorie = null; @endphp
+                            @forelse($item['programme_modules'] as $mod)
+                                @if(!empty($mod->categorie) && $mod->categorie !== $currentCategorie)
+                                    @php $currentCategorie = $mod->categorie; @endphp
+                                    <tr class="verso-row-categorie">
+                                        <td colspan="4" class="verso-cell-categorie">
+                                            {{ $currentCategorie }}
+                                        </td>
+                                    </tr>
+                                @endif
+                                <tr class="{{ $loop->even ? 'verso-row-even' : 'verso-row-odd' }}">
+                                    <td class="verso-cell-num">{{ $mod->numero_module }}</td>
+                                    <td class="verso-cell-titre">{{ $mod->titre }}</td>
+                                    <td class="verso-cell-hebdo">{{ $mod->heures_hebdomadaires ? $mod->heures_hebdomadaires . ' h' : '-' }}</td>
+                                    <td class="verso-cell-total">{{ $mod->heures_total }} h</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" style="text-align: center; padding: 15px; color: #777;">
+                                        Aucun module défini pour cette spécialité.
+                                    </td>
+                                </tr>
+                            @endforelse
+                            <tr class="verso-row-total-general">
+                                <td colspan="3" class="verso-cell-total-label">TOTAL GÉNÉRAL DU PROGRAMME DE FORMATION</td>
+                                <td class="verso-cell-total-value">{{ number_format($item['total_heures_programme'], 0, ',', ' ') }} h</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- COMPÉTENCES SUPPLÉMENTAIRES (SI DÉFINIES) -->
+                @if(!empty($item['competences']) && count($item['competences']) > 0)
+                    <div class="verso-competences-block">
+                        <span class="verso-competences-titre">Compétences clés acquises :</span>
+                        @foreach($item['competences'] as $comp)
+                            <span class="verso-comp-badge">✓ {{ is_array($comp) ? ($comp['intitule'] ?? '') : $comp }}</span>
+                        @endforeach
+                    </div>
+                @endif
+
+                <!-- PIED DE PAGE DU VERSO -->
+                <div class="verso-footer-block">
+                    <table class="verso-table-footer">
+                        <tr>
+                            <td class="verso-col-legal">
+                                <div class="verso-mention-titre">AUTHENTIFICATION DU CURRICULUM</div>
+                                <div class="verso-mention-texte">
+                                    La présente synthèse atteste de l'ensemble des modules d'enseignements théoriques, pratiques et professionnels validés par l'apprenant(e) au Centre de Formation Professionnelle La Canadienne, conformément au référentiel de formation homologué par le MINEFOP.
+                                </div>
+                                <div class="verso-numero-ref">Attestation Réf : <strong>{{ $item['numero_attestation'] }}</strong></div>
+                            </td>
+                            <td class="verso-col-qr">
+                                @if(!empty($item['qr_code']))
+                                    <img src="{{ $item['qr_code'] }}" class="verso-qr-img" alt="QR Code">
+                                    <div class="verso-qr-legende">Scanner pour vérifier</div>
+                                @endif
+                            </td>
+                            <td class="verso-col-signature">
+                                <div class="verso-sig-lieu-date">Fait à {{ $item['lieu_delivrance'] }}, le {{ $item['date_delivrance_formatee'] }}</div>
+                                <div class="verso-sig-titre">La Direction</div>
+                                <div class="verso-sig-espace"></div>
+                                <div class="verso-sig-cachet">(Signature et Cachet)</div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     @endforeach

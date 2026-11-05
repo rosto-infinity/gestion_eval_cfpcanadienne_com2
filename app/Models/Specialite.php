@@ -40,6 +40,21 @@ class Specialite extends Model
         return $this->hasMany(Attestation::class, 'specialite_id');
     }
 
+    public function programmeModules(): HasMany
+    {
+        return $this->hasMany(ProgrammeModule::class, 'specialite_id')->orderBy('ordre', 'asc');
+    }
+
+    public function competences(): HasMany
+    {
+        return $this->hasMany(SpecialiteCompetence::class, 'specialite_id')->orderBy('ordre', 'asc');
+    }
+
+    public function getTotalHeuresProgrammeAttribute(): int
+    {
+        return (int) $this->programmeModules()->sum('heures_total');
+    }
+
     // Scopes
     public function scopeOrdered(Builder $query): Builder
     {

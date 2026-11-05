@@ -148,3 +148,46 @@ test('admin can manage institution arretes and visas', function (): void {
     $toggleResponse->assertRedirect();
     expect($visa->fresh()->is_active)->toBeFalse();
 });
+
+test('preview and pdf contain verso with programme modules and total hours without institutional header', function (): void {
+    $this->seed(\Database\Seeders\ProgrammeModuleSeeder::class);
+
+    $response = $this->actingAs($this->admin)
+        ->get(route('attestations.apercu', $this->student->id));
+
+    $response->assertStatus(200);
+    // Vérification Recto
+    $response->assertSee('ATTESTATION DE FIN DE FORMATION PROFESSIONNELLE');
+    $response->assertSee('MENEAM KAPTUE FALONE');
+
+    // Vérification Verso
+    $response->assertSee('SYNTHÈSE DU PROGRAMME DE FORMATION');
+    $response->assertSee('Graphisme de production');
+    $response->assertSee('Choix esthétiques et graphiques');
+    $response->assertSee('TOTAL GÉNÉRAL DU PROGRAMME DE FORMATION');
+    $response->assertSee('990 h');
+    $response->assertSee('AUTHENTIFICATION DU CURRICULUM');
+});
+
+test('all 10 specialties have exact modules and total hours seeded correctly', function (): void {
+    $this->seed(\Database\Seeders\ProgrammeModuleSeeder::class);
+
+    $expectedTotals = [
+        'CIG' => 1220,
+        'DA' => 1170,
+        'GP' => 990,
+        'MI' => 920,
+        'MRI' => 1100,
+        'PB' => 1560,
+        'SD' => 1440,
+        'SC' => 1530,
+        'WBM' => 1270,
+        'SB' => 1183,
+    ];
+
+    foreach ($expectedTotals as $code => $totalHours) {
+        $specialite = Specialite::where('code', $code)->first();
+        expect($specialite)->not->toBeNull("Spécialité $code non trouvée");
+        expect($specialite->total_heures_programme)->toBe($totalHours, "Total d'heures incorrect pour $code");
+    }
+});

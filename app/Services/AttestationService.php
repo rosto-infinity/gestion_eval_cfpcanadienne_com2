@@ -209,6 +209,28 @@ class AttestationService
 
         $qrCodeBase64 = $this->generateQrCode($attestation);
 
+        // Récupération des modules officiels du programme pour le Verso
+        $specialite = null;
+        if ($attestation->specialite_id) {
+            $specialite = Specialite::find($attestation->specialite_id);
+        }
+        if (! $specialite && ! empty($attestation->specialite_libelle)) {
+            $specialite = Specialite::where('intitule', 'like', '%'.$attestation->specialite_libelle.'%')->first();
+        }
+        if (! $specialite && $user->specialite_id) {
+            $specialite = Specialite::find($user->specialite_id);
+        }
+
+        $programmeModules = $specialite ? $specialite->programmeModules()->get() : collect();
+        $totalHeuresProgramme = (int) $programmeModules->sum('heures_total');
+
+        $competences = collect();
+        if (! empty($attestation->competences_supplementaires) && is_array($attestation->competences_supplementaires)) {
+            $competences = collect($attestation->competences_supplementaires);
+        } elseif ($specialite) {
+            $competences = $specialite->competences()->pluck('intitule');
+        }
+
         return [
             'attestation' => $attestation,
             'user' => $user,
@@ -225,6 +247,10 @@ class AttestationService
             'lieu_delivrance' => $attestation->lieu_delivrance,
             'numero_attestation' => $attestation->numero_attestation,
             'qr_code' => $qrCodeBase64,
+            'programme_modules' => $programmeModules,
+            'total_heures_programme' => $totalHeuresProgramme,
+            'has_categories' => $programmeModules->whereNotNull('categorie')->isNotEmpty(),
+            'competences' => $competences,
         ];
     }
 }

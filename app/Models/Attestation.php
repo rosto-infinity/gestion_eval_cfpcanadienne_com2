@@ -31,6 +31,7 @@ class Attestation extends Model
         'token',
         'arrete_principal',
         'visas_arretes',
+        'competences_supplementaires',
         'created_by',
     ];
 
@@ -41,6 +42,7 @@ class Attestation extends Model
             'date_fin' => 'date',
             'date_delivrance' => 'date',
             'visas_arretes' => 'array',
+            'competences_supplementaires' => 'array',
         ];
     }
 

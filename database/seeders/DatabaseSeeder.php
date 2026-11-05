@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             InstitutionArreteSeeder::class,
+            ProgrammeModuleSeeder::class,
         ]);
 
         User::factory()->create([
