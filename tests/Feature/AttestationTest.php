@@ -198,6 +198,7 @@ test('admin can update signature and formation dates for attestation', function 
     $attestation = Attestation::create([
         'user_id' => $this->student->id,
         'specialite_id' => $this->specialite->id,
+        'annee_academique_id' => $this->academicYear->id,
         'numero_attestation' => 'ATT-TEST-001',
         'token' => 'token-test-update',
         'date_debut' => '2025-10-13',
