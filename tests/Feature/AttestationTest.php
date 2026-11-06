@@ -114,6 +114,7 @@ test('public verification page displays certified information for valid token', 
     $response->assertSee('DOCUMENT OFFICIEL VÉRIFIÉ & CERTIFIÉ', false);
     $response->assertSee('MENEAM KAPTUE FALONE');
     $response->assertSee('Graphisme de production');
+    $response->assertDontSee('Télécharger le document PDF original');
 });
 
 test('public verification page returns 404 for invalid token', function (): void {
@@ -192,3 +193,34 @@ test('all 10 specialties have exact modules and total hours seeded correctly', f
         expect($specialite->total_heures_programme)->toBe($totalHours, "Total d'heures incorrect pour $code");
     }
 });
+
+test('admin can update signature and formation dates for attestation', function (): void {
+    $attestation = Attestation::create([
+        'user_id' => $this->student->id,
+        'specialite_id' => $this->specialite->id,
+        'numero_attestation' => 'ATT-TEST-001',
+        'token' => 'token-test-update',
+        'date_debut' => '2025-10-13',
+        'date_fin' => '2026-10-12',
+        'date_delivrance' => '2026-11-01',
+        'lieu_delivrance' => 'Bafoussam',
+        'arrete_principal' => 'Arrete Test',
+        'visas_arretes' => [],
+    ]);
+
+    $response = $this->actingAs($this->admin)
+        ->post(route('attestations.update-dates', $attestation->id), [
+            'date_delivrance' => '2026-11-15',
+            'lieu_delivrance' => 'Bafoussam',
+            'date_debut' => '2025-09-01',
+            'date_fin' => '2026-08-31',
+        ]);
+
+    $response->assertRedirect();
+    $attestation->refresh();
+
+    expect($attestation->date_delivrance->format('Y-m-d'))->toBe('2026-11-15');
+    expect($attestation->date_debut->format('Y-m-d'))->toBe('2025-09-01');
+    expect($attestation->date_fin->format('Y-m-d'))->toBe('2026-08-31');
+});
+
