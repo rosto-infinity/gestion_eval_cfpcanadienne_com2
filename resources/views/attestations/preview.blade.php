@@ -720,6 +720,70 @@
             </div>
         </div>
 
+        @if(session('success'))
+            <div class="p-3 bg-green-500/10 border border-green-500/30 text-green-700 dark:text-green-300 rounded-lg text-xs font-medium flex items-center gap-2">
+                <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+
+        <!-- CARTE DE MODIFICATION DE LA DATE DE SIGNATURE (RECTO & VERSO) -->
+        <div class="bg-card rounded-xl border border-border p-4 shadow-sm">
+            <form action="{{ route('attestations.update-dates', $attestation->id) }}" method="POST" class="flex flex-col md:flex-row md:items-end gap-3 justify-between">
+                @csrf
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 flex-1">
+                    <div>
+                        <label class="block text-xs font-semibold text-foreground mb-1">
+                            Date de signature (Recto & Verso) :
+                        </label>
+                        <input type="date" name="date_delivrance"
+                            value="{{ $attestation->date_delivrance ? $attestation->date_delivrance->format('Y-m-d') : now()->format('Y-m-d') }}"
+                            class="w-full py-1.5 px-2.5 border border-input rounded-lg bg-background text-foreground text-xs focus:ring-2 focus:ring-red-500" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-foreground mb-1">
+                            Lieu de signature :
+                        </label>
+                        <input type="text" name="lieu_delivrance"
+                            value="{{ $attestation->lieu_delivrance ?? 'Bafoussam' }}"
+                            placeholder="Bafoussam"
+                            class="w-full py-1.5 px-2.5 border border-input rounded-lg bg-background text-foreground text-xs focus:ring-2 focus:ring-red-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-foreground mb-1">
+                            Début de formation :
+                        </label>
+                        <input type="date" name="date_debut"
+                            value="{{ $attestation->date_debut ? $attestation->date_debut->format('Y-m-d') : '' }}"
+                            class="w-full py-1.5 px-2.5 border border-input rounded-lg bg-background text-foreground text-xs focus:ring-2 focus:ring-red-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-foreground mb-1">
+                            Fin de formation :
+                        </label>
+                        <input type="date" name="date_fin"
+                            value="{{ $attestation->date_fin ? $attestation->date_fin->format('Y-m-d') : '' }}"
+                            class="w-full py-1.5 px-2.5 border border-input rounded-lg bg-background text-foreground text-xs focus:ring-2 focus:ring-red-500">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-1 md:pt-0">
+                    <button type="submit"
+                        class="inline-flex items-center justify-center px-4 py-2 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white dark:text-slate-900 text-white font-semibold text-xs rounded-lg shadow-sm transition-all whitespace-nowrap">
+                        <svg class="w-3.5 h-3.5 mr-1.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Mettre à jour la date
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <!-- SÉLECTEUR DE FACE (RECTO / VERSO) -->
         <div class="flex justify-center">
             <div class="inline-flex p-1 bg-muted rounded-xl shadow-inner border border-border gap-1">

@@ -232,7 +232,7 @@
                                         <th class="p-3">Apprenant</th>
                                         <th class="p-3">Date & Lieu de Naissance</th>
                                         <th class="p-3">Spécialité sur l'Attestation</th>
-                                        <th class="p-3">Tranche de Dates</th>
+                                        <th class="p-3">Période & Date de signature</th>
                                         <th class="p-3 text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -242,6 +242,7 @@
                                             $existing = $existingAttestations->get($student->id);
                                             $studentDateDebut = $existing?->date_debut ? $existing->date_debut->format('Y-m-d') : $defaultDateDebut;
                                             $studentDateFin = $existing?->date_fin ? $existing->date_fin->format('Y-m-d') : $defaultDateFin;
+                                            $studentDateDelivrance = $existing?->date_delivrance ? $existing->date_delivrance->format('Y-m-d') : $defaultDateDelivrance;
                                             $customSpec = $existing?->specialite_personnalisee;
                                             $sexeLabel = strtoupper($student->sexe ?? '') === 'F' ? 'Née le' : 'Né le';
                                         @endphp
@@ -313,7 +314,7 @@
                                                 </div>
                                             </td>
 
-                                            <!-- Tranche de dates individuelle -->
+                                            <!-- Tranche de dates individuelle & date de signature -->
                                             <td class="p-3">
                                                 <div class="flex items-center gap-1 text-xs min-w-[200px]">
                                                     <input type="date"
@@ -325,6 +326,13 @@
                                                         name="students[{{ $student->id }}][date_fin]"
                                                         value="{{ $studentDateFin }}"
                                                         class="student-date-fin text-xs py-1 px-1.5 border border-input rounded bg-background text-foreground w-28">
+                                                </div>
+                                                <div class="flex items-center gap-1 text-[11px] text-muted-foreground mt-1.5">
+                                                    <span>Signée le :</span>
+                                                    <input type="date"
+                                                        name="students[{{ $student->id }}][date_delivrance]"
+                                                        value="{{ $studentDateDelivrance }}"
+                                                        class="student-date-delivrance text-xs py-0.5 px-1.5 border border-input rounded bg-background text-foreground w-28">
                                                 </div>
                                             </td>
 
