@@ -93,17 +93,6 @@
                         {{ $attestation->arrete_principal }}
                     </p>
                 </div>
-
-                <!-- Bouton Télécharger -->
-                <div class="pt-2 text-center">
-                    <a href="{{ route('attestations.pdf', $attestation->id) }}"
-                        class="inline-flex items-center justify-center w-full px-5 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-md transition-all">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                        Télécharger le document PDF original
-                    </a>
-                </div>
             </div>
         </div>
 

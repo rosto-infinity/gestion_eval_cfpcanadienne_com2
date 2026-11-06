@@ -13,8 +13,12 @@
         applyGlobalDatesToAll() {
             let start = document.getElementById('global_date_debut').value;
             let end = document.getElementById('global_date_fin').value;
+            let delivrance = document.getElementById('global_date_delivrance') ? document.getElementById('global_date_delivrance').value : '';
             document.querySelectorAll('.student-date-debut').forEach(el => el.value = start);
             document.querySelectorAll('.student-date-fin').forEach(el => el.value = end);
+            if (delivrance) {
+                document.querySelectorAll('.student-date-delivrance').forEach(el => el.value = delivrance);
+            }
         }
     }">
 
@@ -149,9 +153,10 @@
                         <!-- Date de délivrance -->
                         <div>
                             <label class="block text-xs font-semibold text-foreground mb-1">
-                                Fait à Bafoussam, le :
+                                Fait à Bafoussam, le (Signature) :
                             </label>
-                            <input type="date" name="date_delivrance" value="{{ $defaultDateDelivrance }}"
+                            <input type="date" id="global_date_delivrance" name="date_delivrance" value="{{ $defaultDateDelivrance }}"
+                                @change="applyGlobalDatesToAll()"
                                 class="w-full py-2 px-3 border border-input rounded-lg bg-background text-foreground text-sm focus:ring-2 focus:ring-red-500" required>
                         </div>
                     </div>

@@ -125,8 +125,8 @@ class AttestationController extends Controller
                     : null,
                 'date_debut' => ! empty($userCustom['date_debut']) ? $userCustom['date_debut'] : $request->input('date_debut'),
                 'date_fin' => ! empty($userCustom['date_fin']) ? $userCustom['date_fin'] : $request->input('date_fin'),
-                'date_delivrance' => $request->input('date_delivrance'),
-                'lieu_delivrance' => $request->input('lieu_delivrance', 'Bafoussam'),
+                'date_delivrance' => ! empty($userCustom['date_delivrance']) ? $userCustom['date_delivrance'] : $request->input('date_delivrance'),
+                'lieu_delivrance' => ! empty($userCustom['lieu_delivrance']) ? $userCustom['lieu_delivrance'] : $request->input('lieu_delivrance', 'Bafoussam'),
                 'arrete_principal' => $request->input('arrete_principal'),
                 'visas_arretes' => $request->input('visas_arretes', []),
             ];
@@ -160,10 +160,17 @@ class AttestationController extends Controller
             $attestation = $this->attestationService->recordAttestation($user, [
                 'annee_academique_id' => $user->annee_academique_id,
                 'specialite_id' => $user->specialite_id,
-                'date_debut' => now()->subMonths(9),
-                'date_fin' => now(),
-                'date_delivrance' => now(),
+                'date_debut' => $request->input('date_debut', now()->subMonths(9)),
+                'date_fin' => $request->input('date_fin', now()),
+                'date_delivrance' => $request->input('date_delivrance', now()),
+                'lieu_delivrance' => $request->input('lieu_delivrance', 'Bafoussam'),
             ]);
+        } elseif ($request->filled('date_delivrance')) {
+            $attestation->date_delivrance = \Carbon\Carbon::parse($request->input('date_delivrance'));
+            if ($request->filled('lieu_delivrance')) {
+                $attestation->lieu_delivrance = trim((string) $request->input('lieu_delivrance'));
+            }
+            $attestation->save();
         }
 
         $item = $this->attestationService->formatItemForPdf($attestation);
@@ -173,10 +180,46 @@ class AttestationController extends Controller
     }
 
     /**
+     * Mettre à jour la date et le lieu de signature (Recto & Verso)
+     */
+    public function updateDates(Request $request, Attestation $attestation): \Illuminate\Http\RedirectResponse
+    {
+        $validated = $request->validate([
+            'date_delivrance' => 'required|date',
+            'lieu_delivrance' => 'nullable|string|max:255',
+            'date_debut' => 'nullable|date',
+            'date_fin' => 'nullable|date',
+        ]);
+
+        $attestation->date_delivrance = \Carbon\Carbon::parse($validated['date_delivrance']);
+        if (! empty($validated['lieu_delivrance'])) {
+            $attestation->lieu_delivrance = trim($validated['lieu_delivrance']);
+        }
+        if (! empty($validated['date_debut'])) {
+            $attestation->date_debut = \Carbon\Carbon::parse($validated['date_debut']);
+        }
+        if (! empty($validated['date_fin'])) {
+            $attestation->date_fin = \Carbon\Carbon::parse($validated['date_fin']);
+        }
+
+        $attestation->save();
+
+        return redirect()->back()->with('success', 'Date de signature mise à jour avec succès pour le Recto et le Verso.');
+    }
+
+    /**
      * Télécharger une attestation individuelle
      */
-    public function telechargerPdf(Attestation $attestation): Response
+    public function telechargerPdf(Request $request, Attestation $attestation): Response
     {
+        if ($request->filled('date_delivrance')) {
+            $attestation->date_delivrance = \Carbon\Carbon::parse($request->input('date_delivrance'));
+            if ($request->filled('lieu_delivrance')) {
+                $attestation->lieu_delivrance = trim((string) $request->input('lieu_delivrance'));
+            }
+            $attestation->save();
+        }
+
         $item = $this->attestationService->formatItemForPdf($attestation);
         $assets = $this->attestationService->getAssetsBase64();
         $filename = sprintf('attestation_%s_%s.pdf', Str::slug($attestation->user->name), now()->format('Ymd'));

@@ -113,6 +113,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
             Route::get('/par-specialite', [AttestationController::class, 'index'])->name('par-specialite');
             Route::post('/generer-lot-pdf', [AttestationController::class, 'genererLotPdf'])->name('generer-lot-pdf');
             Route::get('/{user}/apercu', [AttestationController::class, 'apercu'])->name('apercu');
+            Route::post('/{attestation}/update-dates', [AttestationController::class, 'updateDates'])->name('update-dates');
             Route::get('/{attestation}/pdf', [AttestationController::class, 'telechargerPdf'])->name('pdf');
         });
     });
