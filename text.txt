@@ -1,1 +1,2 @@
 000-cfpc/modules formation.pdf
+PARTITIONNEMENT_BOUTIQUE_PRODUITS.md

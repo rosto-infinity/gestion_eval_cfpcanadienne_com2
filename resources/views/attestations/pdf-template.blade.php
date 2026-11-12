@@ -763,7 +763,7 @@
 
             <!-- TITRE OFFICIEL SUR UNE SEULE LIGNE -->
             <div class="box-titre-attestation">
-                ATTESTATION DE FIN DE FORMATION PROFESSIONNELLE
+                ATTESTATION DE FORMATION
             </div>
 
             <!-- VISAS DES ARRÊTÉS ADMINISTRATIFS -->
@@ -825,7 +825,7 @@
                             <div>LE DELEGUE</div>
                         </td>
                         <td class="col-sig-impetrant">
-                            <div>L'IMPÉTRANT</div>
+                            <div></div>
                         </td>
                         <td class="col-sig-direction">
                             <div class="direction-date">Fait à {{ $item['lieu_delivrance'] }}, le {{ $item['date_delivrance_formatee'] }}</div>
